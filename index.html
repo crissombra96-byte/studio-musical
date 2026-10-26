@@ -92,15 +92,15 @@ header{position:relative}
 <nav id="nav"></nav>
 <div id="modal" class="modal hide"></div>
 <div id="v" class="hide">
- <div id="vb"><button class="ib" id="vx" aria-label="Cerrar"><i data-ic="x"></i></button><span class="tt" id="vt"></span>
-  <div id="ab" class="hide"><button class="ib" data-t="r"><i data-ic="read"></i><span>Leer</span></button><button class="ib" data-t="l"><i data-ic="pen"></i><span>Lápiz</span></button><button class="ib" data-t="h"><i data-ic="hl"></i><span>Resaltar</span></button><button class="ib" data-t="g"><i data-ic="er"></i><span>Goma</span></button><button class="ib" data-t="n"><i data-ic="note"></i><span>Nota</span></button><span class="sep"></span><span id="sws"></span><span class="sep"></span><button class="ib" id="aun"><i data-ic="undo"></i><span>Deshacer</span></button><button class="ab2" id="agr"></button><button class="ab2" id="adi"></button><button class="ab2" id="aoc"></button></div>
+ <div id="vb"><button class="ib" id="vx" aria-label="Volver a la lista"><i data-ic="back"></i></button><span class="tt" id="vt"></span>
+  <div id="ab" class="hide"><button class="ib" data-t="l"><i data-ic="pen"></i><span>Lápiz</span></button><button class="ib" data-t="h"><i data-ic="hl"></i><span>Resaltar</span></button><button class="ib" data-t="g"><i data-ic="er"></i><span>Goma</span></button><button class="ib" data-t="n"><i data-ic="note"></i><span>Nota</span></button><span class="sep"></span><span id="sws"></span><span class="sep"></span><button class="ib" id="aun"><i data-ic="undo"></i><span>Deshacer</span></button><button class="ab2" id="agr"></button><button class="ab2" id="adi"></button><button class="ab2" id="aoc"></button></div>
  </div>
  <div id="pg"></div>
  <div id="pages"></div>
  <div id="vf">
   <div id="mb" class="hide"><div class="mr"><span class="ml" id="mlab"></span><button id="mm">−</button><input id="mbpm" type="number" min="30" max="240" inputmode="numeric"><button id="mp">+</button><input id="msl" type="range" min="30" max="240"><button id="mtap">Tap</button></div><div class="mr"><span class="ml">Compás</span><span id="mcs" class="chips"></span></div><div class="mr"><span class="ml">Pulso</span><span id="mus" class="chips"></span></div><div class="mr"><span id="mdots"></span><button id="mgo"></button></div></div>
   <div id="vs"><button id="vp" aria-label="Página anterior">‹</button><input type="range" id="vsl" min="1" max="1" value="1"><button id="vn" aria-label="Página siguiente">›</button></div>
-  <div id="mn"><button class="ib" id="vm"><i data-ic="pages"></i><span id="vml"></span></button><button class="ib" id="vmt"><i data-ic="metro"></i><span>Metrónomo</span></button><button class="ib" id="pplay"><i data-ic="play"></i><span id="ppl"></span></button><button class="ib" id="vsec"><i data-ic="mark"></i><span>Secciones</span></button></div>
+  <div id="mn"><button class="ib" id="vm"><i data-ic="pages"></i><span id="vml"></span></button><button class="ib" id="vmt"><i data-ic="metro"></i><span>Metrónomo</span></button><button class="ib" id="pplay"><i data-ic="play"></i><span id="ppl"></span></button><button class="ib hide" id="pfin"><i data-ic="stop"></i><span>Terminar</span></button><button class="ib" id="vsec"><i data-ic="mark"></i><span>Secciones</span></button></div>
  </div>
 </div>
 <div id="nt" class="hide"><textarea id="ntx" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit"></textarea><div class="row"><button class="btn" id="nts">Guardar</button><button class="btn d" id="ntd">Borrar</button><button class="btn s" id="ntc">Cerrar</button></div></div>
@@ -109,7 +109,7 @@ header{position:relative}
 <script src="pdf.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
-const IC={x:'<path d="M6 6l12 12M18 6L6 18"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
+const IC={back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
 const svg=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 document.querySelectorAll('i[data-ic]').forEach(i=>i.innerHTML=svg(i.dataset.ic));
 const MAXP=10,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
@@ -354,7 +354,7 @@ $('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'
  ls.set('auto',V.auto?'1':'0');vista()};
 $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp=0;V.rs=true;$('#vsl').blur();pintar()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-function cerrarV(){tok++;PR.run=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
+function cerrarV(){tok++;PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
 $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
 addEventListener('popstate',()=>{if(V.doc)cerrarV()});
 $('#pages').onclick=e=>{if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
@@ -389,7 +389,7 @@ function mgo(){
  M.on=true;M.beat=0;M.nx=M.ctx.currentTime+.06;msch();M.tm=setInterval(msch,25);mui();
 }
 function mstop(){M.on=false;clearInterval(M.tm);if($('#mdots'))mui()}
-$('#vmt').onclick=()=>{if(!$('#mb').classList.toggle('hide'))mui()};
+$('#vmt').onclick=()=>{const h=$('#mb').classList.contains('hide');$('#sc').classList.add('hide');$('#mb').classList.toggle('hide',!h);if(h)mui()};
 $('#mgo').onclick=()=>M.on?mstop():mgo();
 $('#mm').onclick=()=>mset(M.bpm-1);$('#mp').onclick=()=>mset(M.bpm+1);
 $('#mbpm').onchange=e=>mset(+e.target.value);$('#msl').oninput=e=>mset(+e.target.value);
@@ -405,6 +405,7 @@ tema(document.documentElement.dataset.t||'folk');
 function ordO(a){const o=ls.get('orden')||'pri';return o==='az'?a.sort((x,y)=>x.titulo.localeCompare(y.titulo,'es')):o==='rec'?a.sort((x,y)=>y.id-x.id):sortO(a)}
 /* Secciones dentro de una obra */
 function scAbrir(){
+ $('#mb').classList.add('hide');
  const o=obras.find(x=>x.id===V.id);if(!o)return;const L=(o.marc||[]).map((x,i)=>({...x,i})).sort((a,b)=>a.p-b.p);
  $('#sc').classList.remove('hide');$('#sct').textContent='Secciones · '+o.titulo;$('#sca').textContent='+ Marcar pág. '+(V.n+1);
  $('#scl').innerHTML=L.length?L.map(x=>`<div class="scr" data-p="${x.p}"><span style="flex:1"><b>${esc(x.n)}</b> · pág. ${x.p+1}</span><button class="btn s" data-d="${x.i}" style="padding:6px 10px">✕</button></div>`).join(''):'<div class="empty" style="padding:14px 8px">Todavía no marcaste secciones.<br>Andá a la página y tocá “Marcar”.</div>';
@@ -420,12 +421,13 @@ $('#pg').onclick=scAbrir;
  P.addEventListener('touchend',fin);P.addEventListener('touchcancel',fin)})();$('#scx').onclick=()=>$('#sc').classList.add('hide');
 $('#sca').onclick=async()=>{const o=obras.find(x=>x.id===V.id);if(!o)return;o.marc=o.marc||[];o.marc.push({n:$('#scn').value.trim()||'Sección '+(o.marc.length+1),p:V.n});$('#scn').value='';await rq('obras','readwrite',s=>s.put(o));scAbrir()};
 /* Práctica: tiempo con la partitura abierta, por obra y por día */
-const PR={s:0,t:null,last:Date.now(),id:null,q:Promise.resolve(),run:false,el:0};
+const PR={s:0,t:null,last:Date.now(),id:null,q:Promise.resolve(),run:false,act:false,el:0};
 const fmt=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
-function prui(){$('#ppl').textContent=PR.run?'Parar '+fmt(PR.el):'Practicar';$('#pplay').classList.toggle('on',PR.run);$('#pplay i').innerHTML=svg(PR.run?'stop':'play')}
-$('#pplay').onclick=()=>{if(PR.run){PR.run=false;pguardar()}else{PR.run=true;PR.el=0}prui()};
-$('#vsec').onclick=()=>scAbrir();prui();
-function ptick(){if(!PR.run||!V.doc||document.hidden)return;PR.el++;$('#ppl').textContent='Parar '+fmt(PR.el);if(++PR.s>=30)pguardar()}
+function prui(){const a=PR.act;$('#ppl').textContent=!a?'Practicar':(PR.run?'Pausar ':'Seguir ')+fmt(PR.el);$('#pplay').classList.toggle('on',PR.run);$('#pplay i').innerHTML=svg(PR.run?'pause':'play');$('#pfin').classList.toggle('hide',!a)}
+$('#pplay').onclick=()=>{if(!PR.act){PR.act=true;PR.run=true;PR.el=0}else if(PR.run){PR.run=false;pguardar()}else PR.run=true;prui()};
+$('#pfin').onclick=()=>{PR.run=false;PR.act=false;pguardar();prui()};
+$('#vsec').onclick=()=>{if($('#sc').classList.contains('hide'))scAbrir();else $('#sc').classList.add('hide')};prui();
+function ptick(){if(!PR.run||!V.doc||document.hidden)return;PR.el++;$('#ppl').textContent='Pausar '+fmt(PR.el);if(++PR.s>=30)pguardar()}
 function pguardar(){
  if(!PR.s||PR.id==null)return PR.q;const sec=PR.s,id=PR.id;PR.s=0;
  PR.q=PR.q.then(async()=>{const d=ymd(new Date()),r=(await rq('practica','readonly',x=>x.get(d)))||{d,o:{}};r.o[id]=(r.o[id]||0)+sec;await rq('practica','readwrite',x=>x.put(r))}).catch(()=>{});
@@ -459,7 +461,7 @@ function abtn(){
  $('#agr').textContent=V.gr?'Trazo grueso':'Trazo fino';$('#aoc').textContent=V.hm?'Marcas ocultas':'Marcas visibles';$('#aoc').classList.toggle('on',!V.hm);$('#adi').textContent=V.dedo?'Dedo: sí':'Dedo: no';$('#adi').classList.toggle('on',V.dedo);
  $('#pages').classList.toggle('an',V.an);$('#pages').classList.toggle('sd',V.an&&!V.dedo);
 }
-$('#ab').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{V.tl=b.dataset.t;V.an=V.tl!=='r';const wh=V.hm;if(V.an)V.hm=false;abtn();if(wh&&!V.hm)pintar()});
+$('#ab').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{V.tl=V.tl===b.dataset.t?'r':b.dataset.t;V.an=V.tl!=='r';const wh=V.hm;if(V.an)V.hm=false;abtn();if(wh&&!V.hm)pintar()});
 $('#adi').onclick=()=>{V.dedo=!V.dedo;ls.set('dedo',V.dedo?'1':'0');abtn()};
 $('#agr').onclick=()=>{V.gr=1-V.gr;abtn()};
 $('#aoc').onclick=()=>{V.hm=!V.hm;abtn();pintar()};
@@ -490,11 +492,12 @@ function capa(w,pi,cw,ch,fw,fh,ox,oy){
  const borrar=q=>{const k=d.s.length;d.s=d.s.filter(s=>!s.q.some(p=>Math.hypot((p[0]-q[0])*fw,(p[1]-q[1])*fh)<14));if(d.s.length!==k)redib()};
  let cur=null;
  o.onpointerdown=e=>{
-  if(!V.an||(e.pointerType==='touch'&&!V.dedo))return;e.preventDefault();o.setPointerCapture(e.pointerId);const q=pos(e);
+  if(e.pointerType==='pen')V.penT=Date.now();if(!V.an||(e.pointerType==='touch'&&(!V.dedo||Date.now()-(V.penT||0)<1200)))return;e.preventDefault();o.setPointerCapture(e.pointerId);const q=pos(e);
   if(V.tl==='n'){const n={x:q[0],y:q[1],t:''};d.n.push(n);abrirNt(d,n,o);return}
   if(V.tl==='g'){borrar(q);cur='g';return}
   cur={c:V.col,h:V.tl==='h',w:(V.tl==='h'?[.012,.022]:[.0025,.005])[V.gr],q:[q]};d.s.push(cur);redib();
  };
+ o.addEventListener('pointermove',e=>{if(e.pointerType==='pen')V.penT=Date.now()});
  o.onpointermove=e=>{if(!cur)return;const q=pos(e);if(cur==='g')borrar(q);else{cur.q.push(q);redib()}};
  o.onpointerup=o.onpointercancel=()=>{if(!cur)return;if(cur!=='g')V.hist.push([d,cur]);gnt();cur=null};
 }

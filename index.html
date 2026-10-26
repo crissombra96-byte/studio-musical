@@ -56,6 +56,7 @@ input[type=text],input[type=date],textarea,select{width:100%;padding:11px;border
 #mb button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px 11px;font-size:15px}#mb button.on{border-color:var(--br);color:var(--br)}
 #mbpm{width:64px;padding:8px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit;text-align:center}#msl{flex:1;min-width:110px;accent-color:var(--br)}
 #mdots{display:flex;gap:6px;margin:0 4px}#mdots .dot{width:12px;height:12px;border-radius:50%;background:var(--ln)}#mdots .dot.on{background:var(--br)}#mdots .dot.ac.on{background:var(--al)}
+.ag{padding:4px 0}
 #pg{color:var(--mu);font-size:14px;min-width:64px;text-align:center}
 #vf{padding:2px 16px calc(2px + env(safe-area-inset-bottom));background:var(--pn);border-top:1px solid var(--ln)}#vf input{width:100%;accent-color:var(--br);margin:8px 0}.li{display:flex;gap:6px}.li button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px 11px;font-size:15px}
 .hide{display:none!important}#pages::-webkit-scrollbar{display:none}
@@ -77,7 +78,7 @@ input[type=text],input[type=date],textarea,select{width:100%;padding:11px;border
 const $=s=>document.querySelector(s);
 const MAXP=10,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let db,obras=[],listas=[],pdfIds=new Set(),tab='est',sub='obras',gf='',se='hoy',oq='';
+let db,obras=[],listas=[],pdfIds=new Set(),tab='est',sub='obras',gf='',se='hoy',wk=0,oq='';
 const nz=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const fmtF=f=>{const [y,m,d]=f.split('-');return new Date(y,m-1,d).toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short',year:'numeric'})};
@@ -101,14 +102,14 @@ const PL={alta:'Alta',media:'Media',baja:'Baja'};
 
 function draw(){
  const now=new Date(),hoy=now.getDay(),m=$('#main');
- $('#h1').textContent={est:se==='lis'?'Listas':'Hoy',org:'Organizar',aju:'Ajustes'}[tab];
+ $('#h1').textContent={est:{hoy:'Hoy',age:'Agenda',lis:'Listas'}[se],org:'Organizar',aju:'Ajustes'}[tab];
  $('#h2').textContent=tab==='est'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
  $('#nav').innerHTML=[['est','Estudiar'],['org','Organizar'],['aju','Ajustes']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
  $('#nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
  if(tab==='est'){
-  m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['hoy','Hoy'],['lis','Listas']].map(([k,t])=>`<button data-e="${k}" class="${k===se?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
+  m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['hoy','Hoy'],['age','Agenda'],['lis','Listas']].map(([k,t])=>`<button data-e="${k}" class="${k===se?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
   m.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{se=b.dataset.e;draw()});
-  se==='hoy'?vHoy($('#sb'),hoy):vListas($('#sb'));
+  se==='hoy'?vHoy($('#sb'),hoy):se==='age'?vAgenda($('#sb')):vListas($('#sb'));
  }else if(tab==='org'){
   m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['obras','Obras'],['sem','Semana']].map(([k,t])=>`<button data-s="${k}" class="${k===sub?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
   m.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sub=b.dataset.s;draw()});
@@ -193,26 +194,44 @@ function vHoy(m,hoy){
  m.innerHTML=l.length?l.map(o=>card(o)).join(''):'<div class="empty">No hay obras asignadas para hoy.<br>Asignalas en Organizar, pestaña Semana.</div>';
  bindCards(m);
 }
+function vAgenda(m){
+ const now=new Date(),h=ymd(now),DL=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],cmp=(a,b)=>(a.fecha+(a.hora||'')).localeCompare(b.fecha+(b.hora||''));
+ const prox=listas.filter(l=>l.fecha&&l.fecha>=h).sort(cmp).slice(0,6);
+ const lun=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7)+7*wk),fd=d=>d.toLocaleDateString('es-AR',{day:'numeric',month:'short'});
+ const dias=ORD.map((d,i)=>{const f=new Date(lun.getFullYear(),lun.getMonth(),lun.getDate()+i);return{d,f,k:ymd(f)}});
+ const sem=dias.map(({d,f,k})=>{
+  const sh=listas.filter(l=>l.fecha===k).sort(cmp),ob=sortO(obras.filter(o=>(o.dias||[]).includes(d)));
+  return `<div class="card" style="display:block;${k===h?'border-color:var(--br)':''}"><div class="tt" style="font-size:16px">${DL[d]} ${f.getDate()}${k===h?' · hoy':''}</div>`
+   +sh.map(l=>`<div class="ag" data-l="${l.id}" style="color:var(--br)">♪ ${l.hora?esc(l.hora)+' · ':''}${esc(l.nombre)}${l.lugar?' · '+esc(l.lugar):''}</div>`).join('')
+   +ob.map(o=>`<div class="ag" data-o="${o.id}"><span class="dot ${o.prioridad}" style="display:inline-block;margin:0 8px 0 0"></span>${esc(o.titulo)}</div>`).join('')
+   +(sh.length||ob.length?'':'<small>Sin nada asignado</small>')+'</div>'}).join('');
+ m.innerHTML=`<h2 style="font-size:18px;margin:4px 0 10px">Próximos shows</h2>`
+  +(prox.length?prox.map(l=>`<div class="card" data-l="${l.id}" style="align-items:center"><div style="flex:1"><div class="tt">${esc(l.nombre)}</div><small>${l.fecha===h?'HOY · ':''}${fmtF(l.fecha)}${l.hora?' · '+esc(l.hora)+' h':''}${l.lugar?' · '+esc(l.lugar):''}</small><small>${l.obras.length} obra${l.obras.length===1?'':'s'}</small></div></div>`).join(''):'<div class="empty" style="padding:14px 10px">No hay shows con fecha próxima.<br>Creá una lista con fecha en la pestaña Listas.</div>')
+  +`<h2 style="font-size:18px;margin:16px 0 10px">Semana</h2><div class="row" style="margin-top:0;align-items:center"><button class="btn s" id="wp">‹</button><b style="flex:1;text-align:center">${fd(dias[0].f)} al ${fd(dias[6].f)}</b><button class="btn s" id="wn">›</button></div>${wk?'<div class="row" style="margin-top:0"><button class="btn s" id="wh">Volver a esta semana</button></div>':''}`+sem;
+ $('#wp').onclick=()=>{wk--;draw()};$('#wn').onclick=()=>{wk++;draw()};if(wk)$('#wh').onclick=()=>{wk=0;draw()};
+ m.querySelectorAll('[data-l]').forEach(c=>c.onclick=()=>detLista(+c.dataset.l));
+ m.querySelectorAll('[data-o]').forEach(c=>c.onclick=()=>{const o=obras.find(x=>x.id==c.dataset.o);if(o&&pdfIds.has(o.id))abrir(o);else if(o)form(o)});
+}
 function vListas(m){
  const h=ymd(new Date()),k=l=>l.fecha&&l.fecha>=h?0:l.fecha?2:1;
  const ord=[...listas].sort((a,b)=>k(a)-k(b)||(k(a)===0?a.fecha.localeCompare(b.fecha):0)||a.nombre.localeCompare(b.nombre));
- m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="nl">+ Nueva lista</button></div>`+(ord.length?ord.map(l=>`<div class="card" data-l="${l.id}"><div style="flex:1"><div class="tt">${esc(l.nombre)}</div><small>${l.fecha?(l.fecha===h?'HOY · ':'')+fmtF(l.fecha)+' · ':''}${l.obras.length} obra${l.obras.length===1?'':'s'}</small></div></div>`).join(''):'<div class="empty">Todavía no hay listas.<br>Creá una por show, ensamble o clase y sumale las obras en el orden en que las vas a tocar.</div>');
+ m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="nl">+ Nueva lista</button></div>`+(ord.length?ord.map(l=>`<div class="card" data-l="${l.id}"><div style="flex:1"><div class="tt">${esc(l.nombre)}</div><small>${l.fecha?(l.fecha===h?'HOY · ':'')+fmtF(l.fecha)+(l.hora?' · '+l.hora+' h':'')+(l.lugar?' · '+esc(l.lugar):'')+' · ':''}${l.obras.length} obra${l.obras.length===1?'':'s'}</small></div></div>`).join(''):'<div class="empty">Todavía no hay listas.<br>Creá una por show, ensamble o clase y sumale las obras en el orden en que las vas a tocar.</div>');
  $('#nl').onclick=()=>formLista();
  m.querySelectorAll('[data-l]').forEach(c=>c.onclick=()=>detLista(+c.dataset.l));
 }
 function formLista(l){
- const e=!!l;l=l||{nombre:'',fecha:'',obras:[]};const M=$('#modal');M.classList.remove('hide');
- M.innerHTML=`<h2 style="margin:0">${e?'Editar lista':'Nueva lista'}</h2><label>Nombre (por ejemplo: Show del sábado, Ensamble tango)</label><input type="text" id="l1" value="${esc(l.nombre)}"><label>Fecha del show (opcional)</label><input type="date" id="l2" value="${esc(l.fecha)}"><p id="le" style="color:var(--al)"></p><div class="row"><button class="btn" id="ls">Guardar</button><button class="btn s" id="lc">Cancelar</button>${e?'<button class="btn d" id="lx">Eliminar lista</button>':''}</div>`;
+ const e=!!l;l=l||{nombre:'',fecha:'',hora:'',lugar:'',obras:[]};const M=$('#modal');M.classList.remove('hide');
+ M.innerHTML=`<h2 style="margin:0">${e?'Editar lista':'Nueva lista'}</h2><label>Nombre (por ejemplo: Show del sábado, Ensamble tango)</label><input type="text" id="l1" value="${esc(l.nombre)}"><label>Fecha del show (opcional)</label><input type="date" id="l2" value="${esc(l.fecha)}"><label>Hora (opcional)</label><input type="time" id="l3" value="${esc(l.hora)}"><label>Lugar (opcional)</label><input type="text" id="l4" value="${esc(l.lugar)}"><p id="le" style="color:var(--al)"></p><div class="row"><button class="btn" id="ls">Guardar</button><button class="btn s" id="lc">Cancelar</button>${e?'<button class="btn d" id="lx">Eliminar lista</button>':''}</div>`;
  $('#lc').onclick=()=>e?detLista(l.id):M.classList.add('hide');
  if(e)$('#lx').onclick=async()=>{if(!confirm('¿Eliminar esta lista? Las obras no se borran.'))return;await rq('listas','readwrite',s=>s.delete(l.id));M.classList.add('hide');await load();draw()};
- $('#ls').onclick=async()=>{const n=$('#l1').value.trim();if(!n)return $('#le').textContent='Escribí un nombre para la lista.';const id=await rq('listas','readwrite',s=>s.put({...l,nombre:n,fecha:$('#l2').value}));await load();draw();detLista(id)};
+ $('#ls').onclick=async()=>{const n=$('#l1').value.trim();if(!n)return $('#le').textContent='Escribí un nombre para la lista.';const id=await rq('listas','readwrite',s=>s.put({...l,nombre:n,fecha:$('#l2').value,hora:$('#l3').value,lugar:$('#l4').value.trim()}));await load();draw();detLista(id)};
 }
 function detLista(id){
  const l=listas.find(x=>x.id===id),M=$('#modal');
  if(!l){M.classList.add('hide');return}
  M.classList.remove('hide');
  const arr=l.obras.map(i=>obras.find(o=>o.id===i)).filter(Boolean),ids=arr.map(o=>o.id);
- M.innerHTML=`<h2 style="margin:0">${esc(l.nombre)}</h2><small style="color:var(--mu)">${l.fecha?fmtF(l.fecha)+' · ':''}${arr.length} obra${arr.length===1?'':'s'}</small><div class="row"><button class="btn" id="d1">▶ Empezar</button><button class="btn s" id="d2">+ Agregar obras</button><button class="btn s" id="d3">Editar</button><button class="btn s" id="d4">Cerrar</button></div>`+(arr.length?arr.map((o,i)=>`<div class="card" data-i="${i}" style="align-items:center"><div style="flex:1"><div class="tt">${i+1}. ${esc(o.titulo)}</div><small>${esc(o.compositor)}${pdfIds.has(o.id)?'':(o.compositor?' · ':'')+'sin PDF'}</small></div><div class="li"><button data-a="u">▲</button><button data-a="d">▼</button><button data-a="x">✕</button></div></div>`).join(''):'<div class="empty">Esta lista está vacía.<br>Tocá "Agregar obras".</div>');
+ M.innerHTML=`<h2 style="margin:0">${esc(l.nombre)}</h2><small style="color:var(--mu)">${l.fecha?fmtF(l.fecha)+(l.hora?' · '+l.hora+' h':'')+(l.lugar?' · '+esc(l.lugar):'')+' · ':''}${arr.length} obra${arr.length===1?'':'s'}</small><div class="row"><button class="btn" id="d1">▶ Empezar</button><button class="btn s" id="d2">+ Agregar obras</button><button class="btn s" id="d3">Editar</button><button class="btn s" id="d4">Cerrar</button></div>`+(arr.length?arr.map((o,i)=>`<div class="card" data-i="${i}" style="align-items:center"><div style="flex:1"><div class="tt">${i+1}. ${esc(o.titulo)}</div><small>${esc(o.compositor)}${pdfIds.has(o.id)?'':(o.compositor?' · ':'')+'sin PDF'}</small></div><div class="li"><button data-a="u">▲</button><button data-a="d">▼</button><button data-a="x">✕</button></div></div>`).join(''):'<div class="empty">Esta lista está vacía.<br>Tocá "Agregar obras".</div>');
  const v=arr.filter(o=>pdfIds.has(o.id)),abrirI=i=>{const o=arr[i];if(o&&pdfIds.has(o.id))abrir(o,{arr:v,i:v.indexOf(o)})};
  const guardar=async a=>{await rq('listas','readwrite',s=>s.put({...l,obras:a}));await load();detLista(id)};
  M.querySelectorAll('.card[data-i]').forEach(c=>{const i=+c.dataset.i;c.onclick=()=>abrirI(i);c.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{e.stopPropagation();const a=[...ids],t=b.dataset.a,j=t==='u'?i-1:i+1;if(t==='x')a.splice(i,1);else{if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]]}guardar(a)})});

@@ -40,7 +40,7 @@ input[type=text],textarea,select{width:100%;padding:11px;border-radius:8px;borde
 #vb .tt{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 #vb button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:9px 12px;font-size:15px}
 #vb button.on{border-color:var(--br);color:var(--br)}
-#pages{flex:1;overflow:auto;display:flex;gap:4px;touch-action:pan-x pan-y}
+#pages{scrollbar-width:none;flex:1;overflow:auto;display:flex;gap:4px;touch-action:pan-x pan-y}
 .pw{position:relative;margin:auto 0;flex:none}.pw:first-child{margin-left:auto}.pw:last-child{margin-right:auto}.pw canvas{display:block}
 .ov{position:absolute;left:0;top:0;pointer-events:none}
 #pages.an .ov{pointer-events:auto;touch-action:none}#pages.an.mano .ov{pointer-events:none}#pages.an.sd .ov{touch-action:pan-x pan-y}
@@ -51,14 +51,14 @@ input[type=text],textarea,select{width:100%;padding:11px;border-radius:8px;borde
 #nt{position:fixed;left:0;right:0;bottom:0;z-index:11;background:var(--pn);border-top:1px solid var(--ln);padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
 #pages.inv .pg{filter:invert(.92) hue-rotate(180deg)}
 #pg{color:var(--mu);font-size:14px;min-width:64px;text-align:center}
-.hide{display:none!important}
+.hide{display:none!important}#pages::-webkit-scrollbar{display:none}
 </style></head><body>
 <header><h1 id="h1"></h1><p id="h2"></p></header>
 <main id="main"></main>
 <nav id="nav"></nav>
 <div id="modal" class="modal hide"></div>
 <div id="v" class="hide">
- <div id="vb"><button id="vx">✕</button><span class="tt" id="vt"></span><button id="vi" title="Invertir colores">◐</button><button id="vo" class="hide">✎ Anotar</button><button id="vz">×1</button><button id="vm"></button><button id="vp">‹</button><span id="pg"></span><button id="vn">›</button></div>
+ <div id="vb"><button id="vx">✕</button><span class="tt" id="vt"></span><button id="vi" title="Invertir colores">◐</button><button id="vc" title="Recortar márgenes">✂</button><button id="vo" class="hide">✎ Anotar</button><button id="vz">×1</button><button id="vm"></button><button id="vp">‹</button><span id="pg"></span><button id="vn">›</button></div>
  <div id="ab" class="hide"><button data-t="l">Lápiz</button><button data-t="h">Resaltador</button><button data-t="g">Goma</button><button data-t="n">Nota</button><button data-t="m">Mover</button><span id="sws"></span><button id="agr"></button><button id="aun">Deshacer</button><button id="adi"></button><button id="aoc"></button></div>
  <div id="pages"></div>
 </div>
@@ -174,26 +174,49 @@ function form(o){
  };
 }
 /* Visor */
-const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,inv:ls.get('inv')==='1'};let tok=0,wl=null;
+const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,inv:ls.get('inv')==='1',rec:ls.get('rec')!=='0',cr:null};let tok=0,wl=null;
 async function abrir(o){
  const b=await rq('pdfs','readonly',s=>s.get(o.id));
  try{V.doc=await pdfjsLib.getDocument({data:await b.arrayBuffer(),isEvalSupported:false}).promise}catch(e){alert('No se pudo abrir la partitura. Revisá que pdf.min.js y pdf.worker.min.js estén en la carpeta de la app.');return}
+ try{V.cr=await calcCrop(V.doc)}catch(e){V.cr=null}
  V.n=0;V.zoom=1;$('#vb').classList.remove('hide');V.hist=[];V.hm=false;V.nt=(await rq('notas','readonly',s=>s.get(o.id)))||{obra:o.id,p:{}};
  $('#vt').textContent=o.titulo;$('#v').classList.remove('hide');history.pushState({v:1},'');vista();
  try{wl=await navigator.wakeLock.request('screen')}catch(e){}
 }
 function vista(){
  $('#vm').textContent=V.mode===1?'1 pág.':'2 pág.';$('#vm').classList.toggle('on',V.mode===2);
- $('#vo').classList.toggle('hide',!TAB);$('#vo').classList.toggle('on',V.an);$('#vz').textContent='×'+V.zoom;$('#vz').classList.toggle('on',V.zoom>1);$('#vi').classList.toggle('on',V.inv);$('#pages').classList.toggle('inv',V.inv);pintar();
+ $('#vo').classList.toggle('hide',!TAB);$('#vo').classList.toggle('on',V.an);$('#vz').textContent='×'+V.zoom;$('#vz').classList.toggle('on',V.zoom>1);$('#vi').classList.toggle('on',V.inv);$('#vc').classList.toggle('on',V.rec);$('#pages').classList.toggle('inv',V.inv);pintar();
+}
+async function calcCrop(doc){
+ let a=1,b=1,c=0,d=0,any=false;
+ for(let i=1;i<=doc.numPages;i++){
+  const p=await doc.getPage(i),v0=p.getViewport({scale:1}),vp=p.getViewport({scale:300/v0.width}),cv=document.createElement('canvas');
+  cv.width=Math.ceil(vp.width);cv.height=Math.ceil(vp.height);
+  const x=cv.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,cv.width,cv.height);
+  await p.render({canvasContext:x,viewport:vp}).promise;
+  const W=cv.width,H=cv.height,im=x.getImageData(0,0,W,H).data,cc=new Uint16Array(W),rc=new Uint16Array(H);
+  for(let y=0;y<H;y++)for(let q=0;q<W;q++){const k=(y*W+q)*4;if(im[k+3]>0&&(im[k]+im[k+1]+im[k+2])/3<225){cc[q]++;rc[y]++}}
+  let x0=0,x1=W-1,y0=0,y1=H-1;
+  while(x0<W&&cc[x0]<2)x0++;while(x1>x0&&cc[x1]<2)x1--;while(y0<H&&rc[y0]<2)y0++;while(y1>y0&&rc[y1]<2)y1--;
+  if(x0>=x1||y0>=y1)continue;
+  any=true;a=Math.min(a,x0/W);b=Math.min(b,y0/H);c=Math.max(c,(x1+1)/W);d=Math.max(d,(y1+1)/H);
+ }
+ if(!any)return null;
+ const pd=.015;a=Math.max(0,a-pd);b=Math.max(0,b-pd);c=Math.min(1,c+pd);d=Math.min(1,d+pd);
+ if(c-a<.3||d-b<.3||(c-a>.97&&d-b>.97))return null;
+ return{x0:a,y0:b,x1:c,y1:d};
 }
 async function pintar(){
  const st=++tok,box=$('#pages'),tot=V.doc.numPages,nw=[],hid=$('#vb').classList.contains('hide'),G=4;
  const cnt=V.mode===2&&V.n+1<tot?2:1,W=box.clientWidth-(hid?1:8),H=box.clientHeight-(hid?1:8),dpr=Math.min(devicePixelRatio||1,2);
+ const K=V.rec&&V.cr?V.cr:{x0:0,y0:0,x1:1,y1:1},ps=[];
+ for(let i=0;i<cnt;i++){const p=await V.doc.getPage(V.n+1+i);if(st!==tok)return;ps.push([p,p.getViewport({scale:1})])}
+ let sw=0,mh=0;for(const [,v] of ps){sw+=v.width*(K.x1-K.x0);mh=Math.max(mh,v.height*(K.y1-K.y0))}
+ const sW=(W-G*(cnt-1))/sw,sH=H/mh,s=(sW*mh<=H*1.25?sW:sH)*V.zoom*.999;
  for(let i=0;i<cnt;i++){
-  const p=await V.doc.getPage(V.n+1+i);if(st!==tok)return;
-  const v=p.getViewport({scale:1}),s=Math.min((W-G*(cnt-1))/cnt/v.width,H/v.height)*V.zoom,dp=Math.min(dpr,Math.sqrt(12e6/(v.width*s*v.height*s))),vp=p.getViewport({scale:s*dp});
-  const c=document.createElement('canvas'),w=document.createElement('div'),cw=v.width*s,ch=v.height*s;c.className='pg';c.width=vp.width;c.height=vp.height;c.style.width=cw+'px';c.style.height=ch+'px';w.className='pw';w.appendChild(c);nw.push(w);
-  await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;if(st!==tok)return;capa(w,V.n+i,cw,ch);
+  const [p,v]=ps[i],fw=v.width*s,fh=v.height*s,ox=K.x0*fw,oy=K.y0*fh,cw=(K.x1-K.x0)*fw,ch=(K.y1-K.y0)*fh,dp=Math.min(dpr,Math.sqrt(12e6/(cw*ch))),vp=p.getViewport({scale:s*dp});
+  const c=document.createElement('canvas'),w=document.createElement('div');c.className='pg';c.width=Math.ceil(cw*dp);c.height=Math.ceil(ch*dp);c.style.width=cw+'px';c.style.height=ch+'px';w.className='pw';w.appendChild(c);nw.push(w);
+  await p.render({canvasContext:c.getContext('2d'),viewport:vp,transform:[1,0,0,1,-ox*dp,-oy*dp]}).promise;if(st!==tok)return;capa(w,V.n+i,cw,ch,fw,fh,ox,oy);
  }
  if(st!==tok)return;box.replaceChildren(...nw);if(V.rs){box.scrollTo(0,0);V.rs=false}
  $('#pg').textContent=cnt===2?`${V.n+1}-${V.n+2} / ${tot}`:`${V.n+1} / ${tot}`;
@@ -205,6 +228,7 @@ function ir(d){
 $('#vp').onclick=()=>ir(-1);$('#vn').onclick=()=>ir(1);
 $('#vm').onclick=()=>{V.mode=V.mode===1?2:1;if(V.mode===2)V.n-=V.n%2;ls.set('modo',V.mode);vista()};
 $('#vz').onclick=()=>{V.zoom=ZS[(ZS.indexOf(V.zoom)+1)%ZS.length];vista()};
+$('#vc').onclick=()=>{V.rec=!V.rec;ls.set('rec',V.rec?'1':'0');vista()};
 $('#vi').onclick=()=>{V.inv=!V.inv;ls.set('inv',V.inv?'1':'0');vista()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
 function cerrarV(){tok++;V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
@@ -234,25 +258,26 @@ function cierraNt(){$('#nt').classList.add('hide');$('#pages').style.paddingBott
 function abrirNt(d,n,o){
  const T=$('#nt'),x=$('#ntx'),P=$('#pages');T.classList.remove('hide');x.value=n.t;x.readOnly=!V.an;
  P.style.paddingBottom=T.offsetHeight+'px';
- setTimeout(()=>{if(!o||!o.isConnected)return;const vv=window.visualViewport,bot=(vv?vv.height:innerHeight)-T.offsetHeight-60,y=o.getBoundingClientRect().top+n.y*parseFloat(o.style.height);if(y>bot)P.scrollTop+=y-bot},350);
+ setTimeout(()=>{if(!o||!o.isConnected)return;const vv=window.visualViewport,bot=(vv?vv.height:innerHeight)-T.offsetHeight-60,y=o.getBoundingClientRect().top+n.y*o._fh-o._oy;if(y>bot)P.scrollTop+=y-bot},350);
  $('#nts').classList.toggle('hide',!V.an);$('#ntd').classList.toggle('hide',!V.an);
  $('#nts').onclick=()=>{n.t=x.value.trim();if(!n.t)d.n=d.n.filter(y=>y!==n);gnt();cierraNt();pintar()};
  $('#ntd').onclick=()=>{d.n=d.n.filter(y=>y!==n);gnt();cierraNt();pintar()};
  $('#ntc').onclick=()=>{if(!n.t)d.n=d.n.filter(y=>y!==n);cierraNt()};
 }
-function capa(w,pi,cw,ch){
+function capa(w,pi,cw,ch,fw,fh,ox,oy){
  const d=V.nt.p[pi]||(V.nt.p[pi]={s:[],n:[]}),o=document.createElement('canvas'),R=2;
  o.className='ov';o.width=cw*R;o.height=ch*R;o.style.width=cw+'px';o.style.height=ch+'px';w.appendChild(o);
  const x=o.getContext('2d');
  const redib=()=>{x.setTransform(R,0,0,R,0,0);x.clearRect(0,0,cw,ch);if(V.hm)return;
-  for(const s of d.s){x.beginPath();x.strokeStyle=s.c;x.globalAlpha=s.h?.35:1;x.lineWidth=s.w*cw;x.lineCap=s.h?'butt':'round';x.lineJoin='round';
-   s.q.forEach((p,i)=>i?x.lineTo(p[0]*cw,p[1]*ch):x.moveTo(p[0]*cw,p[1]*ch));
-   if(s.q.length===1)x.lineTo(s.q[0][0]*cw+.1,s.q[0][1]*ch);x.stroke()}
+  for(const s of d.s){x.beginPath();x.strokeStyle=s.c;x.globalAlpha=s.h?.35:1;x.lineWidth=s.w*fw;x.lineCap=s.h?'butt':'round';x.lineJoin='round';
+   s.q.forEach((p,i)=>i?x.lineTo(p[0]*fw-ox,p[1]*fh-oy):x.moveTo(p[0]*fw-ox,p[1]*fh-oy));
+   if(s.q.length===1)x.lineTo(s.q[0][0]*fw-ox+.1,s.q[0][1]*fh-oy);x.stroke()}
   x.globalAlpha=1};
  redib();
- if(!V.hm)d.n.forEach(n=>{const b=document.createElement('button');b.className='pin';b.style.left=n.x*cw+'px';b.style.top=n.y*ch+'px';b.onclick=e=>{e.stopPropagation();abrirNt(d,n,o)};w.appendChild(b)});
- const pos=e=>{const r=o.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
- const borrar=q=>{const k=d.s.length;d.s=d.s.filter(s=>!s.q.some(p=>Math.hypot((p[0]-q[0])*cw,(p[1]-q[1])*ch)<14));if(d.s.length!==k)redib()};
+ if(!V.hm)d.n.forEach(n=>{const b=document.createElement('button');b.className='pin';b.style.left=n.x*fw-ox+'px';b.style.top=n.y*fh-oy+'px';b.onclick=e=>{e.stopPropagation();abrirNt(d,n,o)};w.appendChild(b)});
+ o._fh=fh;o._oy=oy;
+ const pos=e=>{const r=o.getBoundingClientRect();return[(e.clientX-r.left+ox)/fw,(e.clientY-r.top+oy)/fh]};
+ const borrar=q=>{const k=d.s.length;d.s=d.s.filter(s=>!s.q.some(p=>Math.hypot((p[0]-q[0])*fw,(p[1]-q[1])*fh)<14));if(d.s.length!==k)redib()};
  let cur=null;
  o.onpointerdown=e=>{
   if(!V.an||(e.pointerType==='touch'&&!V.dedo))return;e.preventDefault();o.setPointerCapture(e.pointerId);const q=pos(e);

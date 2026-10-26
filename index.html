@@ -220,7 +220,7 @@ function selObras(id){
  $('#s2').onclick=()=>detLista(id);
 }
 /* Visor */
-const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,inv:false,rec:true,cr:null,half:ls.get('half')==='1',hp:0,c2:false,id:null,ctx:null};let tok=0,wl=null;
+const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,auto:ls.get('auto')!=='0',inv:false,rec:true,cr:null,half:ls.get('half')==='1',hp:0,c2:false,id:null,ctx:null};let tok=0,wl=null;
 async function abrir(o,ctx,fin){
  const b=await rq('pdfs','readonly',s=>s.get(o.id));
  try{V.doc=await pdfjsLib.getDocument({data:await b.arrayBuffer(),isEvalSupported:false}).promise}catch(e){alert('No se pudo abrir la partitura. Revisá que pdf.min.js y pdf.worker.min.js estén en la carpeta de la app.');return}
@@ -233,8 +233,9 @@ async function abrir(o,ctx,fin){
  $('#vt').textContent=(ctx?`${ctx.i+1}/${ctx.arr.length} · `:'')+o.titulo;$('#v').classList.remove('hide');if(!abierto)history.pushState({v:1},'');vista();
  if(!wl||wl.released){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}
 }
+function aut(){if(!V.auto)return;const b=$('#pages'),m=b.clientWidth>b.clientHeight?2:1;if(m===V.mode)return;V.mode=m;if(m===2)V.n-=V.n%2;V.hp=0;V.rs=true}
 function vista(){
- $('#vm').textContent=V.mode===1?'1 pág.':'2 pág.';$('#vm').classList.toggle('on',V.mode===2);$('#vh').classList.toggle('on',V.half);$('#vh').classList.toggle('hide',V.mode===2);
+ aut();$('#vm').textContent=V.auto?'Auto '+V.mode:V.mode+' pág.';$('#vm').classList.toggle('on',V.auto);$('#vh').classList.toggle('on',V.half);$('#vh').classList.toggle('hide',V.mode===2);
  $('#vo').classList.toggle('hide',!TAB);$('#vo').classList.toggle('on',V.an);$('#vz').textContent='×'+V.zoom;$('#vz').classList.toggle('on',V.zoom>1);$('#pages').classList.toggle('inv',V.inv);pintar();
 }
 async function calcCrop(doc){
@@ -285,7 +286,9 @@ function ir(d){
 }
 $('#v').addEventListener('contextmenu',e=>e.preventDefault());
 $('#vp').onclick=()=>ir(-1);$('#vn').onclick=()=>ir(1);
-$('#vm').onclick=()=>{V.mode=V.mode===1?2:1;if(V.mode===2)V.n-=V.n%2;ls.set('modo',V.mode);vista()};
+$('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'a'}[st];
+ if(nx==='a')V.auto=true;else{V.auto=false;V.mode=+nx;if(V.mode===2)V.n-=V.n%2;V.hp=0;V.rs=true;ls.set('modo',V.mode)}
+ ls.set('auto',V.auto?'1':'0');vista()};
 $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp=0;V.rs=true;$('#vsl').blur();pintar()};
 $('#vh').onclick=()=>{V.half=!V.half;V.hp=0;ls.set('half',V.half?'1':'0');V.rs=true;vista()};
 $('#vz').onclick=()=>{V.zoom=ZS[(ZS.indexOf(V.zoom)+1)%ZS.length];vista()};
@@ -295,7 +298,7 @@ $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerr
 addEventListener('popstate',()=>{if(V.doc)cerrarV()});
 $('#pages').onclick=e=>{if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
 addEventListener('keydown',e=>{if(!V.doc||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;const k=e.key;if(['ArrowRight','PageDown',' '].includes(k)){ir(1);e.preventDefault()}else if(['ArrowLeft','PageUp'].includes(k)){ir(-1);e.preventDefault()}});
-addEventListener('resize',()=>{if(V.doc)pintar()});
+addEventListener('resize',()=>{if(V.doc)vista()});
 /* Anotar */
 const TAB=Math.min(screen.width,screen.height)>=600,COL=['#111111','#d93a2b','#2a6fdb','#2e9e5b','#ffd400'];
 Object.assign(V,{dedo:ls.get('dedo')!=='0',an:false,tl:'l',col:COL[1],gr:0,hm:false,hist:[],nt:{p:{}}});

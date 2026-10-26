@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#12161a">
+<script>try{document.documentElement.dataset.t=localStorage.getItem("tema")||"folk"}catch(e){document.documentElement.dataset.t="folk"}</script>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <title>Estudio Musical</title>
@@ -60,7 +61,29 @@ input[type=text],input[type=date],textarea,select{width:100%;padding:11px;border
 #pg{color:var(--mu);font-size:14px;min-width:64px;text-align:center}
 #vf{padding:2px 16px calc(2px + env(safe-area-inset-bottom));background:var(--pn);border-top:1px solid var(--ln)}#vf input{width:100%;accent-color:var(--br);margin:8px 0}.li{display:flex;gap:6px}.li button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px 11px;font-size:15px}
 .hide{display:none!important}#pages::-webkit-scrollbar{display:none}
+
+/* Aspecto: Folklore (poncho), Tango (bordó y oro) y Clásico */
+html[data-t="folk"]{--bg:#1d1611;--pn:#2c2119;--ln:#4d3a2c;--tx:#f7ecda;--mu:#bfa98f;--br:#f2a931;--al:#e4572e;--me:#f2a931;--ba:#2ec4b6}
+html[data-t="tango"]{--bg:#150a0d;--pn:#25121a;--ln:#4b2330;--tx:#f5e9d9;--mu:#bb9fa0;--br:#e2b44f;--al:#e24a43;--me:#e2b44f;--ba:#8fbcb4}
+#band{height:10px;flex:none}html[data-t="clas"] #band{display:none}
+html[data-t="folk"] #band{background:repeating-linear-gradient(90deg,#e4572e 0 18px,#1d1611 18px 23px,#f2a931 23px 39px,#1d1611 39px 44px,#2ec4b6 44px 60px,#1d1611 60px 65px,#f7ecda 65px 69px,#1d1611 69px 74px)}
+html[data-t="tango"] #band{background:repeating-linear-gradient(90deg,#6e1520 0 5px,#c2383f 5px 6px,#2a0c11 6px 10px);border-bottom:2px solid var(--br)}
+header{position:relative}
+:is(html[data-t="folk"],html[data-t="tango"]) header h1{color:var(--br)}
+:is(html[data-t="folk"],html[data-t="tango"]) header::before{content:'♫';position:absolute;right:16px;top:0;font-size:60px;color:var(--br);opacity:.2;pointer-events:none}
+:is(html[data-t="folk"],html[data-t="tango"]) header::after{content:'';display:block;height:17px;margin-top:8px;background:repeating-linear-gradient(to bottom,var(--ln) 0 1px,transparent 1px 4px)}
+:is(html[data-t="folk"],html[data-t="tango"]) .card{border-left:4px solid var(--ln)}
+:is(html[data-t="folk"],html[data-t="tango"]) .card:has(.dot.alta){border-left-color:var(--al)}
+:is(html[data-t="folk"],html[data-t="tango"]) .card:has(.dot.media){border-left-color:var(--me)}
+:is(html[data-t="folk"],html[data-t="tango"]) .card:has(.dot.baja){border-left-color:var(--ba)}
+:is(html[data-t="folk"],html[data-t="tango"]) nav{border-top:2px solid var(--br)}
+:is(html[data-t="folk"],html[data-t="tango"]) h2{color:var(--br)}
+:is(html[data-t="folk"],html[data-t="tango"]) .empty::before{content:'♪ ♫ ♪';display:block;font-size:30px;color:var(--br);opacity:.6;margin-bottom:6px;letter-spacing:6px}
+#sc{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--pn);border-top:1px solid var(--ln);padding:12px 12px calc(12px + env(safe-area-inset-bottom));max-height:65%;overflow:auto}
+.scr{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--ln)}
+#pg{cursor:pointer;text-decoration:underline dotted;text-underline-offset:4px}
 </style></head><body>
+<div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p></header>
 <main id="main"></main>
 <nav id="nav"></nav>
@@ -73,6 +96,7 @@ input[type=text],input[type=date],textarea,select{width:100%;padding:11px;border
  <div id="vf"><input type="range" id="vsl" min="1" max="1" value="1"></div>
 </div>
 <div id="nt" class="hide"><textarea id="ntx" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit"></textarea><div class="row"><button class="btn" id="nts">Guardar</button><button class="btn d" id="ntd">Borrar</button><button class="btn s" id="ntc">Cerrar</button></div></div>
+<div id="sc" class="hide"><div style="display:flex;align-items:center;gap:8px"><b id="sct" style="flex:1"></b><button class="btn s" id="scx">Cerrar</button></div><div id="scl"></div><div class="row"><input type="text" id="scn" placeholder="Nombre (Intro, Solo, Coda…)" style="flex:1;min-width:140px"><button class="btn" id="sca"></button></div></div>
 <script src="pdf.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
@@ -86,7 +110,7 @@ const rq=(s,m,f)=>new Promise((ok,no)=>{const r=f(db.transaction(s,m).objectStor
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 
 async function init(){
- db=await new Promise((ok,no)=>{const r=indexedDB.open('estudio',3);r.onupgradeneeded=()=>{const d=r.result,c=(n,o)=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,o)};c('obras',{keyPath:'id',autoIncrement:true});c('pdfs');c('notas',{keyPath:'obra'});c('listas',{keyPath:'id',autoIncrement:true})};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+ db=await new Promise((ok,no)=>{const r=indexedDB.open('estudio',4);r.onupgradeneeded=()=>{const d=r.result,c=(n,o)=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,o)};c('obras',{keyPath:'id',autoIncrement:true});c('pdfs');c('notas',{keyPath:'obra'});c('listas',{keyPath:'id',autoIncrement:true});c('practica',{keyPath:'d'})};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
  if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='pdf.worker.min.js';
@@ -102,21 +126,21 @@ const PL={alta:'Alta',media:'Media',baja:'Baja'};
 
 function draw(){
  const now=new Date(),hoy=now.getDay(),m=$('#main');
- $('#h1').textContent={est:{hoy:'Hoy',age:'Agenda',lis:'Listas'}[se],org:'Organizar',aju:'Ajustes'}[tab];
+ $('#h1').textContent={est:{hoy:'Hoy',age:'Agenda',pra:'Práctica',lis:'Listas'}[se],org:'Organizar',aju:'Ajustes'}[tab];
  $('#h2').textContent=tab==='est'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
- $('#nav').innerHTML=[['est','Estudiar'],['org','Organizar'],['aju','Ajustes']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
+ $('#nav').innerHTML=[['est','♫ Estudiar'],['org','♯ Organizar'],['aju','♭ Ajustes']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
  $('#nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
  if(tab==='est'){
-  m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['hoy','Hoy'],['age','Agenda'],['lis','Listas']].map(([k,t])=>`<button data-e="${k}" class="${k===se?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
+  m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['hoy','Hoy'],['age','Agenda'],['pra','Práctica'],['lis','Listas']].map(([k,t])=>`<button data-e="${k}" class="${k===se?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
   m.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{se=b.dataset.e;draw()});
-  se==='hoy'?vHoy($('#sb'),hoy):se==='age'?vAgenda($('#sb')):vListas($('#sb'));
+  se==='hoy'?vHoy($('#sb'),hoy):se==='age'?vAgenda($('#sb')):se==='pra'?vPractica($('#sb')):vListas($('#sb'));
  }else if(tab==='org'){
   m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['obras','Obras'],['sem','Semana']].map(([k,t])=>`<button data-s="${k}" class="${k===sub?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
   m.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sub=b.dataset.s;draw()});
   sub==='obras'?vObras($('#sb')):vSem($('#sb'),hoy);
  }else{
-  m.innerHTML=`<p style="color:var(--mu)">Los datos viven solo en este dispositivo. Hacé un respaldo seguido por si el sistema borra la caché.</p><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><div class="row"><button class="btn" id="ex">Exportar respaldo</button><button class="btn s" id="im">Importar respaldo</button></div><input type="file" id="imf" accept=".json,application/json" class="hide"><p id="msg" style="color:var(--br)"></p>`;
-  $('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#ex').onclick=exportar;$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
+  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><p style="color:var(--mu)">Los datos viven solo en este dispositivo. Hacé un respaldo seguido por si el sistema borra la caché.</p><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><div class="row"><button class="btn" id="ex">Exportar respaldo</button><button class="btn s" id="im">Importar respaldo</button></div><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
+  $('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#ex').onclick=exportar;$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
  }
 }
 function vObras(m){
@@ -124,11 +148,11 @@ function vObras(m){
  const ch=[['','Todas'],...(sin?[['__sin','Sin clasificar ('+sin+')']]:[]),...gr.map(g=>[g,g])];
  if(!ch.some(c=>c[0]===gf))gf='';
  const l=obras.filter(o=>gf===''||(gf==='__sin'?o.sin:o.grupo===gf));
- m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="imp">+ Importar PDFs</button><button class="btn s" id="add">Nueva obra</button></div><input type="file" id="impf" accept="application/pdf" multiple class="hide"><div class="row" style="margin-top:0">${ch.map(([k,t])=>`<button class="btn s" data-g="${esc(k)}" style="padding:8px 12px;font-size:14px;${k===gf?'border-color:var(--br);color:var(--br)':''}">${esc(t)}</button>`).join('')}</div><input type="text" id="oq" placeholder="Buscar por título o compositor" value="${esc(oq)}"><p id="imsg" style="color:var(--br);margin:8px 0"></p><div id="lst"></div>`;
- const pl=()=>{const k=nz(oq),r=l.filter(o=>!k||nz(o.titulo+' '+o.compositor+' '+(o.grupo||'')).includes(k));$('#lst').innerHTML=r.length?sortO([...r]).map(o=>card(o,true)).join(''):'<div class="empty">No hay obras en esta vista.</div>';bindCards($('#lst'))};
+ m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="imp">+ Importar PDFs</button><button class="btn s" id="add">Nueva obra</button></div><input type="file" id="impf" accept="application/pdf" multiple class="hide"><div class="row" style="margin-top:0">${ch.map(([k,t])=>`<button class="btn s" data-g="${esc(k)}" style="padding:8px 12px;font-size:14px;${k===gf?'border-color:var(--br);color:var(--br)':''}">${esc(t)}</button>`).join('')}</div><select id="ord" style="margin-bottom:8px">${[['pri','Orden: por prioridad'],['az','Orden: de la A a la Z'],['rec','Orden: más recientes primero']].map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select><input type="text" id="oq" placeholder="Buscar por título o compositor" value="${esc(oq)}"><p id="imsg" style="color:var(--br);margin:8px 0"></p><div id="lst"></div>`;
+ const pl=()=>{const k=nz(oq),r=l.filter(o=>!k||nz(o.titulo+' '+o.compositor+' '+(o.grupo||'')).includes(k));$('#lst').innerHTML=r.length?ordO([...r]).map(o=>card(o,true)).join(''):'<div class="empty">No hay obras en esta vista.</div>';bindCards($('#lst'))};
  pl();$('#oq').oninput=e=>{oq=e.target.value;pl()};
  m.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{gf=b.dataset.g;draw()});
- $('#add').onclick=()=>form();
+ $('#ord').value=ls.get('orden')||'pri';$('#ord').onchange=e=>{ls.set('orden',e.target.value);pl()};$('#add').onclick=()=>form();
  $('#imp').onclick=()=>$('#impf').click();
  $('#impf').onchange=async e=>{
   const fs=[...e.target.files],bad=[];let ok=0;
@@ -254,7 +278,7 @@ async function abrir(o,ctx,fin){
  const tot=V.doc.numPages,abierto=!$('#v').classList.contains('hide');let n0=0;
  if(fin)n0=tot-1;else if(!ctx&&ls.get('resume')!=='0')n0=Math.min(Math.max(+ls.get('pag'+o.id)||0,0),tot-1);
  if(V.mode===2)n0-=n0%2;
- V.id=o.id;V.ctx=ctx||null;V.n=n0;V.hp=fin?1:0;V.rs=true;V.zoom=1;V.hist=[];V.hm=false;V.nt=(await rq('notas','readonly',s=>s.get(o.id)))||{obra:o.id,p:{}};mcarga(o.id);
+ pguardar();V.id=o.id;PR.id=o.id;PR.last=Date.now();if(!PR.t)PR.t=setInterval(ptick,1000);V.ctx=ctx||null;V.n=n0;V.hp=fin?1:0;V.rs=true;V.zoom=1;V.hist=[];V.hm=false;V.nt=(await rq('notas','readonly',s=>s.get(o.id)))||{obra:o.id,p:{}};mcarga(o.id);
  if(!abierto){$('#vb').classList.remove('hide');$('#vf').classList.remove('hide')}
  $('#vt').textContent=(ctx?`${ctx.i+1}/${ctx.arr.length} · `:'')+o.titulo;$('#v').classList.remove('hide');if(!abierto)history.pushState({v:1},'');vista();
  if(!wl||wl.released){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}
@@ -319,7 +343,7 @@ $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp
 $('#vh').onclick=()=>{V.half=!V.half;V.hp=0;ls.set('half',V.half?'1':'0');V.rs=true;vista()};
 $('#vz').onclick=()=>{V.zoom=ZS[(ZS.indexOf(V.zoom)+1)%ZS.length];vista()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-function cerrarV(){tok++;mstop();$('#mb').classList.add('hide');V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
+function cerrarV(){tok++;mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
 $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
 addEventListener('popstate',()=>{if(V.doc)cerrarV()});
 $('#pages').onclick=e=>{if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
@@ -354,6 +378,47 @@ $('#mbpm').onchange=e=>mset(+e.target.value);$('#msl').oninput=e=>mset(+e.target
 $('#mb').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{M.cp=+b.dataset.c;M.beat=0;ls.set('cmp'+V.id,M.cp);mui()});
 $('#mtap').onclick=()=>{const t=performance.now();if(M.tp.length&&t-M.tp[M.tp.length-1]>2500)M.tp=[];M.tp.push(t);M.tp=M.tp.slice(-6);if(M.tp.length>=2)mset(60000/((M.tp[M.tp.length-1]-M.tp[0])/(M.tp.length-1)))};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&M.on)mstop()});
+/* Aspecto */
+const TEMAS=[['folk','Folklore'],['tango','Tango'],['clas','Clásico']];
+function tema(t){document.documentElement.dataset.t=t;ls.set('tema',t);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#12161a'}
+tema(document.documentElement.dataset.t||'folk');
+/* Orden de la biblioteca */
+function ordO(a){const o=ls.get('orden')||'pri';return o==='az'?a.sort((x,y)=>x.titulo.localeCompare(y.titulo,'es')):o==='rec'?a.sort((x,y)=>y.id-x.id):sortO(a)}
+/* Secciones dentro de una obra */
+function scAbrir(){
+ const o=obras.find(x=>x.id===V.id);if(!o)return;const L=(o.marc||[]).map((x,i)=>({...x,i})).sort((a,b)=>a.p-b.p);
+ $('#sc').classList.remove('hide');$('#sct').textContent='Secciones · '+o.titulo;$('#sca').textContent='+ Marcar pág. '+(V.n+1);
+ $('#scl').innerHTML=L.length?L.map(x=>`<div class="scr" data-p="${x.p}"><span style="flex:1"><b>${esc(x.n)}</b> · pág. ${x.p+1}</span><button class="btn s" data-d="${x.i}" style="padding:6px 10px">✕</button></div>`).join(''):'<div class="empty" style="padding:14px 8px">Todavía no marcaste secciones.<br>Andá a la página y tocá “Marcar”.</div>';
+ $('#scl').querySelectorAll('.scr').forEach(row=>row.onclick=()=>{const p=+row.dataset.p;V.n=V.mode===2?p-p%2:p;V.hp=0;V.rs=true;$('#sc').classList.add('hide');pintar()});
+ $('#scl').querySelectorAll('[data-d]').forEach(b=>b.onclick=async e=>{e.stopPropagation();o.marc=(o.marc||[]).filter((_,i)=>i!==+b.dataset.d);await rq('obras','readwrite',s=>s.put(o));scAbrir()});
+}
+$('#pg').onclick=scAbrir;$('#scx').onclick=()=>$('#sc').classList.add('hide');
+$('#sca').onclick=async()=>{const o=obras.find(x=>x.id===V.id);if(!o)return;o.marc=o.marc||[];o.marc.push({n:$('#scn').value.trim()||'Sección '+(o.marc.length+1),p:V.n});$('#scn').value='';await rq('obras','readwrite',s=>s.put(o));scAbrir()};
+/* Práctica: tiempo con la partitura abierta, por obra y por día */
+const PR={s:0,t:null,last:Date.now(),id:null,q:Promise.resolve()};
+function ptick(){if(!V.doc||document.hidden)return;if(Date.now()-PR.last>600000&&!M.on)return;if(++PR.s>=30)pguardar()}
+function pguardar(){
+ if(!PR.s||PR.id==null)return PR.q;const sec=PR.s,id=PR.id;PR.s=0;
+ PR.q=PR.q.then(async()=>{const d=ymd(new Date()),r=(await rq('practica','readonly',x=>x.get(d)))||{d,o:{}};r.o[id]=(r.o[id]||0)+sec;await rq('practica','readwrite',x=>x.put(r))}).catch(()=>{});
+ return PR.q;
+}
+$('#v').addEventListener('pointerdown',()=>PR.last=Date.now());document.addEventListener('keydown',()=>PR.last=Date.now());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pguardar()});
+async function vPractica(m){
+ await pguardar();const all=await rq('practica','readonly',s=>s.getAll());if(!m.isConnected)return;
+ const now=new Date(),h=ymd(now),tot=r=>Object.values(r.o).reduce((a,b)=>a+b,0),mp={};all.forEach(r=>mp[r.d]=tot(r));
+ const ok=d=>(mp[d]||0)>=300,dd=new Date(now);if(!ok(ymd(dd)))dd.setDate(dd.getDate()-1);
+ let rach=0;while(ok(ymd(dd))){rach++;dd.setDate(dd.getDate()-1)}
+ let best=0,cur=0,prev=null;for(const d of Object.keys(mp).filter(ok).sort()){if(prev){const [y,mo,da]=prev.split('-');cur=ymd(new Date(+y,mo-1,+da+1))===d?cur+1:1}else cur=1;best=Math.max(best,cur);prev=d}
+ const lun=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7)),dias=ORD.map((d,i)=>{const f=new Date(lun.getFullYear(),lun.getMonth(),lun.getDate()+i),k=ymd(f);return{d,k,s:mp[k]||0}});
+ const mx=Math.max(600,...dias.map(x=>x.s)),sem=dias.reduce((a,x)=>a+x.s,0),po={};
+ all.filter(r=>dias.some(x=>x.k===r.d)).forEach(r=>Object.entries(r.o).forEach(([i,v])=>po[i]=(po[i]||0)+v));
+ const top=Object.entries(po).map(([i,v])=>[obras.find(o=>o.id==i),v]).filter(x=>x[0]).sort((a,b)=>b[1]-a[1]).slice(0,5),mn=v=>Math.round(v/60);
+ m.innerHTML=`<div class="card" style="display:block;text-align:center"><div style="font-size:44px;font-family:Georgia,serif;color:var(--br);line-height:1.1">♫ ${rach}</div><div class="tt">${rach===1?'día seguido':'días seguidos'} de práctica</div><small>Mejor racha: ${best} · Hoy: ${mn(mp[h]||0)} min · Esta semana: ${mn(sem)} min</small></div>
+ <h2 style="font-size:18px;margin:14px 0 8px">Esta semana (minutos)</h2><div class="card" style="display:flex;gap:4px;align-items:flex-end">${dias.map(x=>`<div style="flex:1;text-align:center"><div style="height:80px;display:flex;align-items:flex-end;justify-content:center"><div style="width:70%;height:${Math.max(3,Math.round(x.s/mx*80))}px;background:${x.s>=300?'var(--br)':'var(--ln)'};border-radius:4px 4px 0 0"></div></div><small style="display:block;${x.k===h?'color:var(--br);font-weight:700':''}">${DIAS[x.d]}</small><small style="display:block;color:var(--tx)">${mn(x.s)}</small></div>`).join('')}</div>
+ <h2 style="font-size:18px;margin:14px 0 8px">Lo más estudiado esta semana</h2>${top.length?top.map(([o,v])=>`<div class="card" style="align-items:center"><span class="dot ${o.prioridad}"></span><div style="flex:1" class="tt">${esc(o.titulo)}</div><b>${mn(v)} min</b></div>`).join(''):'<div class="empty" style="padding:14px 10px">Todavía no hay práctica registrada esta semana.<br>Se cuenta sola mientras tenés una partitura abierta.</div>'}
+ <small style="color:var(--mu);display:block;margin-top:10px">Un día suma a la racha desde los 5 minutos con la partitura abierta. El tiempo se pausa tras 10 minutos sin tocar la pantalla, salvo que el metrónomo esté sonando.</small>`;
+}
 /* Anotar */
 const TAB=Math.min(screen.width,screen.height)>=600,COL=['#111111','#d93a2b','#2a6fdb','#2e9e5b','#ffd400'];
 Object.assign(V,{dedo:ls.get('dedo')!=='0',an:false,tl:'l',col:COL[1],gr:0,hm:false,hist:[],nt:{p:{}}});
@@ -406,26 +471,52 @@ function capa(w,pi,cw,ch,fw,fh,ox,oy){
  o.onpointerup=o.onpointercancel=()=>{if(!cur)return;if(cur!=='g')V.hist.push([d,cur]);gnt();cur=null};
 }
 /* Respaldo */
-const b2d=b=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(b)});
+const MAGIC=new TextEncoder().encode('ESTM4'),MB=n=>(n/1048576).toFixed(1)+' MB';
 async function exportar(){
- const out={version:3,obras,pdfs:{},notas:await rq('notas','readonly',s=>s.getAll()),listas};
- for(const o of obras){const b=await rq('pdfs','readonly',s=>s.get(o.id));if(b)out.pdfs[o.id]=await b2d(b)}
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'}));
- a.download='respaldo-estudio-'+new Date().toISOString().slice(0,10)+'.json';a.click();$('#msg').textContent='Respaldo exportado.';
+ try{
+  const nt=await rq('notas','readonly',s=>s.getAll()),pr=await rq('practica','readonly',s=>s.getAll()),fl=[],parts=[];
+  for(const o of obras){const b=await rq('pdfs','readonly',s=>s.get(o.id));if(b){fl.push({id:o.id,n:b.size});parts.push(b)}}
+  const h=new TextEncoder().encode(JSON.stringify({version:5,obras,notas:nt,listas,practica:pr,files:fl})),len=new Uint8Array(4);new DataView(len.buffer).setUint32(0,h.length);
+  const blob=new Blob([MAGIC,len,h,...parts],{type:'application/octet-stream'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='respaldo-estudio-'+new Date().toISOString().slice(0,10)+'.estudio';a.click();
+  $('#msg').textContent='Respaldo exportado ('+obras.length+' obras, '+MB(blob.size)+').';
+ }catch(e){$('#msg').textContent='No se pudo exportar el respaldo: '+(e&&e.message||e)}
 }
 async function importar(f){
  if(!f||!confirm('Importar reemplaza todo lo que hay ahora en la app. ¿Seguir?'))return;
+ let d,src=new Map();
  try{
-  const d=JSON.parse(await f.text());
-  if(!d||!Array.isArray(d.obras)||typeof d.pdfs!=='object'||!d.pdfs||(d.listas&&!Array.isArray(d.listas)))throw 0;
-  const pre=d.obras.map(o=>[o,d.pdfs[o.id]?await0(d.pdfs[o.id]):null]);
-  await rq('obras','readwrite',s=>s.clear());await rq('pdfs','readwrite',s=>s.clear());await rq('notas','readwrite',s=>s.clear());await rq('listas','readwrite',s=>s.clear());
-  for(const [o,b] of pre){await rq('obras','readwrite',s=>s.put(o));if(b)await rq('pdfs','readwrite',s=>s.put(b,o.id))}
+  const nuevo=String.fromCharCode(...new Uint8Array(await f.slice(0,5).arrayBuffer()))==='ESTM4';
+  if(nuevo){
+   const n=new DataView(await f.slice(5,9).arrayBuffer()).getUint32(0);
+   d=JSON.parse(new TextDecoder().decode(await f.slice(9,9+n).arrayBuffer()));
+   let off=9+n;for(const x of d.files){if(!(x.n>=0))throw 0;src.set(x.id,[off,x.n]);off+=x.n}
+   if(off>f.size)throw 0;
+  }else{
+   d=JSON.parse(await f.text());
+   if(!d||typeof d.pdfs!=='object'||!d.pdfs)throw 0;
+   for(const o of d.obras)if(d.pdfs[o.id])src.set(o.id,await0(d.pdfs[o.id]));
+  }
+  if(!d||!Array.isArray(d.obras)||(d.listas&&!Array.isArray(d.listas))||(d.notas&&!Array.isArray(d.notas))||(d.practica&&!Array.isArray(d.practica)))throw 0;
+ }catch(e){$('#msg').textContent='No se pudo importar: el archivo no es un respaldo válido. No se cambió nada.';return}
+ try{
+  for(const s of ['obras','pdfs','notas','listas','practica'])await rq(s,'readwrite',x=>x.clear());
+  for(const o of d.obras){
+   await rq('obras','readwrite',s=>s.put(o));const v=src.get(o.id);
+   if(v){const b=Array.isArray(v)?new Blob([await f.slice(v[0],v[0]+v[1]).arrayBuffer()],{type:'application/pdf'}):v;await rq('pdfs','readwrite',s=>s.put(b,o.id))}
+  }
   for(const n of d.notas||[])await rq('notas','readwrite',s=>s.put(n));
   for(const l of d.listas||[])await rq('listas','readwrite',s=>s.put(l));
- }catch(e){$('#msg').textContent='No se pudo importar: el archivo no es un respaldo válido.';return}
- await load();draw();$('#msg').textContent='Respaldo importado.';
+  for(const x of d.practica||[])await rq('practica','readwrite',s=>s.put(x));
+ }catch(e){$('#msg').textContent='La importación se cortó a la mitad: '+(e&&e.message||e)+'. Volvé a intentarlo con el mismo archivo.';await load();draw();return}
+ await load();draw();$('#msg').textContent='Respaldo importado ('+d.obras.length+' obras).';
 }
 const await0=u=>{const [h,b]=u.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m})};
-init();
+function aviso(t){
+ let d=$('#err');if(!d){d=document.createElement('div');d.id='err';d.style.cssText='position:fixed;left:8px;right:8px;bottom:70px;z-index:99;background:#5a1d17;color:#fff;border:1px solid var(--al);border-radius:10px;padding:12px;font-size:14px';d.onclick=()=>d.remove();document.body.appendChild(d)}
+ d.textContent='Algo falló: '+t+'. (Tocá para cerrar.) Si se repite, hacé un respaldo y mandame una captura de este mensaje.';
+}
+addEventListener('error',e=>aviso(e.message||'error'));
+addEventListener('unhandledrejection',e=>aviso(String(e.reason&&e.reason.message||e.reason||'error desconocido')));
+init().catch(e=>aviso('no se pudo abrir el almacenamiento ('+(e&&e.message||e)+')'));
 </script></body></html>

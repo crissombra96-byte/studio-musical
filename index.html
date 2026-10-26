@@ -79,6 +79,7 @@ header{position:relative}
 :is(html[data-t="folk"],html[data-t="tango"]) nav{border-top:2px solid var(--br)}
 :is(html[data-t="folk"],html[data-t="tango"]) h2{color:var(--br)}
 :is(html[data-t="folk"],html[data-t="tango"]) .empty::before{content:'♪ ♫ ♪';display:block;font-size:30px;color:var(--br);opacity:.6;margin-bottom:6px;letter-spacing:6px}
+#mn{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--pn);border-top:1px solid var(--ln);padding:12px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px}#mn button{flex:1 1 150px;background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:14px 12px;font-size:16px}#mn button.on{border-color:var(--br);color:var(--br)}#pt{color:var(--al)!important;border-color:var(--al)!important}
 #sc{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--pn);border-top:1px solid var(--ln);padding:12px 12px calc(12px + env(safe-area-inset-bottom));max-height:65%;overflow:auto}
 .scr{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--ln)}
 #pg{cursor:pointer;text-decoration:underline dotted;text-underline-offset:4px}
@@ -89,13 +90,14 @@ header{position:relative}
 <nav id="nav"></nav>
 <div id="modal" class="modal hide"></div>
 <div id="v" class="hide">
- <div id="vb"><button id="vx">✕</button><span class="tt" id="vt"></span><button id="vo" class="hide">✎ Anotar</button><button id="vmt" title="Metrónomo">♩</button><button id="vh" title="Media página">½</button><button id="vz">×1</button><button id="vm"></button><button id="vp">‹</button><span id="pg"></span><button id="vn">›</button></div>
+ <div id="vb"><button id="vx">✕</button><span class="tt" id="vt"></span><button id="vo" class="hide">✎ Anotar</button><button id="pt" class="hide"></button><button id="vp">‹</button><span id="pg"></span><button id="vn">›</button><button id="vmn" title="Más opciones">⋯</button></div>
  <div id="ab" class="hide"><button data-t="l">Lápiz</button><button data-t="h">Resaltador</button><button data-t="g">Goma</button><button data-t="n">Nota</button><button data-t="m">Mover</button><span id="sws"></span><button id="agr"></button><button id="aun">Deshacer</button><button id="adi"></button><button id="aoc"></button></div>
  <div id="mb" class="hide"><button id="mm">−</button><input id="mbpm" type="number" min="30" max="240" inputmode="numeric"><button id="mp">+</button><input id="msl" type="range" min="30" max="240"><span id="mdots"></span><button data-c="2">2</button><button data-c="3">3</button><button data-c="4">4</button><button data-c="6" title="6/8">6</button><button id="mtap">Tap</button><button id="mgo"></button></div>
  <div id="pages"></div>
  <div id="vf"><input type="range" id="vsl" min="1" max="1" value="1"></div>
 </div>
 <div id="nt" class="hide"><textarea id="ntx" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit"></textarea><div class="row"><button class="btn" id="nts">Guardar</button><button class="btn d" id="ntd">Borrar</button><button class="btn s" id="ntc">Cerrar</button></div></div>
+<div id="mn" class="hide"><button id="vm"></button><button id="vmt">♩ Metrónomo</button><button id="pplay"></button><button id="vsec">Secciones</button></div>
 <div id="sc" class="hide"><div style="display:flex;align-items:center;gap:8px"><b id="sct" style="flex:1"></b><button class="btn s" id="scx">Cerrar</button></div><div id="scl"></div><div class="row"><input type="text" id="scn" placeholder="Nombre (Intro, Solo, Coda…)" style="flex:1;min-width:140px"><button class="btn" id="sca"></button></div></div>
 <script src="pdf.min.js"></script>
 <script>
@@ -270,7 +272,7 @@ function selObras(id){
  $('#s2').onclick=()=>detLista(id);
 }
 /* Visor */
-const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,auto:ls.get('auto')!=='0',inv:false,rec:true,cr:null,half:ls.get('half')==='1',hp:0,c2:false,id:null,ctx:null};let tok=0,wl=null;
+const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,auto:ls.get('auto')!=='0',inv:false,rec:true,cr:null,half:false,hp:0,c2:false,id:null,ctx:null};let tok=0,wl=null;
 async function abrir(o,ctx,fin){
  const b=await rq('pdfs','readonly',s=>s.get(o.id));
  try{V.doc=await pdfjsLib.getDocument({data:await b.arrayBuffer(),isEvalSupported:false}).promise}catch(e){alert('No se pudo abrir la partitura. Revisá que pdf.min.js y pdf.worker.min.js estén en la carpeta de la app.');return}
@@ -285,8 +287,8 @@ async function abrir(o,ctx,fin){
 }
 function aut(){if(!V.auto)return;const b=$('#pages'),m=b.clientWidth>b.clientHeight?2:1;if(m===V.mode)return;V.mode=m;if(m===2)V.n-=V.n%2;V.hp=0;V.rs=true}
 function vista(){
- aut();$('#vm').textContent=V.auto?'Auto '+V.mode:V.mode+' pág.';$('#vm').classList.toggle('on',V.auto);$('#vh').classList.toggle('on',V.half);$('#vh').classList.toggle('hide',V.mode===2);
- $('#vo').classList.toggle('hide',!TAB);$('#vo').classList.toggle('on',V.an);$('#vz').textContent='×'+V.zoom;$('#vz').classList.toggle('on',V.zoom>1);$('#pages').classList.toggle('inv',V.inv);pintar();
+ aut();$('#vm').textContent=V.auto?'Auto '+V.mode:V.mode+' pág.';$('#vm').classList.toggle('on',V.auto);
+ $('#vo').classList.toggle('hide',!TAB);$('#vo').classList.toggle('on',V.an);$('#pages').classList.toggle('inv',V.inv);pintar();
 }
 async function calcCrop(doc){
  let a=1,b=1,c=0,d=0,any=false;
@@ -319,7 +321,8 @@ async function pintar(){
   const c=document.createElement('canvas'),w=document.createElement('div');c.className='pg';c.width=Math.ceil(cw*dp);c.height=Math.ceil(ch*dp);c.style.width=cw+'px';c.style.height=ch+'px';w.className='pw';w.appendChild(c);nw.push(w);
   await p.render({canvasContext:c.getContext('2d'),viewport:vp,transform:[1,0,0,1,-ox*dp,-oy*dp]}).promise;if(st!==tok)return;capa(w,V.n+i,cw,ch,fw,fh,ox,oy);
  }
- if(st!==tok)return;box.replaceChildren(...nw);V.c2=box.scrollHeight>box.clientHeight+4;if(V.rs){box.scrollTo(0,V.half&&V.mode===1&&V.hp&&V.c2?box.scrollHeight:0);V.rs=false}
+ if(st!==tok)return;box.replaceChildren(...nw);V.c2=box.scrollHeight>box.clientHeight+4;if(V.rs){box.scrollTo(0,V.half&&V.mode===1&&V.hp&&V.c2?box.scrollHeight:0);V.rs=false};if(V.pz){box.scrollTo(V.pz.fx-V.pz.cx,V.pz.fy-V.pz.cy);V.pz=null}
+ if(V.pz){box.scrollTo(V.pz.fx-V.pz.cx,V.pz.fy-V.pz.cy);V.pz=null}
  $('#vsl').max=tot;$('#vsl').value=V.n+1;if(V.id!=null)ls.set('pag'+V.id,V.n);
  $('#pg').textContent=cnt===2?`${V.n+1}-${V.n+2} / ${tot}`:`${V.n+1} / ${tot}`;
 }
@@ -340,13 +343,11 @@ $('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'
  if(nx==='a')V.auto=true;else{V.auto=false;V.mode=+nx;if(V.mode===2)V.n-=V.n%2;V.hp=0;V.rs=true;ls.set('modo',V.mode)}
  ls.set('auto',V.auto?'1':'0');vista()};
 $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp=0;V.rs=true;$('#vsl').blur();pintar()};
-$('#vh').onclick=()=>{V.half=!V.half;V.hp=0;ls.set('half',V.half?'1':'0');V.rs=true;vista()};
-$('#vz').onclick=()=>{V.zoom=ZS[(ZS.indexOf(V.zoom)+1)%ZS.length];vista()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-function cerrarV(){tok++;mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
+function cerrarV(){tok++;PR.run=false;prui();$('#mn').classList.add('hide');mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
 $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
 addEventListener('popstate',()=>{if(V.doc)cerrarV()});
-$('#pages').onclick=e=>{if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
+$('#pages').onclick=e=>{if(!$('#mn').classList.contains('hide')){$('#mn').classList.add('hide');return}if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
 addEventListener('keydown',e=>{if(!V.doc||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;const k=e.key;if(['ArrowRight','PageDown',' '].includes(k)){ir(1);e.preventDefault()}else if(['ArrowLeft','PageUp'].includes(k)){ir(-1);e.preventDefault()}});
 addEventListener('resize',()=>{if(V.doc)vista()});
 /* Metrónomo */
@@ -371,7 +372,7 @@ function mgo(){
  M.on=true;M.beat=0;M.nx=M.ctx.currentTime+.06;msch();M.tm=setInterval(msch,25);mui();
 }
 function mstop(){M.on=false;clearInterval(M.tm);if($('#mdots'))mui()}
-$('#vmt').onclick=()=>{const h=$('#mb').classList.toggle('hide');if(h)mstop();else mui();if(V.doc)pintar()};
+$('#vmt').onclick=()=>{const h=$('#mb').classList.toggle('hide');$('#vmt').classList.toggle('on',!h);if(h)mstop();else mui();if(V.doc)pintar()};
 $('#mgo').onclick=()=>M.on?mstop():mgo();
 $('#mm').onclick=()=>mset(M.bpm-1);$('#mp').onclick=()=>mset(M.bpm+1);
 $('#mbpm').onchange=e=>mset(+e.target.value);$('#msl').oninput=e=>mset(+e.target.value);
@@ -392,11 +393,24 @@ function scAbrir(){
  $('#scl').querySelectorAll('.scr').forEach(row=>row.onclick=()=>{const p=+row.dataset.p;V.n=V.mode===2?p-p%2:p;V.hp=0;V.rs=true;$('#sc').classList.add('hide');pintar()});
  $('#scl').querySelectorAll('[data-d]').forEach(b=>b.onclick=async e=>{e.stopPropagation();o.marc=(o.marc||[]).filter((_,i)=>i!==+b.dataset.d);await rq('obras','readwrite',s=>s.put(o));scAbrir()});
 }
-$('#pg').onclick=scAbrir;$('#scx').onclick=()=>$('#sc').classList.add('hide');
+$('#pg').onclick=scAbrir;
+(()=>{const P=$('#pages');let g=null;
+ const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY),ok=()=>!V.an||!V.dedo||V.tl==='m';
+ P.addEventListener('touchstart',e=>{if(e.touches.length===2&&V.doc&&ok()){const r=P.getBoundingClientRect(),t=e.touches,cx=(t[0].clientX+t[1].clientX)/2,cy=(t[0].clientY+t[1].clientY)/2;g={d:dist(t),z:V.zoom,r:1,cx:cx-r.left,cy:cy-r.top,fx:P.scrollLeft+cx-r.left,fy:P.scrollTop+cy-r.top,org:[...P.querySelectorAll('.pw')].map(w=>{const b=w.getBoundingClientRect();return [cx-b.left,cy-b.top]})}}},{passive:true});
+ P.addEventListener('touchmove',e=>{if(!g||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();g.r=Math.min(4,Math.max(1,g.z*dist(e.touches)/g.d))/g.z;P.querySelectorAll('.pw').forEach((w,i)=>{if(g.org[i]){w.style.transformOrigin=g.org[i][0]+'px '+g.org[i][1]+'px';w.style.transform='scale('+g.r+')'}})},{passive:false});
+ const fin=e=>{if(!g||e.touches.length>=2)return;const q=g;g=null;P.querySelectorAll('.pw').forEach(w=>{w.style.transform=''});if(Math.abs(q.r-1)<.02)return;V.zoom=q.z*q.r;if(V.zoom<1.03)V.zoom=1;V.pz={fx:q.fx*q.r,fy:q.fy*q.r,cx:q.cx,cy:q.cy};pintar()};
+ P.addEventListener('touchend',fin);P.addEventListener('touchcancel',fin)})();$('#scx').onclick=()=>$('#sc').classList.add('hide');
 $('#sca').onclick=async()=>{const o=obras.find(x=>x.id===V.id);if(!o)return;o.marc=o.marc||[];o.marc.push({n:$('#scn').value.trim()||'Sección '+(o.marc.length+1),p:V.n});$('#scn').value='';await rq('obras','readwrite',s=>s.put(o));scAbrir()};
 /* Práctica: tiempo con la partitura abierta, por obra y por día */
-const PR={s:0,t:null,last:Date.now(),id:null,q:Promise.resolve()};
-function ptick(){if(!V.doc||document.hidden)return;if(Date.now()-PR.last>600000&&!M.on)return;if(++PR.s>=30)pguardar()}
+const PR={s:0,t:null,last:Date.now(),id:null,q:Promise.resolve(),run:false,el:0};
+const fmt=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
+function prui(){const b=$('#pt');b.classList.toggle('hide',!PR.run);b.textContent='● '+fmt(PR.el);$('#pplay').textContent=PR.run?'■ Terminar práctica':'▶ Iniciar práctica';$('#pplay').classList.toggle('on',PR.run)}
+$('#pplay').onclick=()=>{if(PR.run){PR.run=false;pguardar()}else{PR.run=true;PR.el=0}prui()};
+$('#pt').onclick=()=>{if(confirm('¿Terminar la práctica? Se guardan '+fmt(PR.el)+'.')){PR.run=false;pguardar();prui()}};
+$('#vmn').onclick=()=>$('#mn').classList.toggle('hide');
+$('#mn').addEventListener('click',e=>{if(e.target.closest('button'))setTimeout(()=>$('#mn').classList.add('hide'))});
+$('#vsec').onclick=()=>scAbrir();prui();
+function ptick(){if(!PR.run||!V.doc||document.hidden)return;PR.el++;$('#pt').textContent='● '+fmt(PR.el);if(++PR.s>=30)pguardar()}
 function pguardar(){
  if(!PR.s||PR.id==null)return PR.q;const sec=PR.s,id=PR.id;PR.s=0;
  PR.q=PR.q.then(async()=>{const d=ymd(new Date()),r=(await rq('practica','readonly',x=>x.get(d)))||{d,o:{}};r.o[id]=(r.o[id]||0)+sec;await rq('practica','readwrite',x=>x.put(r))}).catch(()=>{});
@@ -417,7 +431,7 @@ async function vPractica(m){
  m.innerHTML=`<div class="card" style="display:block;text-align:center"><div style="font-size:44px;font-family:Georgia,serif;color:var(--br);line-height:1.1">♫ ${rach}</div><div class="tt">${rach===1?'día seguido':'días seguidos'} de práctica</div><small>Mejor racha: ${best} · Hoy: ${mn(mp[h]||0)} min · Esta semana: ${mn(sem)} min</small></div>
  <h2 style="font-size:18px;margin:14px 0 8px">Esta semana (minutos)</h2><div class="card" style="display:flex;gap:4px;align-items:flex-end">${dias.map(x=>`<div style="flex:1;text-align:center"><div style="height:80px;display:flex;align-items:flex-end;justify-content:center"><div style="width:70%;height:${Math.max(3,Math.round(x.s/mx*80))}px;background:${x.s>=300?'var(--br)':'var(--ln)'};border-radius:4px 4px 0 0"></div></div><small style="display:block;${x.k===h?'color:var(--br);font-weight:700':''}">${DIAS[x.d]}</small><small style="display:block;color:var(--tx)">${mn(x.s)}</small></div>`).join('')}</div>
  <h2 style="font-size:18px;margin:14px 0 8px">Lo más estudiado esta semana</h2>${top.length?top.map(([o,v])=>`<div class="card" style="align-items:center"><span class="dot ${o.prioridad}"></span><div style="flex:1" class="tt">${esc(o.titulo)}</div><b>${mn(v)} min</b></div>`).join(''):'<div class="empty" style="padding:14px 10px">Todavía no hay práctica registrada esta semana.<br>Se cuenta sola mientras tenés una partitura abierta.</div>'}
- <small style="color:var(--mu);display:block;margin-top:10px">Un día suma a la racha desde los 5 minutos con la partitura abierta. El tiempo se pausa tras 10 minutos sin tocar la pantalla, salvo que el metrónomo esté sonando.</small>`;
+ <small style="color:var(--mu);display:block;margin-top:10px">Un día suma a la racha desde los 5 minutos de práctica. Vos marcás cuándo empieza y cuándo termina: en el lector, tocá ⋯ y después Iniciar práctica.</small>`;
 }
 /* Anotar */
 const TAB=Math.min(screen.width,screen.height)>=600,COL=['#111111','#d93a2b','#2a6fdb','#2e9e5b','#ffd400'];

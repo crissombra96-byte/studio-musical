@@ -1,5 +1,5 @@
-const C='estudio-v18',F=['./','index.html','manifest.json','pdf.min.js','pdf.worker.min.js','icon-192.png','icon-512.png'];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>Promise.all(F.map(u=>c.add(u).catch(()=>{})))).then(()=>self.skipWaiting()))});
+const C='estudio-v19',F=['./','index.html','manifest.json','pdf.min.js','pdf.worker.min.js','icon-192.png','icon-512.png'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>Promise.all(F.map(u=>c.add(new Request(u,{cache:'reload'})).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 // Abre al instante con lo guardado y, en segundo plano, baja la versión nueva para la próxima vez.
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;

@@ -35,7 +35,7 @@ nav button.on{color:var(--br);box-shadow:inset 0 2px 0 var(--br)}
 .days button.hoy{border-color:var(--tx)}
 .modal{position:fixed;inset:0;background:var(--bg);overflow:auto;padding:calc(16px + env(safe-area-inset-top)) 16px 30px;z-index:5}
 label{display:block;margin:14px 0 4px;color:var(--mu);font-size:14px}
-input[type=text],input[type=date],textarea,select{width:100%;padding:11px;border-radius:8px;border:1px solid var(--ln);background:var(--pn);color:var(--tx);font:inherit}
+input[type=text],input[type=date],input[type=number],textarea,select{width:100%;padding:11px;border-radius:8px;border:1px solid var(--ln);background:var(--pn);color:var(--tx);font:inherit}
 #v{position:fixed;inset:0;background:#fff;z-index:9;display:flex;flex-direction:column}
 #vb{display:flex;align-items:center;gap:6px;padding:calc(6px + env(safe-area-inset-top)) 10px 6px;background:var(--pn);border-bottom:1px solid var(--ln)}
 #vb .tt{flex:1 1 120px;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:16px}
@@ -51,7 +51,7 @@ input[type=text],input[type=date],textarea,select{width:100%;padding:11px;border
 #vs{display:flex;align-items:center;gap:4px;padding:4px 8px 0}#vs input{flex:1;min-width:0;accent-color:var(--br);margin:6px 0}#vs button{border:0;background:none;color:var(--tx);font-size:28px;line-height:1;padding:2px 14px;border-radius:10px}
 #mn{display:flex;padding:2px 6px 6px}#mn .ib{flex:1;min-width:0}
 #mb{position:absolute;left:0;right:0;bottom:100%;z-index:4;background:var(--pn);border-top:1px solid var(--ln);box-shadow:0 -10px 28px rgba(0,0,0,.35);padding:10px 12px 4px}.mr{display:flex;align-items:center;gap:8px;margin:0 0 8px}.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}.chips::-webkit-scrollbar{display:none}.chips button{flex:none;white-space:nowrap}.ml{color:var(--mu);font-size:13px}
-#mb button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:8px 12px;font-size:15px}#mb button.on{border-color:var(--br);color:var(--br);background:color-mix(in srgb,var(--br) 14%,var(--bg))}#mb button.off{opacity:.3}#mdots{flex:1}#mgo{padding:10px 18px!important;font-weight:600}
+#mb button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:10px;padding:8px 12px;font-size:15px}#mb button.on{border-color:var(--br);color:var(--br);background:color-mix(in srgb,var(--br) 14%,var(--bg))}#mb button.off{opacity:.3}#mdots{flex:1;min-width:0;flex-wrap:wrap;row-gap:4px}input.nm[type=number]{width:58px;flex:none;padding:8px;text-align:center}#mx .mr.w{gap:6px}#mgo{flex:none}#mmore{flex:none}#mgo{padding:10px 18px!important;font-weight:600}
 #pages{scrollbar-width:none;flex:1;overflow:auto;display:flex;gap:4px;touch-action:pan-x pan-y}
 .pw{position:relative;margin:auto 0;flex:none}.pw:first-child{margin-left:auto}.pw:last-child{margin-right:auto}.pw canvas{display:block}
 .ov{position:absolute;left:0;top:0;pointer-events:none}
@@ -59,10 +59,14 @@ input[type=text],input[type=date],textarea,select{width:100%;padding:11px;border
 .pin{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid var(--br);background:rgba(212,168,75,.35);padding:0}
 #nt{position:fixed;left:0;right:0;bottom:0;z-index:11;background:var(--pn);border-top:1px solid var(--ln);padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
 #pages.inv .pg{filter:invert(.92) hue-rotate(180deg)}
-#mlab{white-space:nowrap}#mbpm{width:60px;padding:8px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit;text-align:center}#msl{flex:1;min-width:50px;accent-color:var(--br)}
+#mlab{white-space:nowrap}#mbpm,.nm{width:60px;padding:8px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit;text-align:center}#msl{flex:1;min-width:50px;accent-color:var(--br)}
 #mdots{display:flex;gap:6px;margin:0 4px}#mdots .dot{width:12px;height:12px;border-radius:50%;background:var(--ln)}#mdots .dot.on{background:var(--br)}#mdots .dot.ac.on{background:var(--al)}
 .ag{padding:4px 0}
 .li{display:flex;gap:6px}.li button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px 11px;font-size:15px}
+#rbar{margin:0 14px 8px;padding:10px 12px;border:1px solid var(--al);border-radius:10px;background:color-mix(in srgb,var(--al) 14%,var(--pn));display:flex;gap:8px;align-items:center;font-size:14px}
+#lkc{position:absolute;left:10px;top:calc(env(safe-area-inset-top) + 10px);z-index:6;width:50px;height:50px;border-radius:50%;border:0;background:rgba(20,20,20,.55);color:#fff;display:flex;align-items:center;justify-content:center}
+#vch{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 10px 0}#vch::-webkit-scrollbar{display:none}#vch button{flex:none;border:1px solid var(--ln);background:var(--bg);color:var(--tx);border-radius:999px;padding:6px 14px;font-size:13px}
+.li button.on{background:var(--br);color:#1a1405;border-color:var(--br)}.mr.w{flex-wrap:wrap}
 .hide{display:none!important}#pages::-webkit-scrollbar{display:none}
 
 /* Aspecto: Folklore (poncho), Tango (bordó y oro) y Clásico */
@@ -88,31 +92,35 @@ header{position:relative}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p></header>
+<div id="rbar" class="hide"></div>
 <main id="main"></main>
 <nav id="nav"></nav>
 <div id="modal" class="modal hide"></div>
 <div id="v" class="hide">
  <div id="vb"><button class="ib" id="vx" aria-label="Volver a la lista"><i data-ic="back"></i></button><span class="tt" id="vt"></span>
   <div id="ab" class="hide"><button class="ib" data-t="l"><i data-ic="pen"></i><span>Lápiz</span></button><button class="ib" data-t="h"><i data-ic="hl"></i><span>Resaltar</span></button><button class="ib" data-t="g"><i data-ic="er"></i><span>Goma</span></button><button class="ib" data-t="n"><i data-ic="note"></i><span>Nota</span></button><span class="sep"></span><span id="sws"></span><span class="sep"></span><button class="ib" id="aun"><i data-ic="undo"></i><span>Deshacer</span></button><button class="ab2" id="agr"></button><button class="ab2" id="adi"></button><button class="ab2" id="aoc"></button></div>
+  <button class="ib" id="vlk" aria-label="Modo escenario"><i data-ic="lock"></i><span>Escenario</span></button>
  </div>
+ <button id="lkc" class="hide" aria-label="Desbloquear"><i data-ic="lock"></i></button>
  <div id="pg"></div>
  <div id="pages"></div>
  <div id="vf">
-  <div id="mb" class="hide"><div class="mr"><span class="ml" id="mlab"></span><button id="mm">−</button><input id="mbpm" type="number" min="30" max="240" inputmode="numeric"><button id="mp">+</button><input id="msl" type="range" min="30" max="240"><button id="mtap">Tap</button></div><div class="mr"><span class="ml">Compás</span><span id="mcs" class="chips"></span></div><div class="mr"><span class="ml">Pulso</span><span id="mus" class="chips"></span></div><div class="mr"><span id="mdots"></span><button id="mgo"></button></div></div>
+  <div id="mb" class="hide"><div class="mr"><span class="ml" id="mlab"></span><button id="mm">−</button><input id="mbpm" type="number" min="30" max="240" inputmode="numeric"><button id="mp">+</button><input id="msl" type="range" min="30" max="240"><button id="mtap">Tap</button></div><div class="mr"><span class="ml">Compás</span><span id="mcs" class="chips"></span></div><div class="mr"><span class="ml">Pulso</span><span id="mus" class="chips"></span></div><div class="mr"><span id="mdots"></span><button id="mmore">Más ▾</button><button id="mgo"></button></div>
+  <div id="mx" class="hide"><div class="mr"><span class="ml">Sonido</span><span id="mss" class="chips"></span></div><div class="mr"><span class="ml">Volumen</span><input type="range" id="mvol" min="10" max="100" style="flex:1;accent-color:var(--br)"></div><div class="mr w"><button id="mpg">Subir de a poco</button><span class="ml">+</span><input id="mpst" class="nm" type="number" inputmode="numeric"><span class="ml">cada</span><input id="mpn" class="nm" type="number" inputmode="numeric"><span class="ml">compases, hasta</span><input id="mptg" class="nm" type="number" inputmode="numeric"></div></div></div>
+  <div id="vch" class="hide"></div>
   <div id="vs"><button id="vp" aria-label="Página anterior">‹</button><input type="range" id="vsl" min="1" max="1" value="1"><button id="vn" aria-label="Página siguiente">›</button></div>
   <div id="mn"><button class="ib" id="vm"><i data-ic="pages"></i><span id="vml"></span></button><button class="ib" id="vmt"><i data-ic="metro"></i><span>Metrónomo</span></button><button class="ib" id="pplay"><i data-ic="play"></i><span id="ppl"></span></button><button class="ib hide" id="pfin"><i data-ic="stop"></i><span>Terminar</span></button><button class="ib" id="vsec"><i data-ic="mark"></i><span>Secciones</span></button></div>
  </div>
 </div>
 <div id="nt" class="hide"><textarea id="ntx" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit"></textarea><div class="row"><button class="btn" id="nts">Guardar</button><button class="btn d" id="ntd">Borrar</button><button class="btn s" id="ntc">Cerrar</button></div></div>
-<div id="mn" class="hide"><button id="vm"></button><button id="vmt">♩ Metrónomo</button><button id="pplay"></button><button id="vsec">Secciones</button></div>
-<div id="sc" class="hide"><div style="display:flex;align-items:center;gap:8px"><b id="sct" style="flex:1"></b><button class="btn s" id="scx">Cerrar</button></div><div id="scl"></div><div class="row"><input type="text" id="scn" placeholder="Nombre (Intro, Solo, Coda…)" style="flex:1;min-width:140px"><button class="btn" id="sca"></button></div></div>
+<div id="sc" class="hide"><div style="display:flex;align-items:center;gap:8px"><b id="sct" style="flex:1"></b><button class="btn s" id="scx">Cerrar</button></div><textarea id="scnt" rows="2" placeholder="Notas de estudio de esta obra (se guardan solas)" style="margin:8px 0"></textarea><div id="scl"></div><div class="row"><input type="text" id="scn" placeholder="Nombre (Intro, Solo, Coda…)" style="flex:1;min-width:140px"><button class="btn" id="sca"></button></div></div>
 <script src="pdf.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
-const IC={back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
+const IC={lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
 const svg=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 document.querySelectorAll('i[data-ic]').forEach(i=>i.innerHTML=svg(i.dataset.ic));
-const MAXP=10,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
+const MAXP=100,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let db,obras=[],listas=[],pdfIds=new Set(),tab='est',sub='obras',gf='',se='hoy',wk=0,oq='';
 const nz=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -131,8 +139,10 @@ async function init(){
 async function load(){
  obras=await rq('obras','readonly',s=>s.getAll());
  pdfIds=new Set(await rq('pdfs','readonly',s=>s.getAllKeys()));
+ for(const o of obras)if(o.ref&&pdfIds.has(o.ref))pdfIds.add(o.id);
  listas=(await rq('listas','readonly',s=>s.getAll())).map(l=>({...l,obras:l.obras||[]}));
 }
+const pdfOf=o=>o.ref||o.id;
 const sortO=a=>a.sort((x,y)=>PRI[x.prioridad]-PRI[y.prioridad]||x.titulo.localeCompare(y.titulo));
 const PL={alta:'Alta',media:'Media',baja:'Baja'};
 
@@ -140,7 +150,7 @@ function draw(){
  const now=new Date(),hoy=now.getDay(),m=$('#main');
  $('#h1').textContent={est:{hoy:'Hoy',age:'Agenda',pra:'Práctica',lis:'Listas'}[se],org:'Organizar',aju:'Ajustes'}[tab];
  $('#h2').textContent=tab==='est'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
- $('#nav').innerHTML=[['est','♫ Estudiar'],['org','♯ Organizar'],['aju','♭ Ajustes']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
+ $('#nav').innerHTML=[['est','♫ Estudiar'],['org','♯ Organizar'],['aju','♭ Ajustes'+(rstate().mal&&obras.length?' ●':'')]].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
  $('#nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
  if(tab==='est'){
   m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['hoy','Hoy'],['age','Agenda'],['pra','Práctica'],['lis','Listas']].map(([k,t])=>`<button data-e="${k}" class="${k===se?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
@@ -151,9 +161,10 @@ function draw(){
   m.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sub=b.dataset.s;draw()});
   sub==='obras'?vObras($('#sb')):vSem($('#sb'),hoy);
  }else{
-  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><p style="color:var(--mu)">Los datos viven solo en este dispositivo. Hacé un respaldo seguido por si el sistema borra la caché.</p><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><div class="row"><button class="btn" id="ex">Exportar respaldo</button><button class="btn s" id="im">Importar respaldo</button></div><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
-  $('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#ex').onclick=exportar;$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
+  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><div class="card" id="rcard" style="display:block"><div class="tt">Respaldo</div><div id="rst" style="margin:4px 0 2px;font-weight:600"></div><small>Tus partituras, marcas, listas y práctica viven solo en este dispositivo. Si Android o el navegador borran los datos, se pierden. Mandá el respaldo a tu Drive o a tu mail cada tanto.</small><div class="row"><button class="btn" id="exs">Compartir respaldo</button><button class="btn s" id="ex">Guardar en la tablet</button><button class="btn s" id="im">Importar respaldo</button></div><small id="prot"></small></div><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
+  $('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#ex').onclick=()=>exportar('file');$('#exs').onclick=()=>exportar('share');(async()=>{try{let p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():false;if(!p&&navigator.storage&&navigator.storage.persist)p=await navigator.storage.persist();const e=$('#prot');if(e)e.textContent=p?'Protección de datos del navegador: activa.':'Protección de datos del navegador: no activa. Por eso el respaldo es importante.'}catch(e){}})();$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
  }
+ rstUI();
 }
 function vObras(m){
  const gr=[...new Set(obras.map(o=>o.grupo).filter(Boolean))].sort(),sin=obras.filter(o=>o.sin).length;
@@ -208,22 +219,43 @@ function form(o){
  <label>Grupo o conjunto (opcional)</label><input type="text" id="f6" list="gl" value="${esc(o.grupo)}"><datalist id="gl">${[...new Set(obras.map(x=>x.grupo).filter(Boolean))].map(g=>`<option value="${esc(g)}">`).join('')}</datalist>
  <label>Prioridad</label><select id="f4">${['alta','media','baja'].map(p=>`<option value="${p}" ${o.prioridad===p?'selected':''}>${PL[p]}</option>`).join('')}</select>
  <label>Partitura en PDF (máximo ${MAXP} páginas)${e&&pdfIds.has(o.id)?' · ya hay una cargada, elegí otra para reemplazarla':''}</label><input type="file" id="f5" accept="application/pdf">
+ ${e&&pdfIds.has(o.id)?`<label>Usar solo estas páginas del PDF (opcional)</label><div class="row" style="margin:0"><input type="number" id="f7" min="1" inputmode="numeric" placeholder="Desde" style="flex:1" value="${o.rg?o.rg[0]:''}"><input type="number" id="f8" min="1" inputmode="numeric" placeholder="Hasta" style="flex:1" value="${o.rg?o.rg[1]:''}"></div><button type="button" class="btn s" id="fdv" style="margin-top:8px">✂ Dividir en varias obras</button>`:''}
  <label>Días de estudio</label><div class="days" id="fd">${ORD.map(d=>`<button type="button" data-d="${d}" class="${(o.dias||[]).includes(d)?'on':''}">${DIAS[d]}</button>`).join('')}</div>
  <p id="fe" style="color:var(--al)"></p>
  <div class="row"><button class="btn" id="fs">Guardar</button><button class="btn s" id="fc">Cancelar</button>${e?'<button class="btn d" id="fx">Eliminar</button>':''}</div>`;
  M.querySelectorAll('#fd button').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
  $('#fc').onclick=()=>M.classList.add('hide');
- if(e)$('#fx').onclick=async()=>{if(!confirm('¿Eliminar esta obra y su PDF?'))return;await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));await rq('notas','readwrite',s=>s.delete(o.id));for(const l of listas.filter(l=>l.obras.includes(o.id)))await rq('listas','readwrite',s=>s.put({...l,obras:l.obras.filter(x=>x!==o.id)}));M.classList.add('hide');await load();draw()};
+ if($('#fdv'))$('#fdv').onclick=()=>divForm(o);
+ if(e)$('#fx').onclick=async()=>{if(!confirm('¿Eliminar esta obra y su PDF?'))return;const dep=obras.filter(x=>x.ref===o.id);if(dep.length){const bl=await rq('pdfs','readonly',s=>s.get(o.id)),nw=dep[0],{ref:_r,...nr}=nw;await rq('pdfs','readwrite',s=>s.put(bl,nw.id));await rq('obras','readwrite',s=>s.put(nr));for(const x of dep.slice(1))await rq('obras','readwrite',s=>s.put({...x,ref:nw.id}))}await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));await rq('notas','readwrite',s=>s.delete(o.id));for(const l of listas.filter(l=>l.obras.includes(o.id)))await rq('listas','readwrite',s=>s.put({...l,obras:l.obras.filter(x=>x!==o.id)}));M.classList.add('hide');await load();draw()};
  $('#fs').onclick=async()=>{
   const err=t=>$('#fe').textContent=t,f=$('#f5').files[0],t=$('#f1').value.trim();
   if(!t)return err('Escribí el título de la obra.');
   if(!e&&!f)return err('Elegí el PDF de la partitura.');
   if(f){try{const d=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;if(d.numPages>MAXP)return err(`El PDF tiene ${d.numPages} páginas; el máximo es ${MAXP}.`)}catch(x){return err('No se pudo leer ese PDF. Revisá que sea un archivo válido y que pdf.min.js esté en la carpeta.')}}
   const n={...o,titulo:t,compositor:$('#f2').value.trim(),notas:$('#f3').value.trim(),prioridad:$('#f4').value,grupo:$('#f6').value.trim(),sin:false,dias:[...M.querySelectorAll('#fd .on')].map(b=>+b.dataset.d)};
+  if(e&&$('#f7')){const va=$('#f7').value,vb=$('#f8').value;if(va===''&&vb==='')delete n.rg;else{const a=+va||1,b2=+vb;if(!(a>=1)||!(b2>=a))return err('Revisá las páginas: "desde" tiene que ser menor o igual que "hasta".');try{const bl=f||await rq('pdfs','readonly',s=>s.get(pdfOf(o))),d=await pdfjsLib.getDocument({data:await bl.arrayBuffer(),isEvalSupported:false}).promise;if(b2>d.numPages)return err('El PDF tiene '+d.numPages+' páginas.')}catch(x){return err('No se pudo leer el PDF.')}n.rg=[a,b2]}}
+  if(f){delete n.ref;if(!(e&&$('#f7')&&($('#f7').value!==''||$('#f8').value!=='')))delete n.rg}
   const id=await rq('obras','readwrite',s=>s.put(n));
   if(f)await rq('pdfs','readwrite',s=>s.put(f,id));
   M.classList.add('hide');await load();draw();
  };
+}
+async function divForm(o){
+ const M=$('#modal');M.innerHTML='<p style="color:var(--mu)">Leyendo el PDF…</p>';
+ let tot=0;try{const bl=await rq('pdfs','readonly',s=>s.get(pdfOf(o)));tot=(await pdfjsLib.getDocument({data:await bl.arrayBuffer(),isEvalSupported:false}).promise).numPages}catch(x){M.innerHTML='<p>No se pudo leer el PDF.</p><div class="row"><button class="btn s" id="dvc">Volver</button></div>';$('#dvc').onclick=()=>form(o);return}
+ const R=[{n:'',a:'',b:''},{n:'',a:'',b:''}];
+ const pinta=()=>{
+  M.innerHTML=`<h2 style="margin:0">Dividir “${esc(o.titulo)}”</h2><p style="color:var(--mu)">El PDF tiene ${tot} páginas. Cada parte se vuelve una obra nueva que usa ese mismo PDF (no se duplica). La obra original queda como está; podés borrarla después.</p>`+R.map((r,i)=>`<div class="card" style="display:block"><input type="text" data-k="n" data-i="${i}" placeholder="Nombre de la obra ${i+1}" value="${esc(r.n)}"><div class="row" style="margin:8px 0 0"><input type="number" inputmode="numeric" min="1" max="${tot}" data-k="a" data-i="${i}" placeholder="Desde pág." value="${esc(r.a)}" style="flex:1"><input type="number" inputmode="numeric" min="1" max="${tot}" data-k="b" data-i="${i}" placeholder="Hasta pág." value="${esc(r.b)}" style="flex:1"></div></div>`).join('')+`<p id="dve" style="color:var(--al)"></p><div class="row"><button class="btn s" id="dva">+ Otra parte</button><button class="btn" id="dvk">Crear obras</button><button class="btn s" id="dvc">Cancelar</button></div>`;
+  M.querySelectorAll('input[data-k]').forEach(x=>x.oninput=()=>{R[+x.dataset.i][x.dataset.k]=x.value});
+  $('#dva').onclick=()=>{R.push({n:'',a:'',b:''});pinta()};$('#dvc').onclick=()=>form(o);
+  $('#dvk').onclick=async()=>{
+   const ok=R.filter(r=>r.n.trim()||r.a||r.b);if(!ok.length)return $('#dve').textContent='Completá al menos una parte.';
+   for(const r of ok){const a=+r.a,b=+r.b;if(!r.n.trim()||!(a>=1)||!(b>=a)||b>tot)return $('#dve').textContent='Revisá cada parte: nombre y páginas (de 1 a '+tot+').'}
+   for(const r of ok){const {id:_i,...base}=o;await rq('obras','readwrite',s=>s.add({...base,titulo:r.n.trim(),dias:[],ref:pdfOf(o),rg:[+r.a,+r.b],sin:false,marc:[]}))}
+   M.classList.add('hide');await load();draw();toast(ok.length+' obra'+(ok.length===1?' creada':'s creadas')+'.');
+  };
+ };
+ pinta();
 }
 function vHoy(m,hoy){
  const l=sortO(obras.filter(o=>(o.dias||[]).includes(hoy)));
@@ -267,12 +299,12 @@ function detLista(id){
  if(!l){M.classList.add('hide');return}
  M.classList.remove('hide');
  const arr=l.obras.map(i=>obras.find(o=>o.id===i)).filter(Boolean),ids=arr.map(o=>o.id);
- M.innerHTML=`<h2 style="margin:0">${esc(l.nombre)}</h2><small style="color:var(--mu)">${l.fecha?fmtF(l.fecha)+(l.hora?' · '+l.hora+' h':'')+(l.lugar?' · '+esc(l.lugar):'')+' · ':''}${arr.length} obra${arr.length===1?'':'s'}</small><div class="row"><button class="btn" id="d1">▶ Empezar</button><button class="btn s" id="d2">+ Agregar obras</button><button class="btn s" id="d3">Editar</button><button class="btn s" id="d4">Cerrar</button></div>`+(arr.length?arr.map((o,i)=>`<div class="card" data-i="${i}" style="align-items:center"><div style="flex:1"><div class="tt">${i+1}. ${esc(o.titulo)}</div><small>${esc(o.compositor)}${pdfIds.has(o.id)?'':(o.compositor?' · ':'')+'sin PDF'}</small></div><div class="li"><button data-a="u">▲</button><button data-a="d">▼</button><button data-a="x">✕</button></div></div>`).join(''):'<div class="empty">Esta lista está vacía.<br>Tocá "Agregar obras".</div>');
+ M.innerHTML=`<h2 style="margin:0">${esc(l.nombre)}</h2><small style="color:var(--mu)">${l.fecha?fmtF(l.fecha)+(l.hora?' · '+l.hora+' h':'')+(l.lugar?' · '+esc(l.lugar):'')+' · ':''}${arr.length} obra${arr.length===1?'':'s'}</small><div class="row"><button class="btn" id="d1">▶ Empezar</button><button class="btn s" id="d2">+ Agregar obras</button><button class="btn s" id="d3">Editar</button><button class="btn s" id="d4">Cerrar</button>${(l.ok||[]).length?'<button class="btn s" id="d5">Reiniciar ✓</button>':''}</div>`+(arr.length?arr.map((o,i)=>`<div class="card" data-i="${i}" style="align-items:center"><div style="flex:1"><div class="tt" style="${(l.ok||[]).includes(o.id)?'opacity:.5;text-decoration:line-through':''}">${i+1}. ${esc(o.titulo)}</div><small>${esc(o.compositor)}${pdfIds.has(o.id)?'':(o.compositor?' · ':'')+'sin PDF'}</small></div><div class="li"><button data-a="k" class="${(l.ok||[]).includes(o.id)?'on':''}">✓</button><button data-a="u">▲</button><button data-a="d">▼</button><button data-a="x">✕</button></div></div>`).join(''):'<div class="empty">Esta lista está vacía.<br>Tocá "Agregar obras".</div>');
  const v=arr.filter(o=>pdfIds.has(o.id)),abrirI=i=>{const o=arr[i];if(o&&pdfIds.has(o.id))abrir(o,{arr:v,i:v.indexOf(o)})};
  const guardar=async a=>{await rq('listas','readwrite',s=>s.put({...l,obras:a}));await load();detLista(id)};
- M.querySelectorAll('.card[data-i]').forEach(c=>{const i=+c.dataset.i;c.onclick=()=>abrirI(i);c.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{e.stopPropagation();const a=[...ids],t=b.dataset.a,j=t==='u'?i-1:i+1;if(t==='x')a.splice(i,1);else{if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]]}guardar(a)})});
+ M.querySelectorAll('.card[data-i]').forEach(c=>{const i=+c.dataset.i;c.onclick=()=>abrirI(i);c.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{e.stopPropagation();const a=[...ids],t=b.dataset.a,j=t==='u'?i-1:i+1;if(t==='k'){const k=new Set(l.ok||[]);k.has(ids[i])?k.delete(ids[i]):k.add(ids[i]);rq('listas','readwrite',s=>s.put({...l,ok:[...k]})).then(async()=>{await load();detLista(id)});return}if(t==='x')a.splice(i,1);else{if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]]}guardar(a)})});
  $('#d1').onclick=()=>{const i=arr.findIndex(o=>pdfIds.has(o.id));if(i>=0)abrirI(i)};
- $('#d2').onclick=()=>selObras(id);$('#d3').onclick=()=>formLista(l);$('#d4').onclick=()=>M.classList.add('hide');
+ $('#d2').onclick=()=>selObras(id);$('#d3').onclick=()=>formLista(l);$('#d4').onclick=()=>M.classList.add('hide');if($('#d5'))$('#d5').onclick=async()=>{await rq('listas','readwrite',s=>s.put({...l,ok:[]}));await load();detLista(id)};
 }
 function selObras(id){
  const l=listas.find(x=>x.id===id),M=$('#modal'),ya=new Set(l.obras),c=sortO(obras.filter(o=>!ya.has(o.id)));
@@ -284,10 +316,11 @@ function selObras(id){
 /* Visor */
 const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,auto:ls.get('auto')!=='0',inv:false,rec:true,cr:null,half:false,hp:0,c2:false,id:null,ctx:null};let tok=0,wl=null;
 async function abrir(o,ctx,fin){
- const b=await rq('pdfs','readonly',s=>s.get(o.id));
+ const b=await rq('pdfs','readonly',s=>s.get(pdfOf(o)));
  try{V.doc=await pdfjsLib.getDocument({data:await b.arrayBuffer(),isEvalSupported:false}).promise}catch(e){alert('No se pudo abrir la partitura. Revisá que pdf.min.js y pdf.worker.min.js estén en la carpeta de la app.');return}
- try{V.cr=await calcCrop(V.doc)}catch(e){V.cr=null}
- const tot=V.doc.numPages,abierto=!$('#v').classList.contains('hide');let n0=0;
+ const rg=o.rg&&o.rg[0]>=1&&o.rg[1]<=V.doc.numPages&&o.rg[0]<=o.rg[1]?o.rg:[1,V.doc.numPages];V.o0=rg[0]-1;V.tot=rg[1]-rg[0]+1;
+ try{V.cr=await calcCrop(V.doc,V.o0,V.tot,o.id+'_'+V.o0+'_'+V.tot+'_'+b.size)}catch(e){V.cr=null}
+ const tot=V.tot,abierto=!$('#v').classList.contains('hide');let n0=0;
  if(fin)n0=tot-1;else if(!ctx&&ls.get('resume')!=='0')n0=Math.min(Math.max(+ls.get('pag'+o.id)||0,0),tot-1);
  if(V.mode===2)n0-=n0%2;
  pguardar();V.id=o.id;PR.id=o.id;PR.last=Date.now();if(!PR.t)PR.t=setInterval(ptick,1000);V.ctx=ctx||null;V.n=n0;V.hp=fin?1:0;V.rs=true;V.zoom=1;V.hist=[];V.hm=false;V.nt=(await rq('notas','readonly',s=>s.get(o.id)))||{obra:o.id,p:{}};mcarga(o.id);
@@ -300,9 +333,11 @@ function vista(){
  aut();$('#vml').textContent=V.auto?'Auto · '+V.mode+' pág.':V.mode+' pág.';$('#vm').classList.toggle('on',V.auto);$('#vb').classList.toggle('tools',TAB);$('#ab').classList.toggle('hide',!TAB);
  $('#pages').classList.toggle('inv',V.inv);pintar();
 }
-async function calcCrop(doc){
+async function calcCrop(doc,o0,n,key){
+ const ck='crop'+key,ch=ls.get(ck);if(ch)return ch==='null'?null:JSON.parse(ch);
  let a=1,b=1,c=0,d=0,any=false;
- for(let i=1;i<=doc.numPages;i++){
+ const IDX=n>24?Array.from({length:24},(_,k)=>Math.round(k*(n-1)/23)):Array.from({length:n},(_,k)=>k);
+ for(const k of IDX){const i=o0+k+1;
   const p=await doc.getPage(i),v0=p.getViewport({scale:1}),vp=p.getViewport({scale:300/v0.width}),cv=document.createElement('canvas');
   cv.width=Math.ceil(vp.width);cv.height=Math.ceil(vp.height);
   const x=cv.getContext('2d',{willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,cv.width,cv.height);
@@ -314,16 +349,16 @@ async function calcCrop(doc){
   if(x0>=x1||y0>=y1)continue;
   any=true;a=Math.min(a,x0/W);b=Math.min(b,y0/H);c=Math.max(c,(x1+1)/W);d=Math.max(d,(y1+1)/H);
  }
- if(!any)return null;
+ if(!any){ls.set(ck,'null');return null}
  const pd=.01;a=Math.max(0,a-pd);b=Math.max(0,b-pd);c=Math.min(1,c+pd);d=Math.min(1,d+pd);
- if(c-a<.3||d-b<.3||(c-a>.97&&d-b>.97))return null;
- return{x0:a,y0:b,x1:c,y1:d};
+ if(c-a<.3||d-b<.3||(c-a>.97&&d-b>.97)){ls.set(ck,'null');return null}
+ const RR={x0:a,y0:b,x1:c,y1:d};ls.set(ck,JSON.stringify(RR));return RR;
 }
 async function pintar(){
- const st=++tok,box=$('#pages'),tot=V.doc.numPages,nw=[],hid=$('#vb').classList.contains('hide'),G=4;
+ const st=++tok,box=$('#pages'),tot=V.tot,nw=[],hid=$('#vb').classList.contains('hide'),G=4;
  const cnt=V.mode===2&&V.n+1<tot?2:1,W=box.clientWidth-(hid?1:8),H=box.clientHeight-(hid?1:8),dpr=Math.min(devicePixelRatio||1,2);
  const K=V.rec&&V.cr?V.cr:{x0:0,y0:0,x1:1,y1:1},ps=[];
- for(let i=0;i<cnt;i++){const p=await V.doc.getPage(V.n+1+i);if(st!==tok)return;ps.push([p,p.getViewport({scale:1})])}
+ for(let i=0;i<cnt;i++){const p=await V.doc.getPage(V.o0+V.n+1+i);if(st!==tok)return;ps.push([p,p.getViewport({scale:1})])}
  let sw=0,mh=0;for(const [,v] of ps){sw+=v.width*(K.x1-K.x0);mh=Math.max(mh,v.height*(K.y1-K.y0))}
  const sW=(W-G*(cnt-1))/sw,s=Math.min(sW,(V.half&&cnt===1?1.9:1)*H/mh)*V.zoom*.999;
  for(let i=0;i<cnt;i++){
@@ -337,7 +372,7 @@ async function pintar(){
  const pk=V.id+':'+V.n+':'+cnt;$('#pg').textContent=cnt===2?`${V.n+1}-${V.n+2} / ${tot}`:`${V.n+1} / ${tot}`;if(pk!==V.pk){V.pk=pk;$('#pg').classList.add('on');clearTimeout(V.pgt);V.pgt=setTimeout(()=>$('#pg').classList.remove('on'),2200)}
 }
 function ir(d){
- const t=V.doc.numPages,P=$('#pages'),c=V.ctx;
+ const t=V.tot,P=$('#pages'),c=V.ctx;
  if(V.half&&V.mode===1&&V.c2){
   if(d>0&&!V.hp){V.hp=1;P.scrollTo(0,P.scrollHeight);return}
   if(d<0&&V.hp){V.hp=0;P.scrollTo(0,0);return}
@@ -347,6 +382,12 @@ function ir(d){
  if(n<0){if(c&&c.i>0)abrir(c.arr[c.i-1],{arr:c.arr,i:c.i-1},true);return}
  V.n=n;V.hp=d<0?1:0;V.rs=true;pintar();
 }
+function lockSet(on){V.lock=on;$('#lkc').classList.toggle('hide',!on);
+ if(on){V.tl='r';V.an=false;abtn();$('#mb').classList.add('hide');$('#sc').classList.add('hide');cierraNt();$('#vb').classList.add('hide');$('#vf').classList.add('hide');try{if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}catch(e){}toast('Escenario activado. Solo se pasa de página. Para salir, mantené apretado el candado.')}
+ else{$('#vb').classList.remove('hide');$('#vf').classList.remove('hide')}
+ pintar()}
+$('#vlk').onclick=()=>lockSet(true);
+let lkT=null;$('#lkc').addEventListener('pointerdown',e=>{e.stopPropagation();lkT=setTimeout(()=>lockSet(false),700)});['pointerup','pointercancel','pointerleave'].forEach(ev=>$('#lkc').addEventListener(ev,()=>clearTimeout(lkT)));$('#lkc').addEventListener('click',e=>{e.stopPropagation();toast('Mantené apretado el candado para desbloquear')});
 $('#v').addEventListener('contextmenu',e=>e.preventDefault());
 $('#vp').onclick=()=>ir(-1);$('#vn').onclick=()=>ir(1);
 $('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'a'}[st];
@@ -354,47 +395,63 @@ $('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'
  ls.set('auto',V.auto?'1':'0');vista()};
 $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp=0;V.rs=true;$('#vsl').blur();pintar()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-function cerrarV(){tok++;PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
+function cerrarV(){tok++;V.lock=false;$('#lkc').classList.add('hide');PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
 $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
-addEventListener('popstate',()=>{if(V.doc)cerrarV()});
-$('#pages').onclick=e=>{if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
+addEventListener('popstate',()=>{if(V.doc){if(V.lock){history.pushState({v:1},'');return}cerrarV()}});
+$('#pages').onclick=e=>{if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else if(!V.lock){const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
 addEventListener('keydown',e=>{if(!V.doc||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;const k=e.key;if(['ArrowRight','PageDown',' '].includes(k)){ir(1);e.preventDefault()}else if(['ArrowLeft','PageUp'].includes(k)){ir(-1);e.preventDefault()}});
 addEventListener('resize',()=>{if(V.doc)vista()});
 /* Metrónomo */
 const U={b:.5,n:.25,np:.375,c:.125,cp:.1875},UL={b:['Blanca','Blanca ='],n:['♩ Negra','♩ ='],np:['♩. Negra con puntillo','♩. ='],c:['♪ Corchea','♪ ='],cp:['♪. Corchea con puntillo','♪. =']};
-const COMP=['2/4','3/4','4/4','6/8','9/8','12/8','2/2','3/8','5/4'];
-const M={on:false,bpm:80,cmp:'4/4',u:'n',cp:4,grp:0,ctx:null,nx:0,beat:0,tm:null,tp:[]};
-const mbeats=(c,u)=>{const [a,b]=c.split('/').map(Number),r=(a/b)/U[u];return Math.abs(r-Math.round(r))<1e-6&&r>=1?Math.round(r):0};
-const mdef=c=>{const [a,b]=c.split('/').map(Number);return b===8?(a%3===0&&a>=6?'np':'c'):b===2?'b':'n'};
-function mrec(){M.cp=mbeats(M.cmp,M.u);const [a,b]=M.cmp.split('/').map(Number);M.grp=(M.u==='c'&&b===8&&a%3===0&&a>3)?3:0}
-const mlv=b=>b===0?2:(M.grp&&b%M.grp===0?1:0);
-function mcarga(id){M.bpm=+ls.get('bpm'+id)||+ls.get('bpm')||80;let c=ls.get('cmp'+id);c=/^\d+\/\d+$/.test(c||'')?c:({2:'2/4',3:'3/4',4:'4/4',6:'6/8'})[c]||'4/4';M.cmp=COMP.includes(c)?c:'4/4';const u=ls.get('pul'+id);M.u=U[u]&&mbeats(M.cmp,u)?u:mdef(M.cmp);mrec();M.beat=0;mui()}
+const COMP=['2/4','3/4','4/4','6/8','9/8','12/8','2/2','3/8','5/4','ZC'],ZCP=[2,0,0,1,0,0,2,0,1,0,1,0],clb=c=>c==='ZC'?'Zamba/Chacarera':c;
+const SND=[['clic','Clic'],['mad','Madera'],['bom','Bombo']];
+const M={snd:ls.get('msnd')||'clic',vol:+ls.get('mvol')||70,pg:false,pst:+ls.get('mpst')||2,pn:+ls.get('mpn')||4,ptg:+ls.get('mptg')||120,bars:0,base:80,on:false,bpm:80,cmp:'4/4',u:'n',cp:4,grp:0,ctx:null,nx:0,beat:0,tm:null,tp:[]};
+const mbeats=(c,u)=>{if(c==='ZC')return u==='c'?12:u==='np'?4:0;const [a,b]=c.split('/').map(Number),r=(a/b)/U[u];return Math.abs(r-Math.round(r))<1e-6&&r>=1?Math.round(r):0};
+const mdef=c=>{if(c==='ZC')return 'c';const [a,b]=c.split('/').map(Number);return b===8?(a%3===0&&a>=6?'np':'c'):b===2?'b':'n'};
+function mrec(){M.cp=mbeats(M.cmp,M.u);const [a,b]=M.cmp==='ZC'?[0,0]:M.cmp.split('/').map(Number);M.grp=(M.u==='c'&&b===8&&a%3===0&&a>3)?3:0}
+const mlv=b=>M.cmp==='ZC'?ZCP[b*(M.u==='np'?3:1)]:b===0?2:(M.grp&&b%M.grp===0?1:0);
+function mcarga(id){M.bpm=+ls.get('bpm'+id)||+ls.get('bpm')||80;let c=ls.get('cmp'+id);c=/^\d+\/\d+$|^ZC$/.test(c||'')?c:({2:'2/4',3:'3/4',4:'4/4',6:'6/8'})[c]||'4/4';M.cmp=COMP.includes(c)?c:'4/4';const u=ls.get('pul'+id);M.u=U[u]&&mbeats(M.cmp,u)?u:mdef(M.cmp);mrec();M.beat=0;mui()}
 function mui(){
  $('#mbpm').value=M.bpm;$('#msl').value=M.bpm;$('#mlab').textContent=UL[M.u][1];$('#mgo').textContent=M.on?'■ Parar':'▶ Iniciar';$('#mgo').classList.toggle('on',M.on);$('#vmt').classList.toggle('on',M.on);
- $('#mcs').innerHTML=COMP.map(c=>`<button data-c="${c}" class="${c===M.cmp?'on':''}">${c}</button>`).join('');
+ $('#mcs').innerHTML=COMP.map(c=>`<button data-c="${c}" class="${c===M.cmp?'on':''}">${clb(c)}</button>`).join('');
  $('#mus').innerHTML=Object.keys(U).map(u=>`<button data-u="${u}" class="${u===M.u?'on':''}${mbeats(M.cmp,u)?'':' off'}">${UL[u][0]}</button>`).join('');
+ $('#mss').innerHTML=SND.map(x=>`<button data-s="${x[0]}" class="${x[0]===M.snd?'on':''}">${x[1]}</button>`).join('');
+ $('#mvol').value=M.vol;$('#mpst').value=M.pst;$('#mpn').value=M.pn;$('#mptg').value=M.ptg;$('#mpg').classList.toggle('on',M.pg);
  $('#mdots').innerHTML=Array.from({length:M.cp},(_,i)=>`<i class="dot${mlv(i)===2?' ac':mlv(i)===1?' md':''}"></i>`).join('');
 }
 function mset(v){M.bpm=Math.min(240,Math.max(30,Math.round(v)||80));ls.set('bpm'+V.id,M.bpm);ls.set('bpm',M.bpm);$('#mbpm').value=M.bpm;$('#msl').value=M.bpm}
-function clic(t,lv){const o=M.ctx.createOscillator(),g=M.ctx.createGain();o.frequency.value=[1000,1250,1500][lv];g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime([.6,.8,.95][lv],t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+.05);o.connect(g);g.connect(M.ctx.destination);o.start(t);o.stop(t+.06)}
+function clic(t,lv){
+ const c=M.ctx,o=c.createOscillator(),g=c.createGain(),v=Math.pow(M.vol/100,1.6),a=[.6,.8,.95][lv]*v;let d=.05,f=[1000,1250,1500][lv],ty='sine';
+ if(M.snd==='mad'){ty='triangle';f=[700,900,1100][lv];d=.035}
+ if(M.snd==='bom'){f=[90,110,140][lv];d=.16;o.frequency.setValueAtTime(f*2.2,t);o.frequency.exponentialRampToValueAtTime(f,t+.04)}
+ o.type=ty;if(M.snd!=='bom')o.frequency.value=f;
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,a),t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+d+.02)}
 function msch(){
  while(M.nx<M.ctx.currentTime+.12){
   const b=M.beat;clic(M.nx,mlv(b));
   setTimeout(()=>{if(M.on)[...$('#mdots').children].forEach((x,i)=>x.classList.toggle('on',i===b))},Math.max(0,(M.nx-M.ctx.currentTime)*1000));
   M.nx+=60/M.bpm;M.beat=(M.beat+1)%M.cp;
+  if(M.beat===0){M.bars++;if(M.pg&&M.bars%Math.max(1,M.pn)===0&&M.bpm<M.ptg){mset(Math.min(M.ptg,M.bpm+M.pst));setTimeout(()=>{if(M.on)mui()},0)}}
  }
 }
 function mgo(){
  if(M.on)return;M.ctx=M.ctx||new(window.AudioContext||window.webkitAudioContext)();M.ctx.resume();
- M.on=true;M.beat=0;M.nx=M.ctx.currentTime+.06;msch();M.tm=setInterval(msch,25);mui();
+ M.on=true;M.beat=0;M.bars=0;M.base=M.bpm;M.nx=M.ctx.currentTime+.06;msch();M.tm=setInterval(msch,25);mui();
 }
-function mstop(){M.on=false;clearInterval(M.tm);if($('#mdots'))mui()}
+function mstop(){M.on=false;clearInterval(M.tm);if(M.pg&&M.bpm!==M.base)mset(M.base);if($('#mdots'))mui()}
 $('#vmt').onclick=()=>{const h=$('#mb').classList.contains('hide');$('#sc').classList.add('hide');$('#mb').classList.toggle('hide',!h);if(h)mui()};
 $('#mgo').onclick=()=>M.on?mstop():mgo();
 $('#mm').onclick=()=>mset(M.bpm-1);$('#mp').onclick=()=>mset(M.bpm+1);
 $('#mbpm').onchange=e=>mset(+e.target.value);$('#msl').oninput=e=>mset(+e.target.value);
 $('#mcs').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;M.cmp=b.dataset.c;M.u=mdef(M.cmp);mrec();M.beat=0;ls.set('cmp'+V.id,M.cmp);ls.set('pul'+V.id,M.u);mui()};
 $('#mus').onclick=e=>{const b=e.target.closest('[data-u]');if(!b||!mbeats(M.cmp,b.dataset.u))return;M.u=b.dataset.u;mrec();M.beat=0;ls.set('pul'+V.id,M.u);mui()};
+$('#mmore').onclick=()=>{const h=$('#mx').classList.toggle('hide');$('#mmore').textContent=h?'Más ▾':'Más ▴'};
+$('#mss').onclick=e=>{const b=e.target.closest('[data-s]');if(!b)return;M.snd=b.dataset.s;ls.set('msnd',M.snd);mui();if(M.ctx){M.ctx.resume();clic(M.ctx.currentTime+.02,2)}};
+$('#mvol').oninput=e=>{M.vol=+e.target.value;ls.set('mvol',M.vol)};
+$('#mpg').onclick=()=>{M.pg=!M.pg;mui()};
+const mnum=(id,k,key,lo,hi)=>$(id).onchange=e=>{M[k]=Math.min(hi,Math.max(lo,Math.round(+e.target.value)||lo));ls.set(key,M[k]);e.target.value=M[k]};
+mnum('#mpst','pst','mpst',1,20);mnum('#mpn','pn','mpn',1,32);mnum('#mptg','ptg','mptg',40,240);
 $('#mtap').onclick=()=>{const t=performance.now();if(M.tp.length&&t-M.tp[M.tp.length-1]>2500)M.tp=[];M.tp.push(t);M.tp=M.tp.slice(-6);if(M.tp.length>=2)mset(60000/((M.tp[M.tp.length-1]-M.tp[0])/(M.tp.length-1)))};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&M.on)mstop()});
 /* Aspecto */
@@ -404,17 +461,18 @@ tema(document.documentElement.dataset.t||'folk');
 /* Orden de la biblioteca */
 function ordO(a){const o=ls.get('orden')||'pri';return o==='az'?a.sort((x,y)=>x.titulo.localeCompare(y.titulo,'es')):o==='rec'?a.sort((x,y)=>y.id-x.id):sortO(a)}
 /* Secciones dentro de una obra */
+function chipsSec(){const o=obras.find(x=>x.id===V.id),L=o&&o.marc?[...o.marc].sort((a,b)=>a.p-b.p):[],b=$('#vch');b.classList.toggle('hide',!L.length);b.innerHTML=L.map(x=>`<button data-p="${x.p}">${esc(x.n)}</button>`).join('');b.querySelectorAll('button').forEach(x=>x.onclick=()=>{const p=+x.dataset.p;V.n=V.mode===2?p-p%2:p;V.hp=0;V.rs=true;pintar()})}
 function scAbrir(){
- $('#mb').classList.add('hide');
+ $('#mb').classList.add('hide');chipsSec();
  const o=obras.find(x=>x.id===V.id);if(!o)return;const L=(o.marc||[]).map((x,i)=>({...x,i})).sort((a,b)=>a.p-b.p);
- $('#sc').classList.remove('hide');$('#sct').textContent='Secciones · '+o.titulo;$('#sca').textContent='+ Marcar pág. '+(V.n+1);
+ $('#sc').classList.remove('hide');$('#sct').textContent='Secciones y notas · '+o.titulo;$('#scnt').value=o.notas||'';$('#scnt').onchange=async()=>{o.notas=$('#scnt').value.trim();await rq('obras','readwrite',s=>s.put(o))};$('#sca').textContent='+ Marcar pág. '+(V.n+1);
  $('#scl').innerHTML=L.length?L.map(x=>`<div class="scr" data-p="${x.p}"><span style="flex:1"><b>${esc(x.n)}</b> · pág. ${x.p+1}</span><button class="btn s" data-d="${x.i}" style="padding:6px 10px">✕</button></div>`).join(''):'<div class="empty" style="padding:14px 8px">Todavía no marcaste secciones.<br>Andá a la página y tocá “Marcar”.</div>';
  $('#scl').querySelectorAll('.scr').forEach(row=>row.onclick=()=>{const p=+row.dataset.p;V.n=V.mode===2?p-p%2:p;V.hp=0;V.rs=true;$('#sc').classList.add('hide');pintar()});
  $('#scl').querySelectorAll('[data-d]').forEach(b=>b.onclick=async e=>{e.stopPropagation();o.marc=(o.marc||[]).filter((_,i)=>i!==+b.dataset.d);await rq('obras','readwrite',s=>s.put(o));scAbrir()});
 }
 $('#pg').onclick=scAbrir;
 (()=>{const P=$('#pages');let g=null;
- const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY),ok=()=>!V.an||!V.dedo||V.tl==='m';
+ const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY),ok=()=>!V.lock&&(!V.an||!V.dedo||V.tl==='m');
  P.addEventListener('touchstart',e=>{if(e.touches.length===2&&V.doc&&ok()){const r=P.getBoundingClientRect(),t=e.touches,cx=(t[0].clientX+t[1].clientX)/2,cy=(t[0].clientY+t[1].clientY)/2;g={d:dist(t),z:V.zoom,r:1,cx:cx-r.left,cy:cy-r.top,fx:P.scrollLeft+cx-r.left,fy:P.scrollTop+cy-r.top,org:[...P.querySelectorAll('.pw')].map(w=>{const b=w.getBoundingClientRect();return [cx-b.left,cy-b.top]})}}},{passive:true});
  P.addEventListener('touchmove',e=>{if(!g||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();g.r=Math.min(4,Math.max(1,g.z*dist(e.touches)/g.d))/g.z;P.querySelectorAll('.pw').forEach((w,i)=>{if(g.org[i]){w.style.transformOrigin=g.org[i][0]+'px '+g.org[i][1]+'px';w.style.transform='scale('+g.r+')'}})},{passive:false});
  const fin=e=>{if(!g||e.touches.length>=2)return;const q=g;g=null;P.querySelectorAll('.pw').forEach(w=>{w.style.transform=''});if(Math.abs(q.r-1)<.02)return;V.zoom=q.z*q.r;if(V.zoom<1.03)V.zoom=1;V.pz={fx:q.fx*q.r,fy:q.fy*q.r,cx:q.cx,cy:q.cy};pintar()};
@@ -436,7 +494,7 @@ function pguardar(){
 $('#v').addEventListener('pointerdown',()=>PR.last=Date.now());document.addEventListener('keydown',()=>PR.last=Date.now());
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pguardar()});
 async function vPractica(m){
- await pguardar();const all=await rq('practica','readonly',s=>s.getAll());if(!m.isConnected)return;
+ await pguardar();const all=await rq('practica','readonly',s=>s.getAll());if(!m.isConnected)return;const meta=Math.max(1,+ls.get('meta')||30);
  const now=new Date(),h=ymd(now),tot=r=>Object.values(r.o).reduce((a,b)=>a+b,0),mp={};all.forEach(r=>mp[r.d]=tot(r));
  const ok=d=>(mp[d]||0)>=300,dd=new Date(now);if(!ok(ymd(dd)))dd.setDate(dd.getDate()-1);
  let rach=0;while(ok(ymd(dd))){rach++;dd.setDate(dd.getDate()-1)}
@@ -446,9 +504,11 @@ async function vPractica(m){
  all.filter(r=>dias.some(x=>x.k===r.d)).forEach(r=>Object.entries(r.o).forEach(([i,v])=>po[i]=(po[i]||0)+v));
  const top=Object.entries(po).map(([i,v])=>[obras.find(o=>o.id==i),v]).filter(x=>x[0]).sort((a,b)=>b[1]-a[1]).slice(0,5),mn=v=>Math.round(v/60);
  m.innerHTML=`<div class="card" style="display:block;text-align:center"><div style="font-size:44px;font-family:Georgia,serif;color:var(--br);line-height:1.1">♫ ${rach}</div><div class="tt">${rach===1?'día seguido':'días seguidos'} de práctica</div><small>Mejor racha: ${best} · Hoy: ${mn(mp[h]||0)} min · Esta semana: ${mn(sem)} min</small></div>
+ <div class="card" style="display:block"><div style="display:flex;align-items:center;gap:8px"><div class="tt" style="flex:1">Meta de hoy: ${mn(mp[h]||0)} / ${meta} min${mn(mp[h]||0)>=meta?' ✓':''}</div><input type="number" id="meta" min="1" max="600" inputmode="numeric" value="${meta}" class="nm"><small>min</small></div><div style="height:10px;background:var(--ln);border-radius:6px;margin-top:8px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.round(mn(mp[h]||0)/meta*100))}%;background:var(--br)"></div></div></div>
  <h2 style="font-size:18px;margin:14px 0 8px">Esta semana (minutos)</h2><div class="card" style="display:flex;gap:4px;align-items:flex-end">${dias.map(x=>`<div style="flex:1;text-align:center"><div style="height:80px;display:flex;align-items:flex-end;justify-content:center"><div style="width:70%;height:${Math.max(3,Math.round(x.s/mx*80))}px;background:${x.s>=300?'var(--br)':'var(--ln)'};border-radius:4px 4px 0 0"></div></div><small style="display:block;${x.k===h?'color:var(--br);font-weight:700':''}">${DIAS[x.d]}</small><small style="display:block;color:var(--tx)">${mn(x.s)}</small></div>`).join('')}</div>
  <h2 style="font-size:18px;margin:14px 0 8px">Lo más estudiado esta semana</h2>${top.length?top.map(([o,v])=>`<div class="card" style="align-items:center"><span class="dot ${o.prioridad}"></span><div style="flex:1" class="tt">${esc(o.titulo)}</div><b>${mn(v)} min</b></div>`).join(''):'<div class="empty" style="padding:14px 10px">Todavía no hay práctica registrada esta semana.<br>Se cuenta sola mientras tenés una partitura abierta.</div>'}
- <small style="color:var(--mu);display:block;margin-top:10px">Un día suma a la racha desde los 5 minutos de práctica. Vos marcás cuándo empieza y cuándo termina: en el lector, tocá ⋯ y después Iniciar práctica.</small>`;
+ <small style="color:var(--mu);display:block;margin-top:10px">Un día suma a la racha desde los 5 minutos de práctica. Vos marcás cuándo empieza y cuándo termina: en el lector, tocá Practicar (abajo), Pausar si hace falta y Terminar al final.</small>`;
+ $('#meta').onchange=e=>{ls.set('meta',String(Math.min(600,Math.max(1,Math.round(+e.target.value)||30))));vPractica(m)};
 }
 /* Anotar */
 const TAB=Math.min(screen.width,screen.height)>=600,COL=['#111111','#d93a2b','#2a6fdb','#2e9e5b','#ffd400'];
@@ -503,15 +563,22 @@ function capa(w,pi,cw,ch,fw,fh,ox,oy){
 }
 /* Respaldo */
 const MAGIC=new TextEncoder().encode('ESTM4'),MB=n=>(n/1048576).toFixed(1)+' MB';
-async function exportar(){
+async function exportar(modo){
  try{
+  say('Preparando el respaldo…');
   const nt=await rq('notas','readonly',s=>s.getAll()),pr=await rq('practica','readonly',s=>s.getAll()),fl=[],parts=[];
   for(const o of obras){const b=await rq('pdfs','readonly',s=>s.get(o.id));if(b){fl.push({id:o.id,n:b.size});parts.push(b)}}
-  const h=new TextEncoder().encode(JSON.stringify({version:5,obras,notas:nt,listas,practica:pr,files:fl})),len=new Uint8Array(4);new DataView(len.buffer).setUint32(0,h.length);
-  const blob=new Blob([MAGIC,len,h,...parts],{type:'application/octet-stream'}),a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);a.download='respaldo-estudio-'+new Date().toISOString().slice(0,10)+'.estudio';a.click();
-  $('#msg').textContent='Respaldo exportado ('+obras.length+' obras, '+MB(blob.size)+').';
- }catch(e){$('#msg').textContent='No se pudo exportar el respaldo: '+(e&&e.message||e)}
+  const h=new TextEncoder().encode(JSON.stringify({version:6,obras,notas:nt,listas,practica:pr,files:fl})),len=new Uint8Array(4);new DataView(len.buffer).setUint32(0,h.length);
+  const blob=new Blob([MAGIC,len,h,...parts],{type:'application/octet-stream'}),nombre='respaldo-estudio-'+new Date().toISOString().slice(0,10)+'.estudio';
+  let hecho=false;
+  if(modo==='share'&&navigator.canShare&&navigator.share){
+   const file=new File([blob],nombre,{type:'application/octet-stream'});
+   if(navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Respaldo de Estudio Musical'});hecho=true}catch(e){if(e&&e.name==='AbortError'){say('Se canceló: el respaldo no se guardó.');return}}}
+  }
+  if(!hecho){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nombre;a.click()}
+  ls.set('ultresp',String(Date.now()));rstUI();
+  say(hecho?'Respaldo compartido ('+obras.length+' obras, '+MB(blob.size)+').':'Respaldo guardado en Descargas ('+obras.length+' obras, '+MB(blob.size)+'). Subilo a tu Drive o mandalo por mail.');
+ }catch(e){say('No se pudo exportar el respaldo: '+(e&&e.message||e))}
 }
 async function importar(f){
  if(!f||!confirm('Importar reemplaza todo lo que hay ahora en la app. ¿Seguir?'))return;
@@ -529,7 +596,7 @@ async function importar(f){
    for(const o of d.obras)if(d.pdfs[o.id])src.set(o.id,await0(d.pdfs[o.id]));
   }
   if(!d||!Array.isArray(d.obras)||(d.listas&&!Array.isArray(d.listas))||(d.notas&&!Array.isArray(d.notas))||(d.practica&&!Array.isArray(d.practica)))throw 0;
- }catch(e){$('#msg').textContent='No se pudo importar: el archivo no es un respaldo válido. No se cambió nada.';return}
+ }catch(e){say('No se pudo importar: el archivo no es un respaldo válido. No se cambió nada.');return}
  try{
   for(const s of ['obras','pdfs','notas','listas','practica'])await rq(s,'readwrite',x=>x.clear());
   for(const o of d.obras){
@@ -540,9 +607,19 @@ async function importar(f){
   for(const l of d.listas||[])await rq('listas','readwrite',s=>s.put(l));
   for(const x of d.practica||[])await rq('practica','readwrite',s=>s.put(x));
  }catch(e){$('#msg').textContent='La importación se cortó a la mitad: '+(e&&e.message||e)+'. Volvé a intentarlo con el mismo archivo.';await load();draw();return}
- await load();draw();$('#msg').textContent='Respaldo importado ('+d.obras.length+' obras).';
+ ls.set('ultresp',String(Date.now()));await load();draw();say('Respaldo importado ('+d.obras.length+' obras).');
 }
 const await0=u=>{const [h,b]=u.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m})};
+function toast(t){let d=$('#toast');if(!d){d=document.createElement('div');d.id='toast';d.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:90px;z-index:99;background:rgba(20,20,20,.92);color:#fff;border-radius:14px;padding:10px 18px;font-size:14px;max-width:90%;text-align:center';document.body.appendChild(d)}d.textContent=t;d.style.display='block';clearTimeout(d._t);d._t=setTimeout(()=>d.style.display='none',4000)}
+const say=t=>{const e=$('#msg');if(e)e.textContent=t;toast(t)};
+function rstate(){const t=+ls.get('ultresp')||0,d=t?Math.floor((Date.now()-t)/864e5):null;return{t,d,mal:d===null||d>=7}}
+function rstUI(){
+ const s=rstate(),b=$('#rbar'),sn=+ls.get('rsnooze')||0,show=tab!=='aju'&&s.mal&&Date.now()>sn&&obras.length>0;
+ b.classList.toggle('hide',!show);
+ if(show){b.innerHTML=`<span style="flex:1">${s.d===null?'Todavía no hiciste un respaldo. Si Android borra los datos, se pierden tus partituras y marcas.':'Hace '+s.d+' días que no hacés un respaldo.'}</span><button class="btn" id="rbg" style="padding:8px 12px;font-size:14px">Respaldar</button><button class="btn s" id="rbl" style="padding:8px 10px;font-size:14px">Luego</button>`;$('#rbg').onclick=()=>exportar('share');$('#rbl').onclick=()=>{ls.set('rsnooze',String(Date.now()+864e5));rstUI()}}
+ const rt=$('#rst');if(rt){rt.textContent=s.d===null?'Todavía no hiciste ningún respaldo.':'Último respaldo: '+(s.d===0?'hoy':s.d===1?'ayer':'hace '+s.d+' días')+'.';rt.style.color=s.mal?'var(--al)':'var(--br)'}
+ const nb=document.querySelector('#nav button[data-t=aju]');if(nb)nb.textContent='♭ Ajustes'+(s.mal&&obras.length?' ●':'');
+}
 function aviso(t){
  let d=$('#err');if(!d){d=document.createElement('div');d.id='err';d.style.cssText='position:fixed;left:8px;right:8px;bottom:70px;z-index:99;background:#5a1d17;color:#fff;border:1px solid var(--al);border-radius:10px;padding:12px;font-size:14px';d.onclick=()=>d.remove();document.body.appendChild(d)}
  d.textContent='Algo falló: '+t+'. (Tocá para cerrar.) Si se repite, hacé un respaldo y mandame una captura de este mensaje.';

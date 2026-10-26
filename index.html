@@ -179,7 +179,7 @@ async function abrir(o){
  const b=await rq('pdfs','readonly',s=>s.get(o.id));
  try{V.doc=await pdfjsLib.getDocument({data:await b.arrayBuffer(),isEvalSupported:false}).promise}catch(e){alert('No se pudo abrir la partitura. Revisá que pdf.min.js y pdf.worker.min.js estén en la carpeta de la app.');return}
  V.n=0;V.zoom=1;$('#vb').classList.remove('hide');V.hist=[];V.hm=false;V.nt=(await rq('notas','readonly',s=>s.get(o.id)))||{obra:o.id,p:{}};
- $('#vt').textContent=o.titulo;$('#v').classList.remove('hide');vista();
+ $('#vt').textContent=o.titulo;$('#v').classList.remove('hide');history.pushState({v:1},'');vista();
  try{wl=await navigator.wakeLock.request('screen')}catch(e){}
 }
 function vista(){
@@ -187,27 +187,30 @@ function vista(){
  $('#vo').classList.toggle('hide',!TAB);$('#vo').classList.toggle('on',V.an);$('#vz').textContent='×'+V.zoom;$('#vz').classList.toggle('on',V.zoom>1);$('#vi').classList.toggle('on',V.inv);$('#pages').classList.toggle('inv',V.inv);pintar();
 }
 async function pintar(){
- const st=++tok,box=$('#pages'),tot=V.doc.numPages;box.innerHTML='';
- const cnt=V.mode===2&&V.n+1<tot?2:1,W=box.clientWidth-8,H=box.clientHeight-8,dpr=Math.min(devicePixelRatio||1,2);
+ const st=++tok,box=$('#pages'),tot=V.doc.numPages,nw=[],hid=$('#vb').classList.contains('hide'),G=4;
+ const cnt=V.mode===2&&V.n+1<tot?2:1,W=box.clientWidth-(hid?1:8),H=box.clientHeight-(hid?1:8),dpr=Math.min(devicePixelRatio||1,2);
  for(let i=0;i<cnt;i++){
   const p=await V.doc.getPage(V.n+1+i);if(st!==tok)return;
-  const v=p.getViewport({scale:1}),s=Math.min((W-8*(cnt-1))/cnt/v.width,H/v.height)*V.zoom,dp=Math.min(dpr,Math.sqrt(12e6/(v.width*s*v.height*s))),vp=p.getViewport({scale:s*dp});
-  const c=document.createElement('canvas'),w=document.createElement('div'),cw=v.width*s,ch=v.height*s;c.className='pg';c.width=vp.width;c.height=vp.height;c.style.width=cw+'px';c.style.height=ch+'px';w.className='pw';w.appendChild(c);box.appendChild(w);
+  const v=p.getViewport({scale:1}),s=Math.min((W-G*(cnt-1))/cnt/v.width,H/v.height)*V.zoom,dp=Math.min(dpr,Math.sqrt(12e6/(v.width*s*v.height*s))),vp=p.getViewport({scale:s*dp});
+  const c=document.createElement('canvas'),w=document.createElement('div'),cw=v.width*s,ch=v.height*s;c.className='pg';c.width=vp.width;c.height=vp.height;c.style.width=cw+'px';c.style.height=ch+'px';w.className='pw';w.appendChild(c);nw.push(w);
   await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;if(st!==tok)return;capa(w,V.n+i,cw,ch);
  }
+ if(st!==tok)return;box.replaceChildren(...nw);if(V.rs){box.scrollTo(0,0);V.rs=false}
  $('#pg').textContent=cnt===2?`${V.n+1}-${V.n+2} / ${tot}`:`${V.n+1} / ${tot}`;
 }
 function ir(d){
  const st=V.mode,t=V.doc.numPages,n=V.n+d*st;
- if(n<0||n>=t)return;V.n=n;pintar();
+ if(n<0||n>=t)return;V.n=n;V.rs=true;pintar();
 }
 $('#vp').onclick=()=>ir(-1);$('#vn').onclick=()=>ir(1);
 $('#vm').onclick=()=>{V.mode=V.mode===1?2:1;if(V.mode===2)V.n-=V.n%2;ls.set('modo',V.mode);vista()};
 $('#vz').onclick=()=>{V.zoom=ZS[(ZS.indexOf(V.zoom)+1)%ZS.length];vista()};
 $('#vi').onclick=()=>{V.inv=!V.inv;ls.set('inv',V.inv?'1':'0');vista()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-$('#vx').onclick=()=>{tok++;V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}};
-$('#pages').onclick=e=>{if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{$('#vb').classList.toggle('hide');pintar()}};
+function cerrarV(){tok++;V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
+$('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
+addEventListener('popstate',()=>{if(V.doc)cerrarV()});
+$('#pages').onclick=e=>{if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{const h=$('#vb').classList.toggle('hide');try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
 addEventListener('keydown',e=>{if(!V.doc||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;const k=e.key;if(['ArrowRight','PageDown',' '].includes(k)){ir(1);e.preventDefault()}else if(['ArrowLeft','PageUp'].includes(k)){ir(-1);e.preventDefault()}});
 addEventListener('resize',()=>{if(V.doc)pintar()});
 /* Anotar */

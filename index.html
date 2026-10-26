@@ -41,8 +41,15 @@ input[type=text],textarea,select{width:100%;padding:11px;border-radius:8px;borde
 #vb button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:9px 12px;font-size:15px}
 #vb button.on{border-color:var(--br);color:var(--br)}
 #pages{flex:1;overflow:auto;display:flex;gap:8px;touch-action:pan-x pan-y}
-#pages canvas{margin:auto;flex:none}
-#pages.inv canvas{filter:invert(.92) hue-rotate(180deg)}
+.pw{position:relative;margin:auto;flex:none}.pw canvas{display:block}
+.ov{position:absolute;left:0;top:0;pointer-events:none}
+#pages.an .ov{pointer-events:auto;touch-action:none}#pages.an.mano .ov{pointer-events:none}
+.pin{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;border:2px solid var(--br);background:rgba(212,168,75,.35);padding:0}
+#ab{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 8px;background:var(--pn);border-top:1px solid var(--ln)}
+#ab button{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:8px;padding:8px 11px;font-size:14px}#ab button.on{border-color:var(--br);color:var(--br)}
+#ab .sw{width:30px;height:30px;border-radius:50%;padding:0}#ab .sw.on{border:3px solid var(--tx)}#sws{display:flex;gap:6px}
+#nt{position:fixed;left:0;right:0;bottom:0;z-index:11;background:var(--pn);border-top:1px solid var(--ln);padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
+#pages.inv .pg{filter:invert(.92) hue-rotate(180deg)}
 #pg{color:var(--mu);font-size:14px;min-width:64px;text-align:center}
 .hide{display:none!important}
 </style></head><body>
@@ -51,20 +58,22 @@ input[type=text],textarea,select{width:100%;padding:11px;border-radius:8px;borde
 <nav id="nav"></nav>
 <div id="modal" class="modal hide"></div>
 <div id="v" class="hide">
- <div id="vb"><button id="vx">✕</button><span class="tt" id="vt"></span><button id="vi" title="Invertir colores">◐</button><button id="vz">×1</button><button id="vm"></button><button id="vp">‹</button><span id="pg"></span><button id="vn">›</button></div>
+ <div id="vb"><button id="vx">✕</button><span class="tt" id="vt"></span><button id="vi" title="Invertir colores">◐</button><button id="vo" class="hide">✎ Anotar</button><button id="vz">×1</button><button id="vm"></button><button id="vp">‹</button><span id="pg"></span><button id="vn">›</button></div>
+ <div id="ab" class="hide"><button data-t="l">Lápiz</button><button data-t="h">Resaltador</button><button data-t="g">Goma</button><button data-t="n">Nota</button><button data-t="m">Mover</button><span id="sws"></span><button id="agr"></button><button id="aun">Deshacer</button><button id="aoc"></button></div>
  <div id="pages"></div>
 </div>
+<div id="nt" class="hide"><textarea id="ntx" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit"></textarea><div class="row"><button class="btn" id="nts">Guardar</button><button class="btn d" id="ntd">Borrar</button><button class="btn s" id="ntc">Cerrar</button></div></div>
 <script src="pdf.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
-const DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
+const MAXP=10,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let db,obras=[],pdfIds=new Set(),tab='hoy';
+let db,obras=[],pdfIds=new Set(),tab='est',sub='obras',gf='';
 const rq=(s,m,f)=>new Promise((ok,no)=>{const r=f(db.transaction(s,m).objectStore(s));r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 
 async function init(){
- db=await new Promise((ok,no)=>{const r=indexedDB.open('estudio',1);r.onupgradeneeded=()=>{r.result.createObjectStore('obras',{keyPath:'id',autoIncrement:true});r.result.createObjectStore('pdfs')};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+ db=await new Promise((ok,no)=>{const r=indexedDB.open('estudio',2);r.onupgradeneeded=()=>{const d=r.result,c=(n,o)=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,o)};c('obras',{keyPath:'id',autoIncrement:true});c('pdfs');c('notas',{keyPath:'obra'})};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();
  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
  if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='pdf.worker.min.js';
@@ -78,32 +87,57 @@ const sortO=a=>a.sort((x,y)=>PRI[x.prioridad]-PRI[y.prioridad]||x.titulo.localeC
 const PL={alta:'Alta',media:'Media',baja:'Baja'};
 
 function draw(){
- const now=new Date(),hoy=now.getDay();
- $('#h1').textContent={hoy:'Hoy',rep:'Repertorio',sem:'Semana',aju:'Ajustes'}[tab];
- $('#h2').textContent=tab==='hoy'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
- $('#nav').innerHTML=[['hoy','Hoy'],['rep','Repertorio'],['sem','Semana'],['aju','Ajustes']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
+ const now=new Date(),hoy=now.getDay(),m=$('#main');
+ $('#h1').textContent={est:'Hoy',org:'Organizar',aju:'Ajustes'}[tab];
+ $('#h2').textContent=tab==='est'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
+ $('#nav').innerHTML=[['est','Estudiar'],['org','Organizar'],['aju','Ajustes']].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
  $('#nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
- const m=$('#main');
- if(tab==='hoy'){
+ if(tab==='est'){
   const l=sortO(obras.filter(o=>(o.dias||[]).includes(hoy)));
-  m.innerHTML=l.length?l.map(o=>card(o)).join(''):'<div class="empty">No hay obras asignadas para hoy.<br>Asignalas en la pestaña Semana.</div>';
+  m.innerHTML=l.length?l.map(o=>card(o)).join(''):'<div class="empty">No hay obras asignadas para hoy.<br>Asignalas en Organizar, pestaña Semana.</div>';
   bindCards(m);
- }else if(tab==='rep'){
-  m.innerHTML='<button class="btn" id="add">+ Agregar obra</button><div style="height:12px"></div>'+(obras.length?sortO([...obras]).map(o=>card(o,true)).join(''):'<div class="empty">Todavía no cargaste obras.</div>');
-  $('#add').onclick=()=>form();bindCards(m,true);
- }else if(tab==='sem'){
-  m.innerHTML=obras.length?sortO([...obras]).map(o=>`<div class="card" style="display:block"><div style="display:flex;gap:12px"><span class="dot ${o.prioridad}"></span><div><div class="tt">${esc(o.titulo)}</div><small>${esc(o.compositor)} · Prioridad ${PL[o.prioridad]}</small></div></div><div class="days">${ORD.map(d=>`<button data-o="${o.id}" data-d="${d}" class="${(o.dias||[]).includes(d)?'on':''} ${d===hoy?'hoy':''}">${DIAS[d]}</button>`).join('')}</div></div>`).join(''):'<div class="empty">Cargá obras en Repertorio para organizarlas.</div>';
-  m.querySelectorAll('.days button').forEach(b=>b.onclick=async()=>{
-   const o=obras.find(x=>x.id==b.dataset.o),d=+b.dataset.d;o.dias=o.dias||[];
-   o.dias=o.dias.includes(d)?o.dias.filter(x=>x!==d):[...o.dias,d];
-   await rq('obras','readwrite',s=>s.put(o));b.classList.toggle('on')});
+ }else if(tab==='org'){
+  m.innerHTML=`<div class="days" style="margin:0 0 12px">${[['obras','Obras'],['sem','Semana']].map(([k,t])=>`<button data-s="${k}" class="${k===sub?'on':''}">${t}</button>`).join('')}</div><div id="sb"></div>`;
+  m.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sub=b.dataset.s;draw()});
+  sub==='obras'?vObras($('#sb')):vSem($('#sb'),hoy);
  }else{
   m.innerHTML=`<p style="color:var(--mu)">Los datos viven solo en este dispositivo. Hacé un respaldo seguido por si el sistema borra la caché.</p><div class="row"><button class="btn" id="ex">Exportar respaldo</button><button class="btn s" id="im">Importar respaldo</button></div><input type="file" id="imf" accept=".json,application/json" class="hide"><p id="msg" style="color:var(--br)"></p>`;
   $('#ex').onclick=exportar;$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
  }
 }
+function vObras(m){
+ const gr=[...new Set(obras.map(o=>o.grupo).filter(Boolean))].sort(),sin=obras.filter(o=>o.sin).length;
+ const ch=[['','Todas'],...(sin?[['__sin','Sin clasificar ('+sin+')']]:[]),...gr.map(g=>[g,g])];
+ if(!ch.some(c=>c[0]===gf))gf='';
+ const l=obras.filter(o=>gf===''||(gf==='__sin'?o.sin:o.grupo===gf));
+ m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="imp">+ Importar PDFs</button><button class="btn s" id="add">Nueva obra</button></div><input type="file" id="impf" accept="application/pdf" multiple class="hide"><div class="row" style="margin-top:0">${ch.map(([k,t])=>`<button class="btn s" data-g="${esc(k)}" style="padding:8px 12px;font-size:14px;${k===gf?'border-color:var(--br);color:var(--br)':''}">${esc(t)}</button>`).join('')}</div><p id="imsg" style="color:var(--br);margin:0 0 8px"></p>`+(l.length?sortO([...l]).map(o=>card(o,true)).join(''):'<div class="empty">No hay obras en esta vista.</div>');
+ m.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{gf=b.dataset.g;draw()});
+ $('#add').onclick=()=>form();bindCards(m);
+ $('#imp').onclick=()=>$('#impf').click();
+ $('#impf').onchange=async e=>{
+  const fs=[...e.target.files],bad=[];let ok=0;
+  for(const f of fs){
+   $('#imsg').textContent=`Importando ${ok+bad.length+1} de ${fs.length}…`;
+   try{
+    const d=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;
+    if(d.numPages>MAXP){bad.push(`${f.name} (${d.numPages} págs.)`);continue}
+    const id=await rq('obras','readwrite',s=>s.add({titulo:f.name.replace(/\.pdf$/i,''),compositor:'',notas:'',prioridad:'media',dias:[],grupo:'',sin:true}));
+    await rq('pdfs','readwrite',s=>s.put(f,id));ok++;
+   }catch(x){bad.push(f.name+' (no se pudo leer)')}
+  }
+  await load();if(ok)gf='__sin';draw();
+  $('#imsg').textContent=`${ok} importada(s).`+(bad.length?` No se importaron: ${bad.join(', ')}. El máximo es ${MAXP} páginas por PDF.`:'');
+ };
+}
+function vSem(m,hoy){
+ m.innerHTML=obras.length?sortO([...obras]).map(o=>`<div class="card" style="display:block"><div style="display:flex;gap:12px"><span class="dot ${o.prioridad}"></span><div><div class="tt">${esc(o.titulo)}</div><small>${esc(o.compositor)} · Prioridad ${PL[o.prioridad]}</small></div></div><div class="days">${ORD.map(d=>`<button data-o="${o.id}" data-d="${d}" class="${(o.dias||[]).includes(d)?'on':''} ${d===hoy?'hoy':''}">${DIAS[d]}</button>`).join('')}</div></div>`).join(''):'<div class="empty">Cargá obras en la pestaña Obras para organizarlas.</div>';
+ m.querySelectorAll('.days button').forEach(b=>b.onclick=async()=>{
+  const o=obras.find(x=>x.id==b.dataset.o),d=+b.dataset.d;o.dias=o.dias||[];
+  o.dias=o.dias.includes(d)?o.dias.filter(x=>x!==d):[...o.dias,d];
+  await rq('obras','readwrite',s=>s.put(o));b.classList.toggle('on')});
+}
 function card(o,ed){
- return `<div class="card" data-id="${o.id}"><span class="dot ${o.prioridad}"></span><div style="flex:1"><div class="tt">${esc(o.titulo)}</div><small>${esc(o.compositor)} · ${PL[o.prioridad]}${pdfIds.has(o.id)?'':' · sin PDF'}</small>${o.notas?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}</div>${ed?'<button class="btn s ed" style="padding:8px 12px;font-size:14px">Editar</button>':''}</div>`;
+ return `<div class="card" data-id="${o.id}"><span class="dot ${o.prioridad}"></span><div style="flex:1"><div class="tt">${esc(o.titulo)}</div><small>${esc(o.compositor)}${o.compositor?' · ':''}${PL[o.prioridad]}${o.grupo?' · '+esc(o.grupo):''}${o.sin?' · sin clasificar':''}${pdfIds.has(o.id)?'':' · sin PDF'}</small>${o.notas?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}</div>${ed?'<button class="btn s ed" style="padding:8px 12px;font-size:14px">Editar</button>':''}</div>`;
 }
 function bindCards(m){
  m.querySelectorAll('.card[data-id]').forEach(c=>{
@@ -119,20 +153,21 @@ function form(o){
  <label>Título</label><input type="text" id="f1" value="${esc(o.titulo)}">
  <label>Compositor</label><input type="text" id="f2" value="${esc(o.compositor)}">
  <label>Notas de estudio</label><textarea id="f3" rows="3">${esc(o.notas)}</textarea>
+ <label>Grupo o conjunto (opcional)</label><input type="text" id="f6" list="gl" value="${esc(o.grupo)}"><datalist id="gl">${[...new Set(obras.map(x=>x.grupo).filter(Boolean))].map(g=>`<option value="${esc(g)}">`).join('')}</datalist>
  <label>Prioridad</label><select id="f4">${['alta','media','baja'].map(p=>`<option value="${p}" ${o.prioridad===p?'selected':''}>${PL[p]}</option>`).join('')}</select>
- <label>Partitura en PDF (máximo 7 páginas)${e&&pdfIds.has(o.id)?' · ya hay una cargada, elegí otra para reemplazarla':''}</label><input type="file" id="f5" accept="application/pdf">
+ <label>Partitura en PDF (máximo ${MAXP} páginas)${e&&pdfIds.has(o.id)?' · ya hay una cargada, elegí otra para reemplazarla':''}</label><input type="file" id="f5" accept="application/pdf">
  <label>Días de estudio</label><div class="days" id="fd">${ORD.map(d=>`<button type="button" data-d="${d}" class="${(o.dias||[]).includes(d)?'on':''}">${DIAS[d]}</button>`).join('')}</div>
  <p id="fe" style="color:var(--al)"></p>
  <div class="row"><button class="btn" id="fs">Guardar</button><button class="btn s" id="fc">Cancelar</button>${e?'<button class="btn d" id="fx">Eliminar</button>':''}</div>`;
  M.querySelectorAll('#fd button').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
  $('#fc').onclick=()=>M.classList.add('hide');
- if(e)$('#fx').onclick=async()=>{if(!confirm('¿Eliminar esta obra y su PDF?'))return;await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));M.classList.add('hide');await load();draw()};
+ if(e)$('#fx').onclick=async()=>{if(!confirm('¿Eliminar esta obra y su PDF?'))return;await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));await rq('notas','readwrite',s=>s.delete(o.id));M.classList.add('hide');await load();draw()};
  $('#fs').onclick=async()=>{
   const err=t=>$('#fe').textContent=t,f=$('#f5').files[0],t=$('#f1').value.trim();
   if(!t)return err('Escribí el título de la obra.');
   if(!e&&!f)return err('Elegí el PDF de la partitura.');
-  if(f){try{const d=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;if(d.numPages>7)return err(`El PDF tiene ${d.numPages} páginas; el máximo es 7.`)}catch(x){return err('No se pudo leer ese PDF. Revisá que sea un archivo válido y que pdf.min.js esté en la carpeta.')}}
-  const n={...o,titulo:t,compositor:$('#f2').value.trim(),notas:$('#f3').value.trim(),prioridad:$('#f4').value,dias:[...M.querySelectorAll('#fd .on')].map(b=>+b.dataset.d)};
+  if(f){try{const d=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;if(d.numPages>MAXP)return err(`El PDF tiene ${d.numPages} páginas; el máximo es ${MAXP}.`)}catch(x){return err('No se pudo leer ese PDF. Revisá que sea un archivo válido y que pdf.min.js esté en la carpeta.')}}
+  const n={...o,titulo:t,compositor:$('#f2').value.trim(),notas:$('#f3').value.trim(),prioridad:$('#f4').value,grupo:$('#f6').value.trim(),sin:false,dias:[...M.querySelectorAll('#fd .on')].map(b=>+b.dataset.d)};
   const id=await rq('obras','readwrite',s=>s.put(n));
   if(f)await rq('pdfs','readwrite',s=>s.put(f,id));
   M.classList.add('hide');await load();draw();
@@ -143,13 +178,13 @@ const ZS=[1,1.5,2,3],V={doc:null,n:0,zoom:1,mode:+ls.get('modo')||1,inv:ls.get('
 async function abrir(o){
  const b=await rq('pdfs','readonly',s=>s.get(o.id));
  try{V.doc=await pdfjsLib.getDocument({data:await b.arrayBuffer(),isEvalSupported:false}).promise}catch(e){alert('No se pudo abrir la partitura. Revisá que pdf.min.js y pdf.worker.min.js estén en la carpeta de la app.');return}
- V.n=0;V.zoom=1;
+ V.n=0;V.zoom=1;$('#vb').classList.remove('hide');V.hist=[];V.hm=false;V.nt=(await rq('notas','readonly',s=>s.get(o.id)))||{obra:o.id,p:{}};
  $('#vt').textContent=o.titulo;$('#v').classList.remove('hide');vista();
  try{wl=await navigator.wakeLock.request('screen')}catch(e){}
 }
 function vista(){
  $('#vm').textContent=V.mode===1?'1 pág.':'2 pág.';$('#vm').classList.toggle('on',V.mode===2);
- $('#vz').textContent='×'+V.zoom;$('#vz').classList.toggle('on',V.zoom>1);$('#vi').classList.toggle('on',V.inv);$('#pages').classList.toggle('inv',V.inv);pintar();
+ $('#vo').classList.toggle('hide',!TAB);$('#vo').classList.toggle('on',V.an);$('#vz').textContent='×'+V.zoom;$('#vz').classList.toggle('on',V.zoom>1);$('#vi').classList.toggle('on',V.inv);$('#pages').classList.toggle('inv',V.inv);pintar();
 }
 async function pintar(){
  const st=++tok,box=$('#pages'),tot=V.doc.numPages;box.innerHTML='';
@@ -157,8 +192,8 @@ async function pintar(){
  for(let i=0;i<cnt;i++){
   const p=await V.doc.getPage(V.n+1+i);if(st!==tok)return;
   const v=p.getViewport({scale:1}),s=Math.min((W-8*(cnt-1))/cnt/v.width,H/v.height)*V.zoom,vp=p.getViewport({scale:s*dpr});
-  const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;c.style.width=vp.width/dpr+'px';c.style.height=vp.height/dpr+'px';box.appendChild(c);
-  await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+  const c=document.createElement('canvas'),w=document.createElement('div'),cw=vp.width/dpr,ch=vp.height/dpr;c.className='pg';c.width=vp.width;c.height=vp.height;c.style.width=cw+'px';c.style.height=ch+'px';w.className='pw';w.appendChild(c);box.appendChild(w);
+  await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;if(st!==tok)return;capa(w,V.n+i,cw,ch);
  }
  $('#pg').textContent=cnt===2?`${V.n+1}-${V.n+2} / ${tot}`:`${V.n+1} / ${tot}`;
 }
@@ -170,13 +205,60 @@ $('#vp').onclick=()=>ir(-1);$('#vn').onclick=()=>ir(1);
 $('#vm').onclick=()=>{V.mode=V.mode===1?2:1;if(V.mode===2)V.n-=V.n%2;ls.set('modo',V.mode);vista()};
 $('#vz').onclick=()=>{V.zoom=ZS[(ZS.indexOf(V.zoom)+1)%ZS.length];vista()};
 $('#vi').onclick=()=>{V.inv=!V.inv;ls.set('inv',V.inv?'1':'0');vista()};
-$('#vx').onclick=()=>{tok++;$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}};
-$('#pages').onclick=e=>{const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1)};
+$('#vx').onclick=()=>{tok++;V.an=false;$('#ab').classList.add('hide');$('#pages').classList.remove('an');$('#nt').classList.add('hide');$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}};
+$('#pages').onclick=e=>{if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else{$('#vb').classList.toggle('hide');pintar()}};
+addEventListener('keydown',e=>{if(!V.doc)return;const k=e.key;if(['ArrowRight','PageDown',' '].includes(k)){ir(1);e.preventDefault()}else if(['ArrowLeft','PageUp'].includes(k)){ir(-1);e.preventDefault()}});
 addEventListener('resize',()=>{if(V.doc)pintar()});
+/* Anotar */
+const TAB=Math.min(screen.width,screen.height)>=600,COL=['#111111','#d93a2b','#2a6fdb','#2e9e5b','#ffd400'];
+Object.assign(V,{an:false,tl:'l',col:COL[1],gr:0,hm:false,hist:[],nt:{p:{}}});
+const gnt=()=>rq('notas','readwrite',s=>s.put(V.nt));
+function abtn(){
+ $('#ab').querySelectorAll('[data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===V.tl));
+ $('#sws').innerHTML=COL.map(c=>`<button class="sw ${c===V.col?'on':''}" data-c="${c}" style="background:${c}"></button>`).join('');
+ $('#sws').querySelectorAll('button').forEach(b=>b.onclick=()=>{V.col=b.dataset.c;if('gnm'.includes(V.tl))V.tl='l';abtn()});
+ $('#agr').textContent=V.gr?'Grueso':'Fino';$('#aoc').textContent=V.hm?'Mostrar marcas':'Ocultar marcas';
+ $('#pages').classList.toggle('mano',V.an&&V.tl==='m');
+}
+$('#ab').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{V.tl=b.dataset.t;abtn()});
+$('#agr').onclick=()=>{V.gr=1-V.gr;abtn()};
+$('#aoc').onclick=()=>{V.hm=!V.hm;abtn();pintar()};
+$('#aun').onclick=()=>{const h=V.hist.pop();if(!h)return;h[0].s=h[0].s.filter(x=>x!==h[1]);gnt();pintar()};
+$('#vo').onclick=()=>{V.an=!V.an;if(V.an)V.hm=false;$('#ab').classList.toggle('hide',!V.an);$('#pages').classList.toggle('an',V.an);abtn();vista()};
+function abrirNt(d,n){
+ const T=$('#nt'),x=$('#ntx');T.classList.remove('hide');x.value=n.t;x.readOnly=!V.an;
+ $('#nts').classList.toggle('hide',!V.an);$('#ntd').classList.toggle('hide',!V.an);
+ $('#nts').onclick=()=>{n.t=x.value.trim();if(!n.t)d.n=d.n.filter(y=>y!==n);gnt();T.classList.add('hide');pintar()};
+ $('#ntd').onclick=()=>{d.n=d.n.filter(y=>y!==n);gnt();T.classList.add('hide');pintar()};
+ $('#ntc').onclick=()=>{if(!n.t)d.n=d.n.filter(y=>y!==n);T.classList.add('hide')};
+}
+function capa(w,pi,cw,ch){
+ const d=V.nt.p[pi]||(V.nt.p[pi]={s:[],n:[]}),o=document.createElement('canvas'),R=2;
+ o.className='ov';o.width=cw*R;o.height=ch*R;o.style.width=cw+'px';o.style.height=ch+'px';w.appendChild(o);
+ const x=o.getContext('2d');
+ const redib=()=>{x.setTransform(R,0,0,R,0,0);x.clearRect(0,0,cw,ch);if(V.hm)return;
+  for(const s of d.s){x.beginPath();x.strokeStyle=s.c;x.globalAlpha=s.h?.35:1;x.lineWidth=s.w*cw;x.lineCap=s.h?'butt':'round';x.lineJoin='round';
+   s.q.forEach((p,i)=>i?x.lineTo(p[0]*cw,p[1]*ch):x.moveTo(p[0]*cw,p[1]*ch));
+   if(s.q.length===1)x.lineTo(s.q[0][0]*cw+.1,s.q[0][1]*ch);x.stroke()}
+  x.globalAlpha=1};
+ redib();
+ if(!V.hm)d.n.forEach(n=>{const b=document.createElement('button');b.className='pin';b.style.left=n.x*cw+'px';b.style.top=n.y*ch+'px';b.onclick=e=>{e.stopPropagation();abrirNt(d,n)};w.appendChild(b)});
+ const pos=e=>{const r=o.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
+ const borrar=q=>{const k=d.s.length;d.s=d.s.filter(s=>!s.q.some(p=>Math.hypot((p[0]-q[0])*cw,(p[1]-q[1])*ch)<14));if(d.s.length!==k)redib()};
+ let cur=null;
+ o.onpointerdown=e=>{
+  if(!V.an)return;e.preventDefault();o.setPointerCapture(e.pointerId);const q=pos(e);
+  if(V.tl==='n'){const n={x:q[0],y:q[1],t:''};d.n.push(n);abrirNt(d,n);return}
+  if(V.tl==='g'){borrar(q);cur='g';return}
+  cur={c:V.col,h:V.tl==='h',w:(V.tl==='h'?[.012,.022]:[.0025,.005])[V.gr],q:[q]};d.s.push(cur);redib();
+ };
+ o.onpointermove=e=>{if(!cur)return;const q=pos(e);if(cur==='g')borrar(q);else{cur.q.push(q);redib()}};
+ o.onpointerup=o.onpointercancel=()=>{if(!cur)return;if(cur!=='g')V.hist.push([d,cur]);gnt();cur=null};
+}
 /* Respaldo */
 const b2d=b=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(b)});
 async function exportar(){
- const out={version:1,obras,pdfs:{}};
+ const out={version:2,obras,pdfs:{},notas:await rq('notas','readonly',s=>s.getAll())};
  for(const o of obras){const b=await rq('pdfs','readonly',s=>s.get(o.id));if(b)out.pdfs[o.id]=await b2d(b)}
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'}));
  a.download='respaldo-estudio-'+new Date().toISOString().slice(0,10)+'.json';a.click();$('#msg').textContent='Respaldo exportado.';
@@ -185,8 +267,9 @@ async function importar(f){
  if(!f||!confirm('Importar reemplaza todo lo que hay ahora en la app. ¿Seguir?'))return;
  try{
   const d=JSON.parse(await f.text());
-  await rq('obras','readwrite',s=>s.clear());await rq('pdfs','readwrite',s=>s.clear());
+  await rq('obras','readwrite',s=>s.clear());await rq('pdfs','readwrite',s=>s.clear());await rq('notas','readwrite',s=>s.clear());
   for(const o of d.obras){await rq('obras','readwrite',s=>s.put(o));const u=d.pdfs[o.id];if(u)await rq('pdfs','readwrite',s=>s.put(await0(u),o.id))}
+  for(const n of d.notas||[])await rq('notas','readwrite',s=>s.put(n));
  }catch(e){$('#msg').textContent='No se pudo importar: el archivo no es un respaldo válido.';return}
  await load();draw();$('#msg').textContent='Respaldo importado.';
 }

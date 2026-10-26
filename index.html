@@ -66,7 +66,7 @@ input[type=text],input[type=date],input[type=number],textarea,select{width:100%;
 #rbar{margin:0 14px 8px;padding:10px 12px;border:1px solid var(--al);border-radius:10px;background:color-mix(in srgb,var(--al) 14%,var(--pn));display:flex;gap:8px;align-items:center;font-size:14px}
 #lkc{position:absolute;left:10px;top:calc(env(safe-area-inset-top) + 10px);z-index:6;width:50px;height:50px;border-radius:50%;border:0;background:rgba(20,20,20,.55);color:#fff;display:flex;align-items:center;justify-content:center}
 #vch{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 10px 0}#vch::-webkit-scrollbar{display:none}#vch button{flex:none;border:1px solid var(--ln);background:var(--bg);color:var(--tx);border-radius:999px;padding:6px 14px;font-size:13px}
-.li button.on{background:var(--br);color:#1a1405;border-color:var(--br)}.mr.w{flex-wrap:wrap}
+.li button.on{background:var(--br);color:#1a1405;border-color:var(--br)}.mr.w{flex-wrap:wrap}#selb{position:sticky;bottom:0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--pn);border:1px solid var(--br);border-radius:12px;padding:10px;margin-top:10px;box-shadow:0 -6px 20px rgba(0,0,0,.35)}#selb .btn{padding:10px 12px;font-size:14px}#selb button:disabled{opacity:.4}.card.chk{border-color:var(--br)}.cb{font-size:24px;color:var(--br)}
 .hide{display:none!important}#pages::-webkit-scrollbar{display:none}
 
 /* Aspecto: Folklore (poncho), Tango (bordó y oro) y Clásico */
@@ -120,9 +120,9 @@ const $=s=>document.querySelector(s);
 const IC={lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
 const svg=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 document.querySelectorAll('i[data-ic]').forEach(i=>i.innerHTML=svg(i.dataset.ic));
-const MAXP=100,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
+const MAXP=150,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let db,obras=[],listas=[],pdfIds=new Set(),tab='est',sub='obras',gf='',se='hoy',wk=0,oq='';
+let SEL=null,db,obras=[],listas=[],pdfIds=new Set(),tab='est',sub='obras',gf='',se='hoy',wk=0,oq='';
 const nz=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const fmtF=f=>{const [y,m,d]=f.split('-');return new Date(y,m-1,d).toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short',year:'numeric'})};
@@ -146,7 +146,7 @@ const pdfOf=o=>o.ref||o.id;
 const sortO=a=>a.sort((x,y)=>PRI[x.prioridad]-PRI[y.prioridad]||x.titulo.localeCompare(y.titulo));
 const PL={alta:'Alta',media:'Media',baja:'Baja'};
 
-function draw(){
+function draw(){if(tab!=='org'||sub!=='obras')SEL=null;
  const now=new Date(),hoy=now.getDay(),m=$('#main');
  $('#h1').textContent={est:{hoy:'Hoy',age:'Agenda',pra:'Práctica',lis:'Listas'}[se],org:'Organizar',aju:'Ajustes'}[tab];
  $('#h2').textContent=tab==='est'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
@@ -171,10 +171,12 @@ function vObras(m){
  const ch=[['','Todas'],...(sin?[['__sin','Sin clasificar ('+sin+')']]:[]),...gr.map(g=>[g,g])];
  if(!ch.some(c=>c[0]===gf))gf='';
  const l=obras.filter(o=>gf===''||(gf==='__sin'?o.sin:o.grupo===gf));
- m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="imp">+ Importar PDFs</button><button class="btn s" id="add">Nueva obra</button></div><input type="file" id="impf" accept="application/pdf" multiple class="hide"><div class="row" style="margin-top:0">${ch.map(([k,t])=>`<button class="btn s" data-g="${esc(k)}" style="padding:8px 12px;font-size:14px;${k===gf?'border-color:var(--br);color:var(--br)':''}">${esc(t)}</button>`).join('')}</div><select id="ord" style="margin-bottom:8px">${[['pri','Orden: por prioridad'],['az','Orden: de la A a la Z'],['rec','Orden: más recientes primero']].map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select><input type="text" id="oq" placeholder="Buscar por título o compositor" value="${esc(oq)}"><p id="imsg" style="color:var(--br);margin:8px 0"></p><div id="lst"></div>`;
- const pl=()=>{const k=nz(oq),r=l.filter(o=>!k||nz(o.titulo+' '+o.compositor+' '+(o.grupo||'')).includes(k));$('#lst').innerHTML=r.length?ordO([...r]).map(o=>card(o,true)).join(''):'<div class="empty">No hay obras en esta vista.</div>';bindCards($('#lst'))};
+ m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="imp">+ Importar PDFs</button><button class="btn s" id="add">Nueva obra</button><button class="btn s" id="sel">${SEL?'Salir de selección':'Seleccionar'}</button></div><input type="file" id="impf" accept="application/pdf" multiple class="hide"><div class="row" style="margin-top:0">${ch.map(([k,t])=>`<button class="btn s" data-g="${esc(k)}" style="padding:8px 12px;font-size:14px;${k===gf?'border-color:var(--br);color:var(--br)':''}">${esc(t)}</button>`).join('')}</div><select id="ord" style="margin-bottom:8px">${[['pri','Orden: por prioridad'],['az','Orden: de la A a la Z'],['rec','Orden: más recientes primero']].map(([k,t])=>`<option value="${k}">${t}</option>`).join('')}</select><input type="text" id="oq" placeholder="Buscar por título o compositor" value="${esc(oq)}"><p id="imsg" style="color:var(--br);margin:8px 0"></p><div id="lst"></div>`;
+ const pl=()=>{const k=nz(oq),r=l.filter(o=>!k||nz(o.titulo+' '+o.compositor+' '+(o.grupo||'')).includes(k));$('#lst').innerHTML=r.length?ordO([...r]).map(o=>card(o,true)).join(''):'<div class="empty">No hay obras en esta vista.</div>';bindCards($('#lst'));
+  if(SEL){$('#lst').querySelectorAll('.card[data-id]').forEach(c=>{const id=+c.dataset.id;c.classList.toggle('chk',SEL.has(id));const e=c.querySelector('.ed');if(e){e.outerHTML='<span class="cb">'+(SEL.has(id)?'☑':'☐')+'</span>'}c.onclick=()=>{SEL.has(id)?SEL.delete(id):SEL.add(id);pl()}})}
+  barSel(m,r)};
  pl();$('#oq').oninput=e=>{oq=e.target.value;pl()};
- m.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{gf=b.dataset.g;draw()});
+ m.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{gf=b.dataset.g;draw()});$('#sel').onclick=()=>{SEL=SEL?null:new Set();draw()};
  $('#ord').value=ls.get('orden')||'pri';$('#ord').onchange=e=>{ls.set('orden',e.target.value);pl()};$('#add').onclick=()=>form();
  $('#imp').onclick=()=>$('#impf').click();
  $('#impf').onchange=async e=>{
@@ -209,6 +211,23 @@ function bindCards(m){
   c.onclick=()=>{if(pdfIds.has(o.id))abrir(o);else form(o)};
  });
 }
+function barSel(m,vis){
+ let b=$('#selb');if(b)b.remove();if(!SEL)return;
+ b=document.createElement('div');b.id='selb';const n=SEL.size;
+ b.innerHTML=`<span style="flex:1;font-weight:600">${n} seleccionada${n===1?'':'s'}</span><button class="btn s" id="sa">Todas</button><button class="btn s" id="sm" ${n?'':'disabled'}>Mover a carpeta</button><button class="btn d" id="sd" ${n?'':'disabled'}>Eliminar</button>`;
+ m.appendChild(b);
+ $('#sa').onclick=()=>{vis.forEach(o=>SEL.add(o.id));draw()};
+ $('#sd').onclick=async()=>{const L=obras.filter(o=>SEL.has(o.id));if(!confirm('¿Eliminar '+L.length+' obra'+(L.length===1?'':'s')+' con sus PDF? No se puede deshacer.\n\nHacé un respaldo antes si tenés dudas.'))return;for(const o of L)await borrarObra(o);SEL=new Set();await load();draw();toast(L.length+' eliminada'+(L.length===1?'':'s')+'.')};
+ $('#sm').onclick=()=>moverSel();
+}
+function moverSel(){
+ const M=$('#modal'),gr=[...new Set(obras.map(o=>o.grupo).filter(Boolean))].sort();M.classList.remove('hide');
+ M.innerHTML=`<h2 style="margin:0">Mover ${SEL.size} obra${SEL.size===1?'':'s'} a…</h2><div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">${gr.map(g=>`<button class="btn s" data-mg="${esc(g)}">📁 ${esc(g)}</button>`).join('')}<button class="btn s" data-mg="">Sin carpeta</button></div><label>O una carpeta nueva</label><input type="text" id="mgn" placeholder="Nombre de la carpeta"><div class="row"><button class="btn" id="mgk">Crear y mover</button><button class="btn s" id="mgc">Cancelar</button></div>`;
+ const go=async g=>{for(const o of obras.filter(x=>SEL.has(x.id)))await rq('obras','readwrite',s=>s.put({...o,grupo:g,sin:false}));const n=SEL.size;SEL=new Set();M.classList.add('hide');await load();draw();toast(n+' movida'+(n===1?'':'s')+(g?' a “'+g+'”.':' a sin carpeta.'))};
+ M.querySelectorAll('[data-mg]').forEach(b=>b.onclick=()=>go(b.dataset.mg));
+ $('#mgk').onclick=()=>{const v=$('#mgn').value.trim();if(v)go(v)};$('#mgc').onclick=()=>M.classList.add('hide');
+}
+async function borrarObra(o){await load();const dep=obras.filter(x=>x.ref===o.id);if(dep.length){const bl=await rq('pdfs','readonly',s=>s.get(o.id)),nw=dep[0],{ref:_r,...nr}=nw;await rq('pdfs','readwrite',s=>s.put(bl,nw.id));await rq('obras','readwrite',s=>s.put(nr));for(const x of dep.slice(1))await rq('obras','readwrite',s=>s.put({...x,ref:nw.id}))}await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));await rq('notas','readwrite',s=>s.delete(o.id));for(const l of listas.filter(l=>l.obras.includes(o.id)))await rq('listas','readwrite',s=>s.put({...l,obras:l.obras.filter(x=>x!==o.id)}));}
 function form(o){
  const e=!!o;o=o||{prioridad:'media',dias:[]};
  const M=$('#modal');M.classList.remove('hide');
@@ -226,7 +245,7 @@ function form(o){
  M.querySelectorAll('#fd button').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
  $('#fc').onclick=()=>M.classList.add('hide');
  if($('#fdv'))$('#fdv').onclick=()=>divForm(o);
- if(e)$('#fx').onclick=async()=>{if(!confirm('¿Eliminar esta obra y su PDF?'))return;const dep=obras.filter(x=>x.ref===o.id);if(dep.length){const bl=await rq('pdfs','readonly',s=>s.get(o.id)),nw=dep[0],{ref:_r,...nr}=nw;await rq('pdfs','readwrite',s=>s.put(bl,nw.id));await rq('obras','readwrite',s=>s.put(nr));for(const x of dep.slice(1))await rq('obras','readwrite',s=>s.put({...x,ref:nw.id}))}await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));await rq('notas','readwrite',s=>s.delete(o.id));for(const l of listas.filter(l=>l.obras.includes(o.id)))await rq('listas','readwrite',s=>s.put({...l,obras:l.obras.filter(x=>x!==o.id)}));M.classList.add('hide');await load();draw()};
+ if(e)$('#fx').onclick=async()=>{if(!confirm('¿Eliminar esta obra y su PDF?'))return;await borrarObra(o);M.classList.add('hide');await load();draw()};
  $('#fs').onclick=async()=>{
   const err=t=>$('#fe').textContent=t,f=$('#f5').files[0],t=$('#f1').value.trim();
   if(!t)return err('Escribí el título de la obra.');

@@ -89,6 +89,17 @@ header{position:relative}
 #mdots .dot.md.on{background:var(--me)}
 #sc{position:fixed;left:0;right:0;bottom:0;z-index:12;background:var(--pn);border-top:1px solid var(--ln);padding:12px 12px calc(12px + env(safe-area-inset-bottom));max-height:65%;overflow:auto}
 .scr{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--ln)}
+
+#prg{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 12px);z-index:100;min-width:260px;max-width:92vw;background:var(--pn);border:1px solid var(--br);border-radius:14px;padding:12px 16px;box-shadow:0 8px 30px rgba(0,0,0,.5)}#prg b{display:block;font-size:15px;margin-bottom:6px}#prg small{color:var(--mu)}#prg.ok{border-color:#2e9e5b}#prg.bad{border-color:var(--al)}
+.pb{height:8px;border-radius:99px;background:var(--ln);overflow:hidden;margin:4px 0}.pb i{display:block;height:100%;background:var(--br);transition:width .2s}.pb.ind i{width:35%;animation:ind 1.1s infinite ease-in-out}@keyframes ind{0%{margin-left:-35%}100%{margin-left:100%}}
+#lps{display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--pn);border-top:1px solid var(--ln)}#lps b{font-size:13px;min-width:112px;color:var(--tx);white-space:nowrap}#lps .sg{display:flex;gap:2px;flex:1;height:12px}#lps .sg i{flex:1;border-radius:3px;background:var(--ln)}#lps .sg i.p{background:color-mix(in srgb,var(--br) 55%,var(--ln))}#lps .sg i.c{background:var(--br);transform:scaleY(1.5);box-shadow:0 0 8px var(--br)}#lps .sg i.e{outline:1px solid var(--al);outline-offset:-1px}#lps .sg i.c.e{background:var(--al);box-shadow:0 0 8px var(--al)}#lps .sg i.c.s{background:#2e9e5b;box-shadow:0 0 8px #2e9e5b}#lps b.s{color:#5fd08c}#lps b.e{color:var(--al)}
+#v.lk #pg{pointer-events:none!important}#v.lk #sc,#v.lk #nt,#v.lk #mb,#v.lk #vch{display:none!important}
+@media(min-width:900px){.cg,#lst{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));column-gap:12px;align-items:start}.cg>.row,.cg>.empty{grid-column:1/-1}main{padding:10px 22px 24px}}
+@media(min-width:700px) and (orientation:landscape){
+ #mb{left:auto;right:0;width:min(780px,72vw);border-radius:14px 0 0 0;border-left:1px solid var(--ln);padding:8px 12px 2px;display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+ #mb .mr{margin:0 0 6px;gap:6px;min-width:0}#mb button{padding:6px 10px;font-size:14px}#mb .ml{font-size:13px}#mb #mbpm{width:54px;padding:6px}#mb input.nm[type=number]{width:50px;padding:6px}
+ #mx{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;column-gap:14px}#mx .mr.w{grid-column:1/-1}
+}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p></header>
@@ -98,15 +109,16 @@ header{position:relative}
 <div id="modal" class="modal hide"></div>
 <div id="v" class="hide">
  <div id="vb"><button class="ib" id="vx" aria-label="Volver a la lista"><i data-ic="back"></i></button><span class="tt" id="vt"></span>
-  <div id="ab" class="hide"><button class="ib" data-t="l"><i data-ic="pen"></i><span>Lápiz</span></button><button class="ib" data-t="h"><i data-ic="hl"></i><span>Resaltar</span></button><button class="ib" data-t="g"><i data-ic="er"></i><span>Goma</span></button><button class="ib" data-t="n"><i data-ic="note"></i><span>Nota</span></button><span class="sep"></span><span id="sws"></span><span class="sep"></span><button class="ib" id="aun"><i data-ic="undo"></i><span>Deshacer</span></button><button class="ab2" id="agr"></button><button class="ab2" id="adi"></button><button class="ab2" id="aoc"></button></div>
+  <div id="ab" class="hide"><button class="ib" data-t="l"><i data-ic="pen"></i><span>Lápiz</span></button><button class="ib" data-t="h"><i data-ic="hl"></i><span>Resaltar</span></button><button class="ib" data-t="g"><i data-ic="er"></i><span>Goma</span></button><button class="ib" data-t="n"><i data-ic="note"></i><span>Nota</span></button><button class="ib" data-t="m"><i data-ic="hand"></i><span>Mover</span></button><span class="sep"></span><span id="sws"></span><span class="sep"></span><button class="ib" id="aun"><i data-ic="undo"></i><span>Deshacer</span></button><button class="ab2" id="agr"></button><button class="ab2" id="adi"></button><button class="ab2" id="aoc"></button></div>
   <button class="ib" id="vlk" aria-label="Modo escenario"><i data-ic="lock"></i><span>Escenario</span></button>
  </div>
  <button id="lkc" class="hide" aria-label="Desbloquear"><i data-ic="lock"></i></button>
  <div id="pg"></div>
  <div id="pages"></div>
+ <div id="lps" class="hide"></div>
  <div id="vf">
   <div id="mb" class="hide"><div class="mr"><span class="ml" id="mlab"></span><button id="mm">−</button><input id="mbpm" type="number" min="30" max="240" inputmode="numeric"><button id="mp">+</button><input id="msl" type="range" min="30" max="240"><button id="mtap">Tap</button></div><div class="mr"><span class="ml">Compás</span><span id="mcs" class="chips"></span></div><div class="mr"><span class="ml">Pulso</span><span id="mus" class="chips"></span></div><div class="mr"><span id="mdots"></span><button id="mmore">Más ▾</button><button id="mgo"></button></div>
-  <div id="mx" class="hide"><div class="mr"><span class="ml">Sonido</span><span id="mss" class="chips"></span></div><div class="mr"><span class="ml">Volumen</span><input type="range" id="mvol" min="10" max="100" style="flex:1;accent-color:var(--br)"></div><div class="mr w"><button id="mpg">Subir de a poco</button><span class="ml">+</span><input id="mpst" class="nm" type="number" inputmode="numeric"><span class="ml">cada</span><input id="mpn" class="nm" type="number" inputmode="numeric"><span class="ml">compases, hasta</span><input id="mptg" class="nm" type="number" inputmode="numeric"></div><div class="mr w"><button id="lpg">↻ Repetir páginas</button><input id="lpa" class="nm" type="number" inputmode="numeric"><span class="ml">a</span><input id="lpb" class="nm" type="number" inputmode="numeric"><button id="lpt">Subir tempo cada vuelta</button><span class="ml" id="lpc"></span></div></div></div>
+  <div id="mx" class="hide"><div class="mr"><span class="ml">Sonido</span><span id="mss" class="chips"></span></div><div class="mr"><span class="ml">Volumen</span><input type="range" id="mvol" min="10" max="100" style="flex:1;accent-color:var(--br)"></div><div class="mr w"><button id="mpg">Subir de a poco</button><span class="ml">+</span><input id="mpst" class="nm" type="number" inputmode="numeric"><span class="ml">cada</span><input id="mpn" class="nm" type="number" inputmode="numeric"><span class="ml">compases, hasta</span><input id="mptg" class="nm" type="number" inputmode="numeric"></div><div class="mr w"><button id="lpg">↻ Repetir páginas</button><input id="lpa" class="nm" type="number" inputmode="numeric"><span class="ml">a</span><input id="lpb" class="nm" type="number" inputmode="numeric"><span class="ml">con</span><input id="lpk" class="nm" type="number" inputmode="numeric" placeholder="?"><span class="ml">compases por pantalla</span><button id="lpt">Subir tempo cada vuelta</button><span class="ml" id="lpc"></span></div></div></div>
   <div id="vch" class="hide"></div>
   <div id="vs"><button id="vp" aria-label="Página anterior">‹</button><input type="range" id="vsl" min="1" max="1" value="1"><button id="vn" aria-label="Página siguiente">›</button></div>
   <div id="mn"><button class="ib" id="vm"><i data-ic="pages"></i><span id="vml"></span></button><button class="ib" id="vmt"><i data-ic="metro"></i><span>Metrónomo</span></button><button class="ib" id="pplay"><i data-ic="play"></i><span id="ppl"></span></button><button class="ib hide" id="pfin"><i data-ic="stop"></i><span>Terminar</span></button><button class="ib" id="vsec"><i data-ic="mark"></i><span>Secciones</span></button></div>
@@ -131,7 +143,7 @@ header{position:relative}
  Obra: {id,titulo,compositor,notas,prioridad,dias,grupo,sin,ref,rg,marc,h,del}  (ref/rg = parte de otro PDF; h = huella; del = fecha de papelera)
 */
 const $=s=>document.querySelector(s);
-const IC={lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
+const IC={hand:'<path d="M8 13V6a1.5 1.5 0 013 0v5M11 11V4.5a1.5 1.5 0 013 0V11M14 11V6a1.5 1.5 0 013 0v7a6 6 0 01-6 6h-1a5 5 0 01-4-2l-2.5-3.5a1.4 1.4 0 012.2-1.7L8 13"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
 const svg=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 document.querySelectorAll('i[data-ic]').forEach(i=>i.innerHTML=svg(i.dataset.ic));
 const MAXP=150,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
@@ -179,8 +191,8 @@ function draw(){if(tab!=='org'||sub!=='obras')SEL=null;
   m.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sub=b.dataset.s;draw()});
   sub==='obras'?vObras($('#sb')):vSem($('#sb'),hoy);
  }else{
-  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><div class="card" id="rcard" style="display:block"><div class="tt">Respaldo</div><div id="rst" style="margin:4px 0 2px;font-weight:600"></div><small>Tus partituras, marcas, listas y práctica viven solo en este dispositivo. Si Android o el navegador borran los datos, se pierden. Mandá el respaldo a tu Drive o a tu mail cada tanto.</small><div class="row"><button class="btn" id="exs">Compartir respaldo</button><button class="btn s" id="ex">Guardar en la tablet</button><button class="btn s" id="im">Importar respaldo</button></div><small id="prot"></small></div><div class="card" style="display:block"><div class="tt">Papelera${papelera.length?' ('+papelera.length+')':''}</div><small>Las obras eliminadas se guardan 30 días y después se borran solas.</small><div class="row"><button class="btn s" id="pap">Ver papelera</button></div></div><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
-  $('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#pap').onclick=verPapelera;$('#ex').onclick=()=>exportar('file');$('#exs').onclick=()=>exportar('share');(async()=>{try{let p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():false;if(!p&&navigator.storage&&navigator.storage.persist)p=await navigator.storage.persist();const e=$('#prot');if(e)e.textContent=p?'Protección de datos del navegador: activa.':'Protección de datos del navegador: no activa. Por eso el respaldo es importante.'}catch(e){}})();$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
+  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><div class="card" id="rcard" style="display:block"><div class="tt">Respaldo</div><div id="rst" style="margin:4px 0 2px;font-weight:600"></div><small>Tus partituras, marcas, listas y práctica viven solo en este dispositivo. Si Android o el navegador borran los datos, se pierden. Mandá el respaldo a tu Drive o a tu mail cada tanto.</small><div class="row"><button class="btn" id="exs">Compartir respaldo</button><button class="btn s" id="ex">Guardar en la tablet</button><button class="btn s" id="im">Importar respaldo</button></div><small>“Importar respaldo”: elegí un archivo <b>.estudio</b> (o el .json viejo). Antes de cambiar nada te muestro cuántas obras y listas trae, y arriba vas a ver el avance.</small><small id="prot" style="margin-top:6px"></small></div><div class="card" style="display:block"><div class="tt">Papelera${papelera.length?' ('+papelera.length+')':''}</div><small>Las obras eliminadas se guardan 30 días y después se borran solas.</small><div class="row"><button class="btn s" id="pap">Ver papelera</button></div></div><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="fsc" ${fsPref()?'checked':''} style="width:22px;height:22px"> Pantalla completa (oculta las barras de Android)</label><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
+  $('#fsc').onchange=e=>{ls.set('fsc',e.target.checked?'1':'0');if(e.target.checked){fsNo=false;fsTry()}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})};$('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#pap').onclick=verPapelera;$('#ex').onclick=()=>exportar('file');$('#exs').onclick=()=>exportar('share');(async()=>{try{let p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():false;if(!p&&navigator.storage&&navigator.storage.persist)p=await navigator.storage.persist();const e=$('#prot');if(e)e.textContent=p?'Protección de datos del navegador: activa.':'Protección de datos del navegador: no activa. Por eso el respaldo es importante.'}catch(e){}})();$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
  }
  rstUI();
 }
@@ -203,6 +215,13 @@ function vObras(m){
   $('#imsg').textContent=`${r.ids.length} importada(s).`+(r.bad.length?` No se importaron: ${r.bad.join(', ')}. El máximo es ${MAXP} páginas por PDF.`:'')+(r.dup.length?` Omitidas por repetidas: ${r.dup.join(', ')}.`:'');
  };
 }
+const fsPref=()=>{const v=ls.get('fsc');return v==='1'||(v!=='0'&&Math.min(screen.width,screen.height)>=600)};
+let fsNo=false;
+function fsTry(){if(!fsPref()||fsNo||document.fullscreenElement||!document.documentElement.requestFullscreen)return;try{document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}catch(e){}}
+document.addEventListener('pointerup',fsTry);
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)fsNo=true});
+function prog(t,c,n){let d=$('#prg');if(!d){d=document.createElement('div');d.id='prg';document.body.appendChild(d)}d.className='';d.onclick=null;clearTimeout(progFin.t);d.innerHTML=`<b>${t}</b>`+(n?`<div class="pb"><i style="width:${Math.round(c/n*100)}%"></i></div><small>${c} de ${n}</small>`:'<div class="pb ind"><i></i></div>')}
+function progFin(t,ok=true){const d=$('#prg')||(prog(''),$('#prg'));d.className=ok?'ok':'bad';d.innerHTML=`<b style="margin:0">${ok?'✔ ':'⚠ '}${t}</b>`+(ok?'':'<small>Tocá para cerrar</small>');clearTimeout(progFin.t);if(ok)progFin.t=setTimeout(()=>d.remove(),4000);else d.onclick=()=>d.remove()}
 async function hashB(b){try{const d=await crypto.subtle.digest('SHA-256',await b.arrayBuffer());return[...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return null}}
 async function dupDe(f,excl){
  const h=await hashB(f);
@@ -214,9 +233,9 @@ async function dupDe(f,excl){
  return o?{o,h,igual:false}:{o:null,h}}
 const dupTxt=(n,d)=>`“${n}” ${d.igual?'es el mismo archivo que':'tiene el mismo nombre que'} “${d.o.titulo}”${d.o.del?' (está en la papelera)':''}. ¿Importarla igual?`;
 async function impPdfs(fs,msg){
- const bad=[],ids=[],dup=[];
+ const bad=[],ids=[],dup=[];prog('Importando partituras…',0,fs.length);
  for(const f of fs){
-  msg(`Importando ${ids.length+bad.length+1} de ${fs.length}…`);
+  msg(`Importando ${ids.length+bad.length+dup.length+1} de ${fs.length}…`);prog('Importando partituras · '+f.name,ids.length+bad.length+dup.length,fs.length);
   try{
    const d=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;
    if(d.numPages>MAXP){bad.push(`${f.name} (${d.numPages} págs.)`);continue}
@@ -225,7 +244,9 @@ async function impPdfs(fs,msg){
    await rq('pdfs','readwrite',s=>s.put(f,id));ids.push(id);await load();
   }catch(x){bad.push(f.name+' (no se pudo leer)')}
  }
- await load();return{ids,bad,dup};
+ await load();
+ progFin(ids.length+' importada'+(ids.length===1?'':'s')+(dup.length?' · '+dup.length+' repetida'+(dup.length===1?'':'s')+' omitida'+(dup.length===1?'':'s'):'')+(bad.length?' · '+bad.length+' con problema (más de '+MAXP+' págs. o ilegible)':''),!bad.length);
+ return{ids,bad,dup};
 }
 function vSem(m,hoy){
  m.innerHTML=obras.length?sortO([...obras]).map(o=>`<div class="card" style="display:block"><div style="display:flex;gap:12px"><span class="dot ${o.prioridad}"></span><div><div class="tt">${esc(o.titulo)}</div><small>${esc(o.compositor)} · Prioridad ${PL[o.prioridad]}</small></div></div><div class="days">${ORD.map(d=>`<button data-o="${o.id}" data-d="${d}" class="${(o.dias||[]).includes(d)?'on':''} ${d===hoy?'hoy':''}">${DIAS[d]}</button>`).join('')}</div></div>`).join(''):'<div class="empty">Cargá obras en la pestaña Obras para organizarlas.</div>';
@@ -322,6 +343,7 @@ async function divForm(o){
  pinta();
 }
 function vHoy(m,hoy){
+ m.classList.add('cg');
  const l=sortO(obras.filter(o=>(o.dias||[]).includes(hoy)));
  m.innerHTML=l.length?l.map(o=>card(o)).join(''):'<div class="empty">No hay obras asignadas para hoy.<br>Asignalas en Organizar, pestaña Semana.</div>';
  bindCards(m);
@@ -345,6 +367,7 @@ function vAgenda(m){
  m.querySelectorAll('[data-o]').forEach(c=>c.onclick=()=>{const o=obras.find(x=>x.id==c.dataset.o);if(o&&pdfIds.has(o.id))abrir(o);else if(o)form(o)});
 }
 function vListas(m){
+ m.classList.add('cg');
  const h=ymd(new Date()),k=l=>l.fecha&&l.fecha>=h?0:l.fecha?2:1;
  const ord=[...listas].sort((a,b)=>k(a)-k(b)||(k(a)===0?a.fecha.localeCompare(b.fecha):0)||a.nombre.localeCompare(b.nombre));
  m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="nl">+ Nueva lista</button></div>`+(ord.length?ord.map(l=>`<div class="card" data-l="${l.id}"><div style="flex:1"><div class="tt">${esc(l.nombre)}</div><small>${l.fecha?(l.fecha===h?'HOY · ':'')+fmtF(l.fecha)+(l.hora?' · '+l.hora+' h':'')+(l.lugar?' · '+esc(l.lugar):'')+' · ':''}${l.obras.length} obra${l.obras.length===1?'':'s'}</small></div></div>`).join(''):'<div class="empty">Todavía no hay listas.<br>Creá una por show, ensamble o clase y sumale las obras en el orden en que las vas a tocar.</div>');
@@ -443,7 +466,15 @@ async function pintar(){
  $('#vsl').max=tot;$('#vsl').value=V.n+1;if(V.id!=null)ls.set('pag'+V.id,V.n);
  const pk=V.id+':'+V.n+':'+cnt;$('#pg').textContent=cnt===2?`${V.n+1}-${V.n+2} / ${tot}`:`${V.n+1} / ${tot}`;if(pk!==V.pk){V.pk=pk;$('#pg').classList.add('on');clearTimeout(V.pgt);V.pgt=setTimeout(()=>$('#pg').classList.remove('on'),2200)}
 }
-function lpUI(){const L=V.lp||{};$('#lpg').classList.toggle('on',!!L.on);$('#lpt').classList.toggle('on',!!M.lapUp);$('#lpa').value=L.a||'';$('#lpb').value=L.b||'';$('#lpc').textContent=L.on?'Vuelta '+(V.laps+1):'';$('#vmt').classList.toggle('on',M.on||!!L.on)}
+function lpStrip(k){
+ const L=V.lp,b=$('#lps');if(!L||!L.on||!L.cpp)return;const n=Math.min(64,L.cpp),e=k>=0&&k>=n-2,st=k===0;
+ b.innerHTML=`<b class="${st?'s':e?'e':''}">${k<0?'Compás — / '+n:(st?'▶ Inicio · ':e?'⚠ Final · ':'')+'Compás '+(k+1)+' / '+n}</b><span class="sg">${Array.from({length:n},(_,i)=>`<i class="${i<k?'p':i===k?'c':''}${i>=n-2?' e':''}${i===0?' s':''}"></i>`).join('')}</span><small style="color:var(--mu);white-space:nowrap">vuelta ${V.laps+1}</small>`}
+function lpUI(){const L=V.lp||{},sh=!!(L.on&&L.cpp),was=!$('#lps').classList.contains('hide');$('#lpg').classList.toggle('on',!!L.on);$('#lpt').classList.toggle('on',!!M.lapUp);$('#lpa').value=L.a||'';$('#lpb').value=L.b||'';$('#lpk').value=L.cpp||'';$('#lpc').textContent=L.on?'Vuelta '+(V.laps+1):'';$('#vmt').classList.toggle('on',M.on||!!L.on);
+ $('#lps').classList.toggle('hide',!sh);if(sh)lpStrip(M.on?Math.max(0,(L.k||1)-1):-1);if(sh!==was&&V.doc)pintar()}
+function lpBar(){
+ const L=V.lp;if(!V.doc||!L||!L.on||!L.cpp)return;
+ if((L.k||0)>=L.cpp)ir(1);
+ L.k=L.k||0;lpStrip(L.k);L.k++}
 function ir(d){
  const t=V.tot,P=$('#pages'),c=V.ctx;
  if(V.half&&V.mode===1&&V.c2){
@@ -451,6 +482,7 @@ function ir(d){
   if(d<0&&V.hp){V.hp=0;P.scrollTo(0,0);return}
  }
  let n=V.n+d*V.mode;
+ if(V.lp)V.lp.k=0;
  if(V.lp&&V.lp.on&&V.lp.a&&V.lp.b){
   const a=V.lp.a-1,b=Math.min(t,V.lp.b)-1,fin=V.mode===2?b-b%2:b,ini=V.mode===2?a-a%2:a;
   if(d>0&&V.n>=fin){V.n=ini;V.hp=0;V.rs=true;V.laps++;if(M.on&&M.lapUp&&M.bpm<M.ptg)mset(Math.min(M.ptg,M.bpm+M.pst));lpUI();toast('↻ Vuelta '+(V.laps+1)+(M.on&&M.lapUp?' · '+M.bpm+' bpm':''));pintar();return}
@@ -460,7 +492,7 @@ function ir(d){
  if(n<0){if(c&&c.i>0)abrir(c.arr[c.i-1],{arr:c.arr,i:c.i-1},true);return}
  V.n=n;V.hp=d<0?1:0;V.rs=true;pintar();
 }
-function lockSet(on){V.lock=on;$('#lkc').classList.toggle('hide',!on);
+function lockSet(on){V.lock=on;$('#v').classList.toggle('lk',on);$('#lkc').classList.toggle('hide',!on);
  if(on){V.tl='r';V.an=false;abtn();$('#mb').classList.add('hide');$('#sc').classList.add('hide');cierraNt();$('#vb').classList.add('hide');$('#vf').classList.add('hide');try{if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}catch(e){}toast('Escenario activado. Solo se pasa de página. Para salir, mantené apretado el candado.')}
  else{$('#vb').classList.remove('hide');$('#vf').classList.remove('hide')}
  pintar()}
@@ -473,22 +505,22 @@ $('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'
  ls.set('auto',V.auto?'1':'0');vista()};
 $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp=0;V.rs=true;$('#vsl').blur();pintar()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-function cerrarV(){tok++;V.lp=null;V.laps=0;V.lock=false;$('#lkc').classList.add('hide');PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}rstUI()}
+function cerrarV(){tok++;$('#v').classList.remove('lk');$('#lps').classList.add('hide');V.lp=null;V.laps=0;V.lock=false;$('#lkc').classList.add('hide');PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}rstUI()}
 $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
 addEventListener('popstate',()=>{if(V.doc){if(V.lock){history.pushState({v:1},'');return}cerrarV()}});
-$('#pages').onclick=e=>{if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if(V.an||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else if(!V.lock){const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
+$('#pages').onclick=e=>{if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if((V.an&&V.tl!=='m')||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else if(!V.lock){const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
 addEventListener('keydown',e=>{if(!V.doc||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;const k=e.key;if(['ArrowRight','PageDown',' '].includes(k)){ir(1);e.preventDefault()}else if(['ArrowLeft','PageUp'].includes(k)){ir(-1);e.preventDefault()}});
 addEventListener('resize',()=>{if(V.doc)vista()});
 /* Metrónomo */
 const U={b:.5,n:.25,np:.375,c:.125,cp:.1875},UL={b:['Blanca','Blanca ='],n:['♩ Negra','♩ ='],np:['♩. Negra con puntillo','♩. ='],c:['♪ Corchea','♪ ='],cp:['♪. Corchea con puntillo','♪. =']};
-const COMP=['2/4','3/4','4/4','6/8','9/8','12/8','2/2','3/8','5/4','ZC'],ZCP=[2,0,0,1,0,0,2,0,1,0,1,0],clb=c=>c==='ZC'?'Zamba/Chacarera':c;
+const COMP=['2/4','3/4','4/4','6/8','9/8','12/8','2/2','3/8','5/4'],clb=c=>c;
 const SND=[['clic','Clic'],['mad','Madera'],['bom','Bombo']];
 const M={snd:ls.get('msnd')||'clic',vol:+ls.get('mvol')||70,pg:false,pst:+ls.get('mpst')||2,pn:+ls.get('mpn')||4,ptg:+ls.get('mptg')||120,bars:0,base:80,on:false,bpm:80,cmp:'4/4',u:'n',cp:4,grp:0,ctx:null,nx:0,beat:0,tm:null,tp:[]};
-const mbeats=(c,u)=>{if(c==='ZC')return u==='c'?12:u==='np'?4:0;const [a,b]=c.split('/').map(Number),r=(a/b)/U[u];return Math.abs(r-Math.round(r))<1e-6&&r>=1?Math.round(r):0};
-const mdef=c=>{if(c==='ZC')return 'c';const [a,b]=c.split('/').map(Number);return b===8?(a%3===0&&a>=6?'np':'c'):b===2?'b':'n'};
-function mrec(){M.cp=mbeats(M.cmp,M.u);const [a,b]=M.cmp==='ZC'?[0,0]:M.cmp.split('/').map(Number);M.grp=(M.u==='c'&&b===8&&a%3===0&&a>3)?3:0}
-const mlv=b=>M.cmp==='ZC'?ZCP[b*(M.u==='np'?3:1)]:b===0?2:(M.grp&&b%M.grp===0?1:0);
-function mcarga(id){M.bpm=+ls.get('bpm'+id)||+ls.get('bpm')||80;let c=ls.get('cmp'+id);c=/^\d+\/\d+$|^ZC$/.test(c||'')?c:({2:'2/4',3:'3/4',4:'4/4',6:'6/8'})[c]||'4/4';M.cmp=COMP.includes(c)?c:'4/4';const u=ls.get('pul'+id);M.u=U[u]&&mbeats(M.cmp,u)?u:mdef(M.cmp);mrec();M.beat=0;mui()}
+const mbeats=(c,u)=>{const [a,b]=c.split('/').map(Number),r=(a/b)/U[u];return Math.abs(r-Math.round(r))<1e-6&&r>=1?Math.round(r):0};
+const mdef=c=>{const [a,b]=c.split('/').map(Number);return b===8?(a%3===0&&a>=6?'np':'c'):b===2?'b':'n'};
+function mrec(){M.cp=mbeats(M.cmp,M.u);const [a,b]=M.cmp.split('/').map(Number);M.grp=(M.u==='c'&&b===8&&a%3===0&&a>3)?3:0}
+const mlv=b=>b===0?2:(M.grp&&b%M.grp===0?1:0);
+function mcarga(id){M.bpm=+ls.get('bpm'+id)||+ls.get('bpm')||80;let c=ls.get('cmp'+id);c=/^\d+\/\d+$/.test(c||'')?c:({2:'2/4',3:'3/4',4:'4/4',6:'6/8'})[c]||'4/4';M.cmp=COMP.includes(c)?c:'4/4';const u=ls.get('pul'+id);M.u=U[u]&&mbeats(M.cmp,u)?u:mdef(M.cmp);mrec();M.beat=0;mui()}
 function mui(){
  $('#mbpm').value=M.bpm;$('#msl').value=M.bpm;$('#mlab').textContent=UL[M.u][1];$('#mgo').textContent=M.on?'■ Parar':'▶ Iniciar';$('#mgo').classList.toggle('on',M.on);$('#vmt').classList.toggle('on',M.on);
  $('#mcs').innerHTML=COMP.map(c=>`<button data-c="${c}" class="${c===M.cmp?'on':''}">${clb(c)}</button>`).join('');
@@ -509,6 +541,7 @@ function clic(t,lv){
 function msch(){
  while(M.nx<M.ctx.currentTime+.12){
   const b=M.beat;clic(M.nx,mlv(b));
+  if(b===0)setTimeout(()=>{if(M.on)lpBar()},Math.max(0,(M.nx-M.ctx.currentTime)*1000));
   setTimeout(()=>{if(M.on)[...$('#mdots').children].forEach((x,i)=>x.classList.toggle('on',i===b))},Math.max(0,(M.nx-M.ctx.currentTime)*1000));
   M.nx+=60/M.bpm;M.beat=(M.beat+1)%M.cp;
   if(M.beat===0){M.bars++;if(M.pg&&M.bars%Math.max(1,M.pn)===0&&M.bpm<M.ptg){mset(Math.min(M.ptg,M.bpm+M.pst));setTimeout(()=>{if(M.on)mui()},0)}}
@@ -516,16 +549,17 @@ function msch(){
 }
 function mgo(){
  if(M.on)return;M.ctx=M.ctx||new(window.AudioContext||window.webkitAudioContext)();M.ctx.resume();
- M.on=true;M.beat=0;M.bars=0;M.base=M.bpm;M.nx=M.ctx.currentTime+.06;msch();M.tm=setInterval(msch,25);mui();
+ M.on=true;M.beat=0;M.bars=0;if(V.lp)V.lp.k=0;M.base=M.bpm;M.nx=M.ctx.currentTime+.06;msch();M.tm=setInterval(msch,25);mui();
 }
-function mstop(){M.on=false;clearInterval(M.tm);if((M.pg||M.lapUp)&&M.bpm!==M.base)mset(M.base);if($('#mdots'))mui()}
+function mstop(soft){M.on=false;clearInterval(M.tm);if((M.pg||M.lapUp)&&M.bpm!==M.base)mset(M.base);if(!soft){M.pg=false;M.lapUp=false;if(V.lp)V.lp.on=false;if(V.doc&&$('#lpg'))lpUI()}if($('#mdots'))mui()}
 $('#vmt').onclick=()=>{const h=$('#mb').classList.contains('hide');$('#sc').classList.add('hide');$('#mb').classList.toggle('hide',!h);if(h)mui()};
 $('#mgo').onclick=()=>M.on?mstop():mgo();
 $('#mm').onclick=()=>mset(M.bpm-1);$('#mp').onclick=()=>mset(M.bpm+1);
 $('#mbpm').onchange=e=>mset(+e.target.value);$('#msl').oninput=e=>mset(+e.target.value);
 $('#mcs').onclick=e=>{const b=e.target.closest('[data-c]');if(!b)return;M.cmp=b.dataset.c;M.u=mdef(M.cmp);mrec();M.beat=0;ls.set('cmp'+V.id,M.cmp);ls.set('pul'+V.id,M.u);mui()};
 $('#mus').onclick=e=>{const b=e.target.closest('[data-u]');if(!b||!mbeats(M.cmp,b.dataset.u))return;M.u=b.dataset.u;mrec();M.beat=0;ls.set('pul'+V.id,M.u);mui()};
-$('#lpg').onclick=()=>{V.lp=V.lp||{on:false,a:0,b:0};if(!V.lp.on&&(!V.lp.a||!V.lp.b)){V.lp.a=V.n+1;V.lp.b=Math.min(V.tot,V.n+(V.mode===2?2:1))}V.lp.on=!V.lp.on;V.laps=0;lpUI();toast(V.lp.on?'Repite las páginas '+V.lp.a+' a '+V.lp.b+'. Al llegar al final de ese tramo, vuelve al principio.':'Repetición apagada.')};
+$('#lpg').onclick=()=>{V.lp=V.lp||{on:false,a:0,b:0};if(V.lp.cpp==null)V.lp.cpp=+ls.get('lpk'+V.id)||0;V.lp.k=0;if(!V.lp.on&&(!V.lp.a||!V.lp.b)){V.lp.a=V.n+1;V.lp.b=Math.min(V.tot,V.n+(V.mode===2?2:1))}V.lp.on=!V.lp.on;V.laps=0;lpUI();toast(V.lp.on?'Repite las páginas '+V.lp.a+' a '+V.lp.b+(V.lp.cpp?'. Sigue el compás y pasa de página solo.':'. Poné cuántos compases hay por pantalla para ver el seguimiento y que pase de página solo.'):'Repetición apagada.')};
+$('#lpk').onchange=e=>{V.lp=V.lp||{on:false,a:0,b:0};V.lp.cpp=Math.min(64,Math.max(0,Math.round(+e.target.value)||0));ls.set('lpk'+V.id,String(V.lp.cpp));V.lp.k=0;lpUI()};
 const lpn=(id,k)=>$(id).onchange=e=>{V.lp=V.lp||{on:false,a:0,b:0};V.lp[k]=Math.min(V.tot||1,Math.max(1,Math.round(+e.target.value)||1));if(V.lp.a&&V.lp.b&&V.lp.b<V.lp.a){const x=V.lp.a;V.lp.a=V.lp.b;V.lp.b=x}V.laps=0;lpUI()};
 lpn('#lpa','a');lpn('#lpb','b');
 $('#lpt').onclick=()=>{M.lapUp=!M.lapUp;lpUI()};
@@ -536,7 +570,7 @@ $('#mpg').onclick=()=>{M.pg=!M.pg;mui()};
 const mnum=(id,k,key,lo,hi)=>$(id).onchange=e=>{M[k]=Math.min(hi,Math.max(lo,Math.round(+e.target.value)||lo));ls.set(key,M[k]);e.target.value=M[k]};
 mnum('#mpst','pst','mpst',1,20);mnum('#mpn','pn','mpn',1,32);mnum('#mptg','ptg','mptg',40,240);
 $('#mtap').onclick=()=>{const t=performance.now();if(M.tp.length&&t-M.tp[M.tp.length-1]>2500)M.tp=[];M.tp.push(t);M.tp=M.tp.slice(-6);if(M.tp.length>=2)mset(60000/((M.tp[M.tp.length-1]-M.tp[0])/(M.tp.length-1)))};
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&M.on)mstop()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&M.on)mstop(true)});
 /* Aspecto */
 const TEMAS=[['folk','Folklore'],['tango','Tango'],['clas','Clásico']];
 function tema(t){document.documentElement.dataset.t=t;ls.set('tema',t);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#12161a'}
@@ -553,12 +587,12 @@ function scAbrir(){
  $('#scl').querySelectorAll('.scr').forEach(row=>row.onclick=()=>{const p=+row.dataset.p;V.n=V.mode===2?p-p%2:p;V.hp=0;V.rs=true;$('#sc').classList.add('hide');pintar()});
  $('#scl').querySelectorAll('[data-d]').forEach(b=>b.onclick=async e=>{e.stopPropagation();o.marc=(o.marc||[]).filter((_,i)=>i!==+b.dataset.d);await rq('obras','readwrite',s=>s.put(o));scAbrir()});
 }
-$('#pg').onclick=scAbrir;
+$('#pg').onclick=()=>{if(!V.lock)scAbrir()};
 (()=>{const P=$('#pages');let g=null;
- const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY),ok=()=>!V.lock&&(!V.an||!V.dedo||V.tl==='m');
- P.addEventListener('touchstart',e=>{if(e.touches.length===2&&V.doc&&ok()){const r=P.getBoundingClientRect(),t=e.touches,cx=(t[0].clientX+t[1].clientX)/2,cy=(t[0].clientY+t[1].clientY)/2;g={d:dist(t),z:V.zoom,r:1,cx:cx-r.left,cy:cy-r.top,fx:P.scrollLeft+cx-r.left,fy:P.scrollTop+cy-r.top,org:[...P.querySelectorAll('.pw')].map(w=>{const b=w.getBoundingClientRect();return [cx-b.left,cy-b.top]})}}},{passive:true});
- P.addEventListener('touchmove',e=>{if(!g||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();g.r=Math.min(4,Math.max(1,g.z*dist(e.touches)/g.d))/g.z;P.querySelectorAll('.pw').forEach((w,i)=>{if(g.org[i]){w.style.transformOrigin=g.org[i][0]+'px '+g.org[i][1]+'px';w.style.transform='scale('+g.r+')'}})},{passive:false});
- const fin=e=>{if(!g||e.touches.length>=2)return;const q=g;g=null;P.querySelectorAll('.pw').forEach(w=>{w.style.transform=''});if(Math.abs(q.r-1)<.02)return;V.zoom=q.z*q.r;if(V.zoom<1.03)V.zoom=1;V.pz={fx:q.fx*q.r,fy:q.fy*q.r,cx:q.cx,cy:q.cy};pintar()};
+ const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY),ok=()=>!V.lock;
+ P.addEventListener('touchstart',e=>{if(e.touches.length===2&&V.doc&&ok()){const r=P.getBoundingClientRect(),t=e.touches,cx=(t[0].clientX+t[1].clientX)/2,cy=(t[0].clientY+t[1].clientY)/2;P.querySelectorAll('.ov').forEach(o=>o._cancel&&o._cancel());g={d:dist(t),z:V.zoom,r:1,x0:cx,y0:cy,cx:cx-r.left,cy:cy-r.top,fx:P.scrollLeft+cx-r.left,fy:P.scrollTop+cy-r.top,org:[...P.querySelectorAll('.pw')].map(w=>{const b=w.getBoundingClientRect();return [cx-b.left,cy-b.top]})}}},{passive:true});
+ P.addEventListener('touchmove',e=>{if(!g||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();g.r=Math.min(4,Math.max(1,g.z*dist(e.touches)/g.d))/g.z;const t=e.touches,mx=(t[0].clientX+t[1].clientX)/2,my=(t[0].clientY+t[1].clientY)/2,r0=P.getBoundingClientRect();g.dx=mx-g.x0;g.dy=my-g.y0;g.cx=mx-r0.left;g.cy=my-r0.top;P.querySelectorAll('.pw').forEach((w,i)=>{if(g.org[i]){w.style.transformOrigin=g.org[i][0]+'px '+g.org[i][1]+'px';w.style.transform='translate('+g.dx+'px,'+g.dy+'px) scale('+g.r+')'}})},{passive:false});
+ const fin=e=>{if(!g||e.touches.length>=2)return;const q=g;g=null;P.querySelectorAll('.pw').forEach(w=>{w.style.transform=''});if(Math.abs(q.r-1)<.02){P.scrollTo(q.fx-q.cx,q.fy-q.cy);return}V.zoom=q.z*q.r;if(V.zoom<1.03)V.zoom=1;V.pz={fx:q.fx*q.r,fy:q.fy*q.r,cx:q.cx,cy:q.cy};pintar()};
  P.addEventListener('touchend',fin);P.addEventListener('touchcancel',fin)})();$('#scx').onclick=()=>$('#sc').classList.add('hide');
 $('#sca').onclick=async()=>{const o=obras.find(x=>x.id===V.id);if(!o)return;o.marc=o.marc||[];o.marc.push({n:$('#scn').value.trim()||'Sección '+(o.marc.length+1),p:V.n});$('#scn').value='';await rq('obras','readwrite',s=>s.put(o));scAbrir()};
 /* Práctica: tiempo con la partitura abierta, por obra y por día */
@@ -594,15 +628,18 @@ async function vPractica(m){
  $('#meta').onchange=e=>{ls.set('meta',String(Math.min(600,Math.max(1,Math.round(+e.target.value)||30))));vPractica(m)};
 }
 /* Anotar */
+const cancelAll=()=>document.querySelectorAll('.ov').forEach(o=>o._cancel&&o._cancel());
+document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){V.tpn.add(e.pointerId);if(V.tpn.size>=2)cancelAll()}},true);
+['pointerup','pointercancel'].forEach(ev=>document.addEventListener(ev,e=>V.tpn.delete(e.pointerId),true));
 const TAB=Math.min(screen.width,screen.height)>=600,COL=['#111111','#d93a2b','#2a6fdb','#2e9e5b','#ffd400'];
-Object.assign(V,{dedo:ls.get('dedo')!=='0',an:false,tl:'r',col:COL[1],gr:0,hm:false,hist:[],nt:{p:{}}});
+Object.assign(V,{tpn:new Set(),dedo:ls.get('dedo')!=='0',an:false,tl:'r',col:COL[1],gr:0,hm:false,hist:[],nt:{p:{}}});
 const gnt=()=>rq('notas','readwrite',s=>s.put(V.nt));
 function abtn(){
  $('#ab').querySelectorAll('[data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===V.tl));
  $('#sws').innerHTML=COL.map(c=>`<button class="sw ${c===V.col&&V.an?'on':''}" data-c="${c}" style="background:${c}"></button>`).join('');
  $('#sws').querySelectorAll('button').forEach(b=>b.onclick=()=>{V.col=b.dataset.c;if(!'lh'.includes(V.tl))V.tl='l';const wh=V.hm;V.an=true;V.hm=false;$('#pages').classList.add('an');abtn();if(wh)pintar()});
  $('#agr').textContent=V.gr?'Trazo grueso':'Trazo fino';$('#aoc').textContent=V.hm?'Marcas ocultas':'Marcas visibles';$('#aoc').classList.toggle('on',!V.hm);$('#adi').textContent=V.dedo?'Dedo: sí':'Dedo: no';$('#adi').classList.toggle('on',V.dedo);
- $('#pages').classList.toggle('an',V.an);$('#pages').classList.toggle('sd',V.an&&!V.dedo);
+ $('#pages').classList.toggle('an',V.an);$('#pages').classList.toggle('mano',V.an&&V.tl==='m');$('#pages').classList.toggle('sd',V.an&&!V.dedo);
 }
 $('#ab').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{V.tl=V.tl===b.dataset.t?'r':b.dataset.t;V.an=V.tl!=='r';const wh=V.hm;if(V.an)V.hm=false;abtn();if(wh&&!V.hm)pintar()});
 $('#adi').onclick=()=>{V.dedo=!V.dedo;ls.set('dedo',V.dedo?'1':'0');abtn()};
@@ -634,7 +671,8 @@ function capa(w,pi,cw,ch,fw,fh,ox,oy){
  const pos=e=>{const r=o.getBoundingClientRect();return[(e.clientX-r.left+ox)/fw,(e.clientY-r.top+oy)/fh]};
  const borrar=q=>{const k=d.s.length;d.s=d.s.filter(s=>!s.q.some(p=>Math.hypot((p[0]-q[0])*fw,(p[1]-q[1])*fh)<14));if(d.s.length!==k)redib()};
  let cur=null;
- o.onpointerdown=e=>{
+ o._cancel=()=>{if(cur&&cur!=='g'){d.s=d.s.filter(s=>s!==cur);redib()}cur=null};
+ o.onpointerdown=e=>{if(e.pointerType==='touch'&&V.tpn.size>=2)return;
   if(e.pointerType==='pen')V.penT=Date.now();if(!V.an||(e.pointerType==='touch'&&(!V.dedo||Date.now()-(V.penT||0)<1200)))return;e.preventDefault();o.setPointerCapture(e.pointerId);const q=pos(e);
   if(V.tl==='n'){const n={x:q[0],y:q[1],t:''};d.n.push(n);abrirNt(d,n,o);return}
   if(V.tl==='g'){borrar(q);cur='g';return}
@@ -648,24 +686,25 @@ function capa(w,pi,cw,ch,fw,fh,ox,oy){
 const MAGIC=new TextEncoder().encode('ESTM4'),MB=n=>(n/1048576).toFixed(1)+' MB';
 async function exportar(modo){
  try{
-  say('Preparando el respaldo…');
+  say('Preparando el respaldo…');prog('Preparando el respaldo…');
   const nt=await rq('notas','readonly',s=>s.getAll()),pr=await rq('practica','readonly',s=>s.getAll()),fl=[],parts=[];
-  for(const o of todas){const b=await rq('pdfs','readonly',s=>s.get(o.id));if(b){fl.push({id:o.id,n:b.size});parts.push(b)}}
+  let ne=0;for(const o of todas){prog('Preparando el respaldo…',++ne,todas.length);const b=await rq('pdfs','readonly',s=>s.get(o.id));if(b){fl.push({id:o.id,n:b.size});parts.push(b)}}
   const h=new TextEncoder().encode(JSON.stringify({version:6,obras:todas,notas:nt,listas,practica:pr,files:fl})),len=new Uint8Array(4);new DataView(len.buffer).setUint32(0,h.length);
   const blob=new Blob([MAGIC,len,h,...parts],{type:'application/octet-stream'}),nombre='respaldo-estudio-'+new Date().toISOString().slice(0,10)+'.estudio';
   let hecho=false;
   if(modo==='share'&&navigator.canShare&&navigator.share){
    const file=new File([blob],nombre,{type:'application/octet-stream'});
-   if(navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Respaldo de Estudio Musical'});hecho=true}catch(e){if(e&&e.name==='AbortError'){say('Se canceló: el respaldo no se guardó.');return}}}
+   if(navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'Respaldo de Estudio Musical'});hecho=true}catch(e){if(e&&e.name==='AbortError'){progFin('Se canceló: el respaldo no se guardó.',false);say('Se canceló: el respaldo no se guardó.');return}}}
   }
   if(!hecho){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=nombre;a.click()}
   ls.set('ultresp',String(Date.now()));rstUI();
+  progFin(hecho?'Respaldo compartido':'Respaldo guardado en Descargas');
   say(hecho?'Respaldo compartido ('+obras.length+' obras, '+MB(blob.size)+').':'Respaldo guardado en Descargas ('+obras.length+' obras, '+MB(blob.size)+'). Subilo a tu Drive o mandalo por mail.');
- }catch(e){say('No se pudo exportar el respaldo: '+(e&&e.message||e))}
+ }catch(e){progFin('No se pudo crear el respaldo',false);say('No se pudo exportar el respaldo: '+(e&&e.message||e))}
 }
 async function importar(f){
- if(!f||!confirm('Importar reemplaza todo lo que hay ahora en la app. ¿Seguir?'))return;
- let d,src=new Map();
+ if(!f)return;
+ let d,src=new Map();prog('Leyendo el respaldo “'+f.name+'”…');
  try{
   const nuevo=String.fromCharCode(...new Uint8Array(await f.slice(0,5).arrayBuffer()))==='ESTM4';
   if(nuevo){
@@ -679,18 +718,19 @@ async function importar(f){
    for(const o of d.obras)if(d.pdfs[o.id])src.set(o.id,await0(d.pdfs[o.id]));
   }
   if(!d||!Array.isArray(d.obras)||(d.listas&&!Array.isArray(d.listas))||(d.notas&&!Array.isArray(d.notas))||(d.practica&&!Array.isArray(d.practica)))throw 0;
- }catch(e){say('No se pudo importar: el archivo no es un respaldo válido. No se cambió nada.');return}
+ }catch(e){progFin('Ese archivo no es un respaldo válido. No se cambió nada.',false);say('No se pudo importar: el archivo no es un respaldo válido. No se cambió nada.');return}
+ {const dd=d.obras.filter(o=>!o.del).length;if(!confirm('Este respaldo tiene '+dd+' obra'+(dd===1?'':'s')+' y '+(d.listas||[]).length+' lista'+((d.listas||[]).length===1?'':'s')+'.\n\nImportarlo REEMPLAZA todo lo que hay ahora en la app. ¿Seguir?')){$('#prg')&&$('#prg').remove();return}}
  try{
   for(const s of ['obras','pdfs','notas','listas','practica'])await rq(s,'readwrite',x=>x.clear());
-  for(const o of d.obras){
-   await rq('obras','readwrite',s=>s.put(o));const v=src.get(o.id);
+  let ni=0;for(const o of d.obras){
+   prog('Restaurando respaldo…',++ni,d.obras.length);await rq('obras','readwrite',s=>s.put(o));const v=src.get(o.id);
    if(v){const b=Array.isArray(v)?new Blob([await f.slice(v[0],v[0]+v[1]).arrayBuffer()],{type:'application/pdf'}):v;await rq('pdfs','readwrite',s=>s.put(b,o.id))}
   }
   for(const n of d.notas||[])await rq('notas','readwrite',s=>s.put(n));
   for(const l of d.listas||[])await rq('listas','readwrite',s=>s.put(l));
   for(const x of d.practica||[])await rq('practica','readwrite',s=>s.put(x));
- }catch(e){$('#msg').textContent='La importación se cortó a la mitad: '+(e&&e.message||e)+'. Volvé a intentarlo con el mismo archivo.';await load();draw();return}
- ls.set('ultresp',String(Date.now()));await load();draw();say('Respaldo importado ('+d.obras.length+' obras).');
+ }catch(e){progFin('La importación se cortó a la mitad. Volvé a intentarlo con el mismo archivo.',false);$('#msg').textContent='La importación se cortó a la mitad: '+(e&&e.message||e)+'. Volvé a intentarlo con el mismo archivo.';await load();draw();return}
+ ls.set('ultresp',String(Date.now()));await load();draw();progFin('Respaldo importado: '+d.obras.filter(o=>!o.del).length+' obras, '+(d.listas||[]).length+' listas.');say('Respaldo importado ('+d.obras.length+' obras).');
 }
 const await0=u=>{const [h,b]=u.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m})};
 function toast(t){let d=$('#toast');if(!d){d=document.createElement('div');d.id='toast';d.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:90px;z-index:99;background:rgba(20,20,20,.92);color:#fff;border-radius:14px;padding:10px 18px;font-size:14px;max-width:90%;text-align:center';document.body.appendChild(d)}d.textContent=t;d.style.display='block';clearTimeout(d._t);d._t=setTimeout(()=>d.style.display='none',4000)}

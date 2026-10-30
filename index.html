@@ -35,6 +35,7 @@ nav button.on{color:var(--br);box-shadow:inset 0 2px 0 var(--br)}
 .days button.hoy{border-color:var(--tx)}
 .modal{position:fixed;inset:0;background:var(--bg);overflow:auto;padding:calc(16px + env(safe-area-inset-top)) 16px 30px;z-index:5}
 label{display:block;margin:14px 0 4px;color:var(--mu);font-size:14px}
+input[type=email],input[type=password]{width:100%;padding:11px;border-radius:8px;border:1px solid var(--ln);background:var(--pn);color:var(--tx);font:inherit}
 input[type=text],input[type=date],input[type=number],textarea,select{width:100%;padding:11px;border-radius:8px;border:1px solid var(--ln);background:var(--pn);color:var(--tx);font:inherit}
 #v{position:fixed;inset:0;background:#fff;z-index:9;display:flex;flex-direction:column}
 #vb{display:flex;align-items:center;gap:6px;padding:calc(6px + env(safe-area-inset-top)) 10px 6px;background:var(--pn);border-bottom:1px solid var(--ln)}
@@ -188,6 +189,7 @@ async function load(){
  for(const o of todas)if(o.ref&&pdfIds.has(o.ref))pdfIds.add(o.id);
  listas=(await rq('listas','readonly',s=>s.getAll())).map(l=>({...l,obras:l.obras||[]}));
  eventos=await rq('eventos','readonly',s=>s.getAll());
+ syncSoon();
 }
 async function migrar(){
  let n=0;await load();
@@ -213,8 +215,8 @@ function draw(){if(tab!=='org')SEL=null;
  }else if(tab==='org'){
   vOrg(m,hoy);
  }else{
-  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><div class="card" id="rcard" style="display:block"><div class="tt">Respaldo</div><div id="rst" style="margin:4px 0 2px;font-weight:600"></div><small>Tus partituras, marcas, listas y práctica viven solo en este dispositivo. Si Android o el navegador borran los datos, se pierden. Mandá el respaldo a tu Drive o a tu mail cada tanto.</small><div class="row"><button class="btn" id="exs">Compartir respaldo</button><button class="btn s" id="ex">Guardar en la tablet</button><button class="btn s" id="im">Importar respaldo</button></div><small>“Importar respaldo”: elegí un archivo <b>.estudio</b> (o el .json viejo). Antes de cambiar nada te muestro cuántas obras y listas trae, y arriba vas a ver el avance.</small><small id="prot" style="margin-top:6px"></small></div><div class="card" style="display:block"><div class="tt">Papelera${papelera.length?' ('+papelera.length+')':''}</div><small>Las obras eliminadas se guardan 30 días y después se borran solas.</small><div class="row"><button class="btn s" id="pap">Ver papelera</button></div></div><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="fsc" ${fsPref()?'checked':''} style="width:22px;height:22px"> Pantalla completa (oculta las barras de Android)</label><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
-  $('#fsc').onchange=e=>{ls.set('fsc',e.target.checked?'1':'0');if(e.target.checked){fsNo=false;fsTry()}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})};$('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#pap').onclick=verPapelera;$('#ex').onclick=()=>exportar('file');$('#exs').onclick=()=>exportar('share');(async()=>{try{let p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():false;if(!p&&navigator.storage&&navigator.storage.persist)p=await navigator.storage.persist();const e=$('#prot');if(e)e.textContent=p?'Protección de datos del navegador: activa.':'Protección de datos del navegador: no activa. Por eso el respaldo es importante.'}catch(e){}})();$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
+  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><div class="card" id="rcard" style="display:block"><div class="tt">Respaldo</div><div id="rst" style="margin:4px 0 2px;font-weight:600"></div><small>Tus partituras, marcas, listas y práctica viven solo en este dispositivo. Si Android o el navegador borran los datos, se pierden. Mandá el respaldo a tu Drive o a tu mail cada tanto.</small><div class="row"><button class="btn" id="exs">Compartir respaldo</button><button class="btn s" id="ex">Guardar en la tablet</button><button class="btn s" id="im">Importar respaldo</button></div><small>“Importar respaldo”: elegí un archivo <b>.estudio</b> (o el .json viejo). Antes de cambiar nada te muestro cuántas obras y listas trae, y arriba vas a ver el avance.</small><small id="prot" style="margin-top:6px"></small></div><div class="card" id="scard" style="display:block"></div><div class="card" style="display:block"><div class="tt">Papelera${papelera.length?' ('+papelera.length+')':''}</div><small>Las obras eliminadas se guardan 30 días y después se borran solas.</small><div class="row"><button class="btn s" id="pap">Ver papelera</button></div></div><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="fsc" ${fsPref()?'checked':''} style="width:22px;height:22px"> Pantalla completa (oculta las barras de Android)</label><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
+  syncUI();$('#fsc').onchange=e=>{ls.set('fsc',e.target.checked?'1':'0');if(e.target.checked){fsNo=false;fsTry()}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})};$('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#pap').onclick=verPapelera;$('#ex').onclick=()=>exportar('file');$('#exs').onclick=()=>exportar('share');(async()=>{try{let p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():false;if(!p&&navigator.storage&&navigator.storage.persist)p=await navigator.storage.persist();const e=$('#prot');if(e)e.textContent=p?'Protección de datos del navegador: activa.':'Protección de datos del navegador: no activa. Por eso el respaldo es importante.'}catch(e){}})();$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
  }
  rstUI();
 }
@@ -279,29 +281,35 @@ function progFin(t,ok=true){const d=$('#prg')||(prog(''),$('#prg'));d.className=
 async function hashB(b){try{const d=await crypto.subtle.digest('SHA-256',await b.arrayBuffer());return[...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return null}}
 async function dupDe(f,excl){
  const h=await hashB(f);
- for(const o of todas){if(o.id===excl||o.ref)continue;
+ for(const o of todas){if(o.id===excl||o.ref||!pdfIds.has(o.id))continue;
   if(!o.h&&h){const b=await rq('pdfs','readonly',s=>s.get(o.id));if(b&&b.size===f.size){const x=await hashB(b);if(x){o.h=x;await rq('obras','readwrite',s=>s.put(o))}}}
   if(h&&o.h===h)return{o,h,igual:true};
  }
- const t=nz(f.name.replace(/\.pdf$/i,'')),o=todas.find(x=>x.id!==excl&&nz(x.titulo)===t);
+ const t=nz(f.name.replace(/\.pdf$/i,'')),o=todas.find(x=>x.id!==excl&&pdfIds.has(x.id)&&nz(x.titulo)===t);
  return o?{o,h,igual:false}:{o:null,h}}
 const dupTxt=(n,d)=>`“${n}” ${d.igual?'es el mismo archivo que':'tiene el mismo nombre que'} “${d.o.titulo}”${d.o.del?' (está en la papelera)':''}. ¿Importarla igual?`;
 async function impPdfs(fs,msg){
- const bad=[],ids=[],dup=[];prog('Importando partituras…',0,fs.length);
+ const bad=[],ids=[],dup=[];let vin=0;prog('Importando partituras…',0,fs.length);
  for(const f of fs){
   msg(`Importando ${ids.length+bad.length+dup.length+1} de ${fs.length}…`);prog('Importando partituras · '+f.name,ids.length+bad.length+dup.length,fs.length);
   try{
    const d=await pdfjsLib.getDocument({data:await f.arrayBuffer(),isEvalSupported:false}).promise;
    if(d.numPages>MAXP){bad.push(`${f.name} (${d.numPages} págs.)`);continue}
+   const hu=await huerf(f);
+   if(hu){await rq('pdfs','readwrite',s=>s.put(f,hu.o.id));if(hu.h&&hu.o.h!==hu.h){hu.o.h=hu.h;await rq('obras','readwrite',s=>s.put(hu.o))}ids.push(hu.o.id);vin++;await load();continue}
    const du=await dupDe(f);if(du.o&&!confirm(dupTxt(f.name,du))){dup.push(f.name);continue}
    const id=await rq('obras','readwrite',s=>s.add({titulo:f.name.replace(/\.pdf$/i,''),compositor:'',notas:'',prioridad:'media',dias:[],grupo:'',sin:true,h:du.h||undefined}));
    await rq('pdfs','readwrite',s=>s.put(f,id));ids.push(id);await load();
   }catch(x){bad.push(f.name+' (no se pudo leer)')}
  }
  await load();
- progFin(ids.length+' importada'+(ids.length===1?'':'s')+(dup.length?' · '+dup.length+' repetida'+(dup.length===1?'':'s')+' omitida'+(dup.length===1?'':'s'):'')+(bad.length?' · '+bad.length+' con problema (más de '+MAXP+' págs. o ilegible)':''),!bad.length);
- return{ids,bad,dup};
+ progFin(ids.length+' importada'+(ids.length===1?'':'s')+(vin?' ('+vin+' ya estaba'+(vin===1?'':'n')+' en la lista, ahora con su PDF)':'')+(dup.length?' · '+dup.length+' repetida'+(dup.length===1?'':'s')+' omitida'+(dup.length===1?'':'s'):'')+(bad.length?' · '+bad.length+' con problema (más de '+MAXP+' págs. o ilegible)':''),!bad.length);
+ return{ids,bad,dup,vin};
 }
+async function huerf(f){
+ const h=await hashB(f),t=nz(f.name.replace(/\.pdf$/i,'')),c=obras.filter(o=>!o.ref&&!pdfIds.has(o.id));
+ const o=c.find(x=>h&&x.h===h)||c.find(x=>nz(x.titulo)===t);
+ return o?{o,h}:null}
 function card(o,ed,sel){
  const meta=ed?[o.compositor,pdfIds.has(o.id)?'':'sin PDF'].filter(Boolean).join(' · '):`${esc(o.compositor)}${o.compositor?' · ':''}${PL[pe(o)]}${o.grupo?' · '+esc(o.grupo):''}${o.sin?' · sin clasificar':''}${pdfIds.has(o.id)?'':' · sin PDF'}`;
  const lead=sel===undefined?`<span class="dot ${pe(o)}"></span>`:`<span class="cb ${sel?'on':''}">${sel?'✓':''}</span>`;
@@ -332,7 +340,7 @@ function moverSel(){
  $('#mgk').onclick=()=>{const v=$('#mgn').value.trim();if(v)go(v)};$('#mgc').onclick=()=>M.classList.add('hide');
 }
 async function borrarObra(o){await rq('obras','readwrite',s=>s.put({...o,del:Date.now()}))}
-async function borrarDef(o){await load();const dep=todas.filter(x=>x.ref===o.id);if(dep.length){const bl=await rq('pdfs','readonly',s=>s.get(o.id)),nw=dep[0],{ref:_r,...nr}=nw;await rq('pdfs','readwrite',s=>s.put(bl,nw.id));await rq('obras','readwrite',s=>s.put(nr));for(const x of dep.slice(1))await rq('obras','readwrite',s=>s.put({...x,ref:nw.id}))}await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));await rq('notas','readwrite',s=>s.delete(o.id));for(const l of listas.filter(l=>l.obras.includes(o.id)))await rq('listas','readwrite',s=>s.put({...l,obras:l.obras.filter(x=>x!==o.id)}));}
+async function borrarDef(o){await load();const dep=todas.filter(x=>x.ref===o.id);if(dep.length){const bl=await rq('pdfs','readonly',s=>s.get(o.id)),nw=dep[0],{ref:_r,...nr}=nw;if(bl){await rq('pdfs','readwrite',s=>s.put(bl,nw.id));await rq('obras','readwrite',s=>s.put(nr));for(const x of dep.slice(1))await rq('obras','readwrite',s=>s.put({...x,ref:nw.id}))}}await rq('obras','readwrite',s=>s.delete(o.id));await rq('pdfs','readwrite',s=>s.delete(o.id));await rq('notas','readwrite',s=>s.delete(o.id));for(const l of listas.filter(l=>l.obras.includes(o.id)))await rq('listas','readwrite',s=>s.put({...l,obras:l.obras.filter(x=>x!==o.id)}));}
 function form(o){
  const e=!!o;o=o||{prioridad:'media',dias:[]};
  const M=$('#modal');M.classList.remove('hide');
@@ -342,7 +350,7 @@ function form(o){
  <label>Notas de estudio</label><textarea id="f3" rows="3">${esc(o.notas)}</textarea>
  <label>Grupo o conjunto (opcional)</label><input type="text" id="f6" list="gl" value="${esc(o.grupo)}"><datalist id="gl">${[...new Set(obras.map(x=>x.grupo).filter(Boolean))].map(g=>`<option value="${esc(g)}">`).join('')}</datalist>
  <label>Prioridad</label><select id="f4">${['alta','media','baja'].map(p=>`<option value="${p}" ${o.prioridad===p?'selected':''}>${PL[p]}</option>`).join('')}</select>
- <label>Partitura en PDF (máximo ${MAXP} páginas)${e&&pdfIds.has(o.id)?' · ya hay una cargada, elegí otra para reemplazarla':''}</label><input type="file" id="f5" accept="application/pdf">
+ <label>Partitura en PDF (máximo ${MAXP} páginas)${e&&pdfIds.has(o.id)?' · ya hay una cargada, elegí otra para reemplazarla':''}${e&&!pdfIds.has(o.id)?' · <b style="color:var(--br)">falta en este equipo: elegí el archivo</b>':''}</label><input type="file" id="f5" accept="application/pdf">
  ${e&&pdfIds.has(o.id)?`<label>Usar solo estas páginas del PDF (opcional)</label><div class="row" style="margin:0"><input type="number" id="f7" min="1" inputmode="numeric" placeholder="Desde" style="flex:1" value="${o.rg?o.rg[0]:''}"><input type="number" id="f8" min="1" inputmode="numeric" placeholder="Hasta" style="flex:1" value="${o.rg?o.rg[1]:''}"></div><button type="button" class="btn s" id="fdv" style="margin-top:8px">✂ Dividir en varias obras</button>`:''}
  <label>Días de estudio</label><div class="days" id="fd">${ORD.map(d=>`<button type="button" data-d="${d}" class="${(o.dias||[]).includes(d)?'on':''}">${DIAS[d]}</button>`).join('')}</div>
  <p id="fe" style="color:var(--al)"></p>
@@ -376,7 +384,7 @@ async function divForm(o){
   $('#dvk').onclick=async()=>{
    const ok=R.filter(r=>r.n.trim()||r.a||r.b);if(!ok.length)return $('#dve').textContent='Completá al menos una parte.';
    for(const r of ok){const a=+r.a,b=+r.b;if(!r.n.trim()||!(a>=1)||!(b>=a)||b>tot)return $('#dve').textContent='Revisá cada parte: nombre y páginas (de 1 a '+tot+').'}
-   for(const r of ok){const {id:_i,...base}=o;await rq('obras','readwrite',s=>s.add({...base,titulo:r.n.trim(),dias:[],ref:pdfOf(o),rg:[+r.a,+r.b],sin:false,marc:[]}))}
+   for(const r of ok){const {id:_i,uid:_u,...base}=o;await rq('obras','readwrite',s=>s.add({...base,titulo:r.n.trim(),dias:[],ref:pdfOf(o),rg:[+r.a,+r.b],sin:false,marc:[]}))}
    M.classList.add('hide');await load();draw();toast(ok.length+' obra'+(ok.length===1?' creada':'s creadas')+'.');
   };
  };
@@ -582,7 +590,7 @@ $('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'
  ls.set('auto',V.auto?'1':'0');vista()};
 $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp=0;V.rs=true;$('#vsl').blur();pintar()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-function cerrarV(){tok++;$('#v').classList.remove('lk');$('#lps').classList.add('hide');V.lp=null;V.laps=0;V.lock=false;$('#lkc').classList.add('hide');PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}rstUI()}
+function cerrarV(){tok++;$('#v').classList.remove('lk');$('#lps').classList.add('hide');V.lp=null;V.laps=0;V.lock=false;$('#lkc').classList.add('hide');PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}rstUI();syncSoon(1500)}
 $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
 addEventListener('popstate',()=>{if(!V.doc&&!$('#modal').classList.contains('hide')){$('#modal').classList.add('hide');return}if(V.doc){if(V.lock){history.pushState({v:1},'');return}cerrarV()}});
 $('#pages').onclick=e=>{if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if((V.an&&V.tl!=='m')||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else if(!V.lock){const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
@@ -815,7 +823,7 @@ async function importar(f){
   await migrar();
   for(const x of d.practica||[])await rq('practica','readwrite',s=>s.put(x));
  }catch(e){progFin('La importación se cortó a la mitad. Volvé a intentarlo con el mismo archivo.',false);$('#msg').textContent='La importación se cortó a la mitad: '+(e&&e.message||e)+'. Volvé a intentarlo con el mismo archivo.';await load();draw();return}
- ls.set('ultresp',String(Date.now()));await load();draw();progFin('Respaldo importado: '+d.obras.filter(o=>!o.del).length+' obras, '+(d.listas||[]).length+' listas.');say('Respaldo importado ('+d.obras.length+' obras).');
+ ls.set('ultresp',String(Date.now()));syncReset();await load();draw();progFin('Respaldo importado: '+d.obras.filter(o=>!o.del).length+' obras, '+(d.listas||[]).length+' listas.');say('Respaldo importado ('+d.obras.length+' obras).');
 }
 const await0=u=>{const [h,b]=u.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m})};
 function toast(t){let d=$('#toast');if(!d){d=document.createElement('div');d.id='toast';d.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:90px;z-index:99;background:rgba(20,20,20,.92);color:#fff;border-radius:14px;padding:10px 18px;font-size:14px;max-width:90%;text-align:center';document.body.appendChild(d)}d.textContent=t;d.style.display='block';clearTimeout(d._t);d._t=setTimeout(()=>d.style.display='none',4000)}
@@ -832,6 +840,164 @@ function aviso(t){
  let d=$('#err');if(!d){d=document.createElement('div');d.id='err';d.style.cssText='position:fixed;left:8px;right:8px;bottom:70px;z-index:99;background:#5a1d17;color:#fff;border:1px solid var(--al);border-radius:10px;padding:12px;font-size:14px';d.onclick=()=>d.remove();document.body.appendChild(d)}
  d.textContent='Algo falló: '+t+'. (Tocá para cerrar.) Si se repite, hacé un respaldo y mandame una captura de este mensaje.';
 }
+/* ===== SINCRONIZACIÓN (Supabase) =====
+ Sincroniza obras (sin PDF), listas, eventos y la meta diaria entre equipos. Los PDF, las anotaciones y la práctica NO se sincronizan.
+ Cada obra/lista/evento tiene un "uid" propio (los id numéricos son distintos en cada equipo). SBU y SBK: dirección y clave PÚBLICA del proyecto.
+ Funciones: sbIn/sbOut (sesión), sync (orquesta), sbPull, sbApply (baja), sbPushAll (sube), snap (estado local), syncUI (Ajustes).
+ Estado: localStorage sbs (sesión), sy_map (huella de lo último sincronizado por registro), sy_last (cursor de bajada), sy_t (última vez). */
+const SBU='https://tkykthmssnlxgqukptss.supabase.co',SBK='sb_publishable_GGsAmFkI3Vzzcot5oNQajA_P2rsex8t';
+const SB={s:null,busy:false,msg:'',err:false,t:null,rf:null};
+try{SB.s=JSON.parse(ls.get('sbs')||'null')}catch(e){}
+const hs=s=>{let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);return (4294967296*(2097151&b)+(a>>>0)).toString(36)};
+const canon=v=>v===null||v===undefined||typeof v!=='object'?JSON.stringify(v===undefined?null:v):Array.isArray(v)?'['+v.map(canon).join(',')+']':'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}';
+const SBM=()=>{try{return JSON.parse(ls.get('sy_map')||'{}')}catch(e){return{}}},SBMs=m=>ls.set('sy_map',JSON.stringify(m));
+function syncReset(){ls.set('sy_map','{}');ls.set('sy_last','')}
+function sbSave(j,email){SB.s={at:j.access_token,rt:j.refresh_token,exp:Date.now()+(j.expires_in||3600)*1000,uid:(j.user&&j.user.id)||(SB.s&&SB.s.uid),email:email||(j.user&&j.user.email)||''};ls.set('sbs',JSON.stringify(SB.s))}
+async function sbTok(){
+ const s=SB.s;if(!s)throw new Error('nosession');
+ if(s.exp-Date.now()>60000)return s.at;
+ if(!SB.rf)SB.rf=(async()=>{
+  try{
+   const r=await fetch(SBU+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:SBK,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:s.rt})});
+   if(!r.ok){if(r.status===400||r.status===401){SB.s=null;ls.set('sbs','');throw new Error('nosession')}const e=new Error('refresh');e.status=r.status;throw e}
+   sbSave(await r.json(),s.email);
+  }finally{SB.rf=null}
+ })();
+ await SB.rf;return SB.s.at}
+async function sbf(path,opt={}){
+ const t=await sbTok(),r=await fetch(SBU+path,{...opt,cache:'no-store',headers:{apikey:SBK,Authorization:'Bearer '+t,...(opt.headers||{})}});
+ if(!r.ok){const e=new Error('http '+r.status);e.status=r.status;try{e.body=await r.text()}catch(x){}throw e}
+ return r}
+async function sbIn(email,pass){
+ const r=await fetch(SBU+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:SBK,'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})});
+ if(!r.ok){const e=new Error('login');e.status=r.status;e.login=true;throw e}
+ const j=await r.json(),pu=ls.get('sy_uid');SB.s=null;sbSave(j,email);
+ if(pu&&pu!==SB.s.uid)syncReset();ls.set('sy_uid',SB.s.uid)}
+function sbErr(e){
+ const st=e&&e.status,b=(e&&e.body)||'';
+ if(e&&e.login)return (st===400||st===401||st===422)?'Mail o clave incorrectos.':'No se pudo entrar (código '+st+').';
+ if(e&&e.message==='nosession')return 'La sesión venció. Entrá de nuevo.';
+ if(!st)return 'Sin conexión. Se sincroniza cuando vuelva internet.';
+ if(st===401||(st===403&&/JWT|expired/i.test(b)))return 'La sesión venció. Entrá de nuevo.';
+ if(st===404&&/PGRST205|datos/.test(b))return 'Falta crear la tabla en Supabase (el paso del SQL).';
+ return 'No se pudo sincronizar (código '+st+').'}
+const kf={obra:x=>nz(x.titulo),lista:x=>nz(x.nombre),evento:x=>[x.tipo,nz(x.titulo),x.fecha,x.hora||''].join('|')};
+const nuid=()=>crypto.randomUUID?crypto.randomUUID():'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
+async function sbUids(){
+ for(const o of todas)if(!o.uid){o.uid=nuid();await rq('obras','readwrite',s=>s.put(o))}
+ for(const l of listas)if(!l.uid){l.uid=nuid();await rq('listas','readwrite',s=>s.put(l))}
+ for(const e of eventos)if(!e.uid){e.uid=nuid();await rq('eventos','readwrite',s=>s.put(e))}}
+function snap(){
+ const S=new Map(),i2u={},l2u={};
+ for(const o of todas)i2u[o.id]=o.uid;for(const l of listas)l2u[l.id]=l.uid;
+ const put=(t,u,c)=>S.set(t+'/'+u,{t,u,c,h:hs(canon(c))});
+ for(const o of todas)put('obra',o.uid,{titulo:o.titulo||'',compositor:o.compositor||'',notas:o.notas||'',prioridad:o.prioridad||'media',dias:[...(o.dias||[])].sort((a,b)=>a-b),grupo:o.grupo||'',sin:!!o.sin,marc:(o.marc||[]).map(m=>({n:m.n,p:m.p})),sp:o.sp||null,rg:o.rg||null,ref:o.ref?(i2u[o.ref]||null):null,h:o.h||null,del:o.del||null});
+ for(const l of listas)put('lista',l.uid,{nombre:l.nombre||'',obras:(l.obras||[]).map(i=>i2u[i]).filter(Boolean),ok:(l.ok||[]).map(i=>i2u[i]).filter(Boolean)});
+ for(const e of eventos)put('evento',e.uid,{tipo:e.tipo,titulo:e.titulo||'',fecha:e.fecha||'',hora:e.hora||'',lugar:e.lugar||'',nota:e.nota||'',lista:e.lista?(l2u[e.lista]||null):null,rep:e.rep||''});
+ const mt=ls.get('meta');if(mt)put('ajuste','meta',{v:mt});
+ return S}
+async function sbPull(){
+ const last=ls.get('sy_last')||'';let rows=[],off=0;
+ for(;;){
+  const r=await sbf('/rest/v1/datos?select=tipo,id,contenido,borrado,actualizado&order=actualizado.asc,tipo.asc,id.asc&limit=500&offset='+off+(last?'&actualizado=gte.'+encodeURIComponent(last):'')),a=await r.json();
+  rows=rows.concat(a);if(a.length<500)break;off+=500}
+ return rows}
+async function sbApply(rows){
+ if(!rows.length)return false;
+ const MAP=SBM(),S=snap(),done=[],X=[],rid=new Set(rows.map(r=>r.tipo+'/'+r.id));let chg=false;
+ const by={obra:[],lista:[],evento:[],ajuste:[]};for(const r of rows)if(by[r.tipo])by[r.tipo].push(r);
+ const rh=r=>hs(canon(r.contenido||{}));
+ const dec=(k,r)=>{
+  const l=S.get(k),m=MAP[k];
+  if(r.borrado){if(!l){X.push(k);return 'none'}return l.h!==m?'skip':'del'}
+  if(l){if(l.h===rh(r)){done.push(k);return 'none'}return l.h!==m?'skip':'apply'}
+  if(m!==undefined&&m!=='X')return 'skip';
+  return 'new'};
+ const adopt=(tipo,arr,r)=>{const kk=kf[tipo](r.contenido||{});return arr.find(x=>x.uid&&!MAP[tipo+'/'+x.uid]&&!rid.has(tipo+'/'+x.uid)&&kf[tipo](x)===kk)};
+ const guarda=async(st,n,t)=>{if(t)await rq(st,'readwrite',s=>s.put(n));else{delete n.id;await rq(st,'readwrite',s=>s.add(n))}};
+ const pend=[];
+ for(const r of by.obra){
+  const k='obra/'+r.id,d=dec(k,r);if(d==='none'||d==='skip')continue;
+  const loc=todas.find(x=>x.uid===r.id);
+  if(d==='del'){if(loc){await borrarDef(loc);chg=true;X.push(k)}continue}
+  const t=loc||adopt('obra',todas,r),c=r.contenido||{},n={...(t||{}),uid:r.id,titulo:c.titulo||'',compositor:c.compositor||'',notas:c.notas||'',prioridad:c.prioridad||'media',dias:c.dias||[],grupo:c.grupo||'',sin:!!c.sin,marc:c.marc||[]};
+  for(const q of ['sp','rg','h','del'])if(c[q]!=null)n[q]=c[q];else delete n[q];
+  delete n.ref;if(c.ref)pend.push([r.id,c.ref]);
+  await guarda('obras',n,t);done.push(k);chg=true}
+ await load();
+ {const U={};for(const o of todas)U[o.uid]=o.id;
+  for(const [u,ru] of pend){const o=todas.find(x=>x.uid===u),id=U[ru];if(o&&id&&id!==o.id)await rq('obras','readwrite',s=>s.put({...o,ref:id}))}}
+ await load();
+ const O2I={};for(const o of todas)O2I[o.uid]=o.id;
+ for(const r of by.lista){
+  const k='lista/'+r.id,d=dec(k,r);if(d==='none'||d==='skip')continue;
+  const loc=listas.find(x=>x.uid===r.id);
+  if(d==='del'){if(loc){await rq('listas','readwrite',s=>s.delete(loc.id));for(const v of eventos.filter(x=>x.lista===loc.id))await rq('eventos','readwrite',s=>s.put({...v,lista:0}));X.push(k);chg=true}continue}
+  const t=loc||adopt('lista',listas,r),c=r.contenido||{},n={...(t||{}),uid:r.id,nombre:c.nombre||'',obras:(c.obras||[]).map(u=>O2I[u]).filter(Boolean),ok:(c.ok||[]).map(u=>O2I[u]).filter(Boolean)};
+  await guarda('listas',n,t);done.push(k);chg=true}
+ await load();
+ const L2I={};for(const l of listas)L2I[l.uid]=l.id;
+ for(const r of by.evento){
+  const k='evento/'+r.id,d=dec(k,r);if(d==='none'||d==='skip')continue;
+  const loc=eventos.find(x=>x.uid===r.id);
+  if(d==='del'){if(loc){await rq('eventos','readwrite',s=>s.delete(loc.id));X.push(k);chg=true}continue}
+  const t=loc||adopt('evento',eventos,r),c=r.contenido||{},n={...(t||{}),uid:r.id,tipo:c.tipo||'recordatorio',titulo:c.titulo||'',fecha:c.fecha||'',hora:c.hora||'',lugar:c.lugar||'',nota:c.nota||'',lista:c.lista?(L2I[c.lista]||0):0,rep:c.rep||''};
+  await guarda('eventos',n,t);done.push(k);chg=true}
+ for(const r of by.ajuste){
+  if(r.id!=='meta')continue;const k='ajuste/meta',d=dec(k,r);
+  if(d==='apply'||d==='new'){const v=r.contenido&&r.contenido.v;if(v!=null){ls.set('meta',String(v));done.push(k);chg=true}}}
+ await load();const S2=snap();
+ for(const k of done)if(S2.has(k))MAP[k]=S2.get(k).h;
+ for(const k of X)MAP[k]='X';
+ SBMs(MAP);return chg}
+async function sbPushAll(man){
+ const MAP=SBM(),S=snap(),up=[],ks=[],uid=SB.s.uid;let aviso='';
+ for(const [k,v] of S)if(MAP[k]!==v.h){up.push({user_id:uid,tipo:v.t,id:v.u,contenido:v.c,borrado:false});ks.push([k,v.h])}
+ let dels=Object.keys(MAP).filter(k=>MAP[k]!=='X'&&!S.has(k));
+ if(dels.length>5&&dels.length>Object.keys(MAP).length/2){
+  if(!(man&&confirm('Este equipo tiene muchísimo menos que la nube. Si seguís, se borran '+dels.length+' elementos de la nube y de tus otros equipos. ¿Es lo que querés?'))){aviso='Se frenó el borrado de '+dels.length+' elementos: este equipo tiene mucho menos que la nube. Tocá “Sincronizar ahora” para confirmarlo.';dels=[]}}
+ for(const k of dels){const i=k.indexOf('/');up.push({user_id:uid,tipo:k.slice(0,i),id:k.slice(i+1),contenido:{},borrado:true})}
+ for(let i=0;i<up.length;i+=100)await sbf('/rest/v1/datos?on_conflict=user_id,tipo,id',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(up.slice(i,i+100))});
+ for(const [k,h] of ks)MAP[k]=h;for(const k of dels)MAP[k]='X';SBMs(MAP);
+ return aviso}
+async function sync(man){
+ if(!SB.s)return;
+ if(SB.busy){if(man)toast('Ya se está sincronizando…');return}
+ if(!man&&V.doc)return;
+ if(!navigator.onLine){SB.msg='Sin conexión. Se sincroniza cuando vuelva internet.';SB.err=false;sbSt();if(man)toast(SB.msg);return}
+ SB.busy=true;SB.msg='Sincronizando…';SB.err=false;sbSt();
+ try{
+  await load();await sbUids();await load();
+  const rows=await sbPull(),ch=await sbApply(rows);
+  if(rows.length)ls.set('sy_last',rows[rows.length-1].actualizado);
+  const av=await sbPushAll(man);
+  ls.set('sy_t',String(Date.now()));SB.msg=av;SB.err=!!av;
+  if(ch){await load();if(!V.doc)draw()}
+  if(man)toast(av||'Sincronizado.');
+ }catch(e){SB.err=true;SB.msg=sbErr(e);if(man)toast(SB.msg)}
+ SB.busy=false;if(SB.s)sbSt();else syncUI()}
+function syncSoon(ms){if(!SB.s||SB.busy)return;clearTimeout(SB.t);SB.t=setTimeout(()=>sync(false),ms==null?3000:ms)}
+setInterval(()=>{if(!document.hidden)syncSoon(500)},90000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncSoon(800)});
+addEventListener('online',()=>syncSoon(500));
+function sbSt(){
+ const e=$('#sbst');if(!e)return;const t=+ls.get('sy_t')||0;
+ e.textContent=SB.msg||(t?'Sincronizado: '+new Date(t).toLocaleString('es-AR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'Todavía no se sincronizó.');
+ e.style.color=SB.err?'var(--al)':'var(--br)';const b=$('#sbn');if(b)b.disabled=SB.busy}
+function syncUI(){
+ const c=$('#scard');if(!c)return;const T='<div class="tt">Sincronización entre equipos</div>';
+ if(!SB.s){
+  c.innerHTML=T+'<small>Entrá con tu cuenta para tener las mismas obras, días de estudio, importancia, repertorios y agenda en el celular y en la tablet. Los PDF y las anotaciones no se sincronizan: en cada equipo se cargan aparte (o con el respaldo).</small><label>Mail</label><input type="email" id="sbm" autocomplete="username" autocapitalize="none"><label>Clave</label><input type="password" id="sbp" autocomplete="current-password"><div class="row"><button class="btn" id="sbi">Entrar</button></div><p id="sbe" style="color:var(--al);margin:4px 0">'+esc(SB.err?SB.msg:'')+'</p>';
+  $('#sbi').onclick=async()=>{
+   const m=$('#sbm').value.trim(),p=$('#sbp').value,er=$('#sbe');
+   if(!m||!p){er.textContent='Escribí el mail y la clave.';return}
+   er.style.color='var(--mu)';er.textContent='Entrando…';
+   try{await sbIn(m,p);SB.err=false;SB.msg='';syncUI();toast('Sesión iniciada. Sincronizando…');sync(true)}catch(x){er.style.color='var(--al)';er.textContent=sbErr(x)}}
+ }else{
+  c.innerHTML=T+'<div id="sbst" style="margin:4px 0;font-weight:600"></div><small>Cuenta: '+esc(SB.s.email)+'. Se sincroniza sola al abrir la app, al hacer cambios y cuando vuelve internet. Si cambiás lo mismo en dos equipos a la vez, queda el último cambio.</small><div class="row"><button class="btn" id="sbn">Sincronizar ahora</button><button class="btn s" id="sbo">Salir</button></div>';
+  $('#sbn').onclick=()=>sync(true);
+  $('#sbo').onclick=()=>{if(!confirm('¿Salir de la cuenta? Tus datos quedan en este equipo, pero dejan de sincronizarse.'))return;SB.s=null;ls.set('sbs','');SB.msg='';SB.err=false;syncUI()};
+  sbSt()}}
 addEventListener('error',e=>aviso(e.message||'error'));
 addEventListener('unhandledrejection',e=>aviso(String(e.reason&&e.reason.message||e.reason||'error desconocido')));
 init().catch(e=>aviso('no se pudo abrir el almacenamiento ('+(e&&e.message||e)+')'));

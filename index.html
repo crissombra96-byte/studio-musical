@@ -42,11 +42,11 @@ input[type=text],input[type=date],input[type=number],textarea,select{width:100%;
 #vb .tt{flex:1 1 120px;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:16px}
 .ib{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:50px;min-height:50px;padding:4px 8px;border:0;border-radius:12px;background:none;color:var(--mu);font-size:11px;line-height:1.1;white-space:nowrap;flex:none}
 .ib i{display:block;height:22px}.ib svg{display:block}.ib.on{background:color-mix(in srgb,var(--br) 18%,transparent);color:var(--br)}
-#ab{flex:1 1 auto;display:flex;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;justify-content:flex-end}#ab::-webkit-scrollbar{display:none}
+#ab{flex:1 1 auto;display:flex;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;justify-content:flex-start}#ab>:first-child{margin-left:auto}#ab::-webkit-scrollbar{display:none}
 #ab .sep{width:1px;height:28px;background:var(--ln);margin:0 6px;flex:none}
 #ab .sw{width:26px;height:26px;border-radius:50%;border:2px solid transparent;padding:0;flex:none;margin:0 3px}#ab .sw.on{border-color:var(--tx)}#sws{display:flex;align-items:center;flex:none}
 .ab2{border:0;background:none;color:var(--mu);font-size:12px;padding:10px 8px;border-radius:10px;flex:none;white-space:nowrap}.ab2.on{color:var(--br)}
-@media(max-width:1000px){#vb.tools .tt{display:none}}
+@media(max-width:1000px){#vb{flex-wrap:wrap}#vb #ab{order:5;flex:1 1 100%;padding-top:2px}#vb .tt{flex:1 1 60px}}
 #pg{position:absolute;right:12px;top:calc(env(safe-area-inset-top) + 76px);z-index:3;background:rgba(20,20,20,.74);color:#fff;font-size:14px;padding:5px 12px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s}#pg.on{opacity:1;pointer-events:auto}#vb.hide~#pg{top:calc(env(safe-area-inset-top) + 12px)}
 #vf{position:relative;background:var(--pn);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom)}
 #vs{display:flex;align-items:center;gap:4px;padding:4px 8px 0}#vs input{flex:1;min-width:0;accent-color:var(--br);margin:6px 0}#vs button{border:0;background:none;color:var(--tx);font-size:28px;line-height:1;padding:2px 14px;border-radius:10px}
@@ -126,6 +126,17 @@ details.idt{background:var(--pn);border:1px solid var(--ln);border-radius:10px;p
 .dh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:16px 0 8px;font-weight:700;color:var(--br);font-family:Georgia,'Times New Roman',serif;font-size:17px}.dh:first-child{margin-top:2px}.dh small{color:var(--mu);font-weight:400;font-family:inherit;font-size:14px}
 .agr{display:flex;gap:10px;align-items:center;background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer}.agr .tt{overflow-wrap:anywhere}.agr small{display:block;color:var(--mu)}
 details.est summary{cursor:pointer;color:var(--mu);font-size:14px;margin:8px 0 2px}details.est .ag{padding:5px 0}
+
+#rp{position:absolute;z-index:8;right:0;top:0;bottom:0;width:min(380px,90vw);display:flex;flex-direction:column;background:var(--pn);color:var(--tx);border-left:1px solid var(--ln);box-shadow:-12px 0 30px rgba(0,0,0,.45);padding-top:env(safe-area-inset-top)}#rp.hide{display:none}
+#rp .rph{display:flex;align-items:center;gap:10px;padding:12px 12px 10px;border-bottom:1px solid var(--ln)}#rp .rph b{flex:1;min-width:0;font-family:Georgia,'Times New Roman',serif;font-size:18px;overflow-wrap:anywhere}#rp .rph small{color:var(--mu)}
+#rp .rpl{flex:1;overflow:auto;padding:8px 10px}#rp .rpn{display:block;color:var(--mu);padding:8px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--ln)}
+.rpi{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:8px 10px;margin-bottom:8px;cursor:pointer}.rpi.cur{border-color:var(--br);background:color-mix(in srgb,var(--br) 12%,var(--bg))}.rpi.nopdf{opacity:.55}.rpi .rpt{flex:1;min-width:0}.rpi .tt{font-size:16px;overflow-wrap:anywhere}.rpi small{display:block;color:var(--mu)}
+.rpi .rpk{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--mu);background:none;color:transparent;font-weight:700;font-size:17px;padding:0}.rpi .rpk.on{background:var(--br);border-color:var(--br);color:#1a1405}
+#v.lk #rp{display:none!important}
+.hb{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--mu);background:none;color:#1a1405;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0;margin-left:8px}.hb.on{background:var(--br);border-color:var(--br)}
+.dn{opacity:.55}.dn .tt,.dn .tx{text-decoration:line-through}
+.ag.hr,.ag.ev{display:flex;gap:8px;align-items:center}.ag .tx{flex:1;min-width:0;overflow-wrap:anywhere}.ag .hb{width:32px;height:32px;font-size:17px}
+.cg>details{grid-column:1/-1}details.est>.cg{margin-top:8px}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p></header>
@@ -136,18 +147,19 @@ details.est summary{cursor:pointer;color:var(--mu);font-size:14px;margin:8px 0 2
 <div id="v" class="hide">
  <div id="vb"><button class="ib" id="vx" aria-label="Volver a la lista"><i data-ic="back"></i></button><span class="tt" id="vt"></span>
   <div id="ab" class="hide"><button class="ib" data-t="l"><i data-ic="pen"></i><span>Lápiz</span></button><button class="ib" data-t="h"><i data-ic="hl"></i><span>Resaltar</span></button><button class="ib" data-t="g"><i data-ic="er"></i><span>Goma</span></button><button class="ib" data-t="n"><i data-ic="note"></i><span>Nota</span></button><button class="ib" data-t="m"><i data-ic="hand"></i><span>Mover</span></button><span class="sep"></span><span id="sws"></span><span class="sep"></span><button class="ib" id="aun"><i data-ic="undo"></i><span>Deshacer</span></button><button class="ab2" id="agr"></button><button class="ab2" id="adi"></button><button class="ab2" id="aoc"></button></div>
-  <button class="ib" id="vlk" aria-label="Modo escenario"><i data-ic="lock"></i><span>Escenario</span></button>
+  <button class="ib hide" id="van" aria-label="Anotar"><i data-ic="pen"></i><span>Anotar</span></button><button class="ib" id="vlk" aria-label="Modo escenario"><i data-ic="lock"></i><span>Escenario</span></button>
  </div>
  <button id="lkc" class="hide" aria-label="Desbloquear"><i data-ic="lock"></i></button>
  <div id="pg"></div>
  <div id="pages"></div>
  <div id="lps" class="hide"></div>
+ <div id="rp" class="hide"></div>
  <div id="vf">
   <div id="mb" class="hide"><div class="mr"><span class="ml" id="mlab"></span><button id="mm">−</button><input id="mbpm" type="number" min="30" max="240" inputmode="numeric"><button id="mp">+</button><input id="msl" type="range" min="30" max="240"><button id="mtap">Tap</button><button id="mgo"></button></div><div class="mr"><span class="ml">Compás</span><select id="mcs"></select><span class="ml">Pulso</span><select id="mus"></select><span id="mdots"></span><button id="mmore">Más ▾</button></div>
   <div id="mx" class="hide"><div class="mr"><span class="ml">Sonido</span><span id="mss" class="chips"></span></div><div class="mr"><span class="ml">Volumen</span><input type="range" id="mvol" min="10" max="100" style="flex:1;accent-color:var(--br)"></div><div class="mr w"><button id="mpg">Subir de a poco</button><span class="ml">+</span><input id="mpst" class="nm" type="number" inputmode="numeric"><span class="ml">cada</span><input id="mpn" class="nm" type="number" inputmode="numeric"><span class="ml">comp. · tope</span><input id="mptg" class="nm" type="number" inputmode="numeric"></div><div class="mr w"><button id="lpg">↻ Repetir páginas</button><input id="lpa" class="nm" type="number" inputmode="numeric"><span class="ml">a</span><input id="lpb" class="nm" type="number" inputmode="numeric"><span class="ml">con</span><input id="lpk" class="nm" type="number" inputmode="numeric" placeholder="?"><span class="ml">comp. por pantalla</span><button id="lpt">Subir tempo cada vuelta</button><span class="ml" id="lpc"></span></div></div></div>
   <div id="vch" class="hide"></div>
   <div id="vs"><button id="vp" aria-label="Página anterior">‹</button><input type="range" id="vsl" min="1" max="1" value="1"><button id="vn" aria-label="Página siguiente">›</button></div>
-  <div id="mn"><button class="ib" id="vm"><i data-ic="pages"></i><span id="vml"></span></button><button class="ib" id="vmt"><i data-ic="metro"></i><span>Metrónomo</span></button><button class="ib" id="pplay"><i data-ic="play"></i><span id="ppl"></span></button><button class="ib hide" id="pfin"><i data-ic="stop"></i><span>Terminar</span></button><button class="ib" id="vsec"><i data-ic="mark"></i><span>Secciones</span></button></div>
+  <div id="mn"><button class="ib" id="vm"><i data-ic="pages"></i><span id="vml"></span></button><button class="ib" id="vmt"><i data-ic="metro"></i><span>Metrónomo</span></button><button class="ib" id="pplay"><i data-ic="play"></i><span id="ppl"></span></button><button class="ib hide" id="pfin"><i data-ic="stop"></i><span>Terminar</span></button><button class="ib" id="vsec"><i data-ic="mark"></i><span>Secciones</span></button><button class="ib hide" id="vrp"><i data-ic="list"></i><span>Repertorio</span></button></div>
  </div>
 </div>
 <div id="nt" class="hide"><textarea id="ntx" rows="3" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font:inherit"></textarea><div class="row"><button class="btn" id="nts">Guardar</button><button class="btn d" id="ntd">Borrar</button><button class="btn s" id="ntc">Cerrar</button></div></div>
@@ -160,18 +172,19 @@ details.est summary{cursor:pointer;color:var(--mu);font-size:14px;margin:8px 0 2
  OBRAS      card, bindCards, form (alta/edición), divForm (dividir PDF), impPdfs (importar PDFs), dupDe/hashB (repetidas)
  BORRADO    borrarObra (a la papelera), borrarDef (definitivo), verPapelera, vObras (barra superior de selección)/moverSel
  LISTAS     detLista, formLista, selObras
- LECTOR     abrir, vista, pintar, ir (páginas y bucle), calcCrop, cerrarV, lockSet (escenario), chipsSec, scAbrir
+ LECTOR     rpUI/rpDraw (panel del repertorio dentro del lector), abShow (barra de anotar), abrir, vista, pintar, ir (páginas y bucle), calcCrop, cerrarV, lockSet (escenario), chipsSec, scAbrir
  METRÓNOMO  M, mui, msch, mgo, mstop, clic, lpUI (repetir páginas)
  PRÁCTICA   PR, ptick, pguardar, prui
  ANOTAR     capa (pointer events), herramientas #ab
  RESPALDO   exportar, importar (restaura), rstate/rstUI (aviso), toast/say
  Claves localStorage: modo auto dedo resume pag<id> bpm bpm<id> cmp<id> pul<id> orden tema meta ultresp rsnooze crop<k> msnd mvol mpst mpn mptg esto (orden de pestañas de Estudiar) agv (vista de Agenda) impdest (carpeta elegida al importar) mig_g2l (ya se pasaron las carpetas viejas a repertorios)
  v30: las "carpetas" de Organizar SON los repertorios (listas). Una obra puede estar en varios; sin ninguno = "Sin carpeta". El campo obra.grupo quedó sin uso (se migró a repertorios con migGrupos).
+ v31: eventos y obras tienen dn=[fechas completadas] (togDone/hb/doneE/doneO); la barra de anotaciones en el celular se abre con el botón Anotar (#van).
  Funciones nuevas v30: impModal (importar con carpeta destino), moverSel (agrega a repertorio), ordEst (orden de pestañas), migGrupos, fsOn/fsTry. La práctica también se sincroniza (se mezcla por máximo de segundos por obra).
  Obra: {id,titulo,compositor,notas,prioridad,dias,grupo,sin,ref,rg,marc,h,del}  (ref/rg = parte de otro PDF; h = huella; del = fecha de papelera)
 */
 const $=s=>document.querySelector(s);
-const IC={hand:'<path d="M8 13V6a1.5 1.5 0 013 0v5M11 11V4.5a1.5 1.5 0 013 0V11M14 11V6a1.5 1.5 0 013 0v7a6 6 0 01-6 6h-1a5 5 0 01-4-2l-2.5-3.5a1.4 1.4 0 012.2-1.7L8 13"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
+const IC={list:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/>',hand:'<path d="M8 13V6a1.5 1.5 0 013 0v5M11 11V4.5a1.5 1.5 0 013 0V11M14 11V6a1.5 1.5 0 013 0v7a6 6 0 01-6 6h-1a5 5 0 01-4-2l-2.5-3.5a1.4 1.4 0 012.2-1.7L8 13"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',pause:'<rect x="7" y="5" width="3.6" height="14" rx="1" fill="currentColor"/><rect x="13.4" y="5" width="3.6" height="14" rx="1" fill="currentColor"/>',read:'<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',pen:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',hl:'<path d="M9 15l6-10 4 3-6 10z"/><path d="M4 20h9"/>',er:'<path d="M5 15l8-9 6 5-6 8H8z"/><path d="M13 19h7"/>',note:'<path d="M5 5h14v11H11l-6 4z"/>',undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12H9"/>',pages:'<rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/>',metro:'<path d="M8 21L10 4h4l2 17z"/><path d="M12 16L16 8"/>',play:'<path d="M8 5v14l11-7z" fill="currentColor"/>',stop:'<rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>',mark:'<path d="M6 3h12v18l-6-4-6 4z"/>'};
 const svg=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
 document.querySelectorAll('i[data-ic]').forEach(i=>i.innerHTML=svg(i.dataset.ic));
 const MAXP=150,DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],ORD=[1,2,3,4,5,6,0],PRI={alta:0,media:1,baja:2};
@@ -368,10 +381,10 @@ async function huerf(f){
  const h=await hashB(f),t=nz(f.name.replace(/\.pdf$/i,'')),c=obras.filter(o=>!o.ref&&!pdfIds.has(o.id));
  const o=c.find(x=>h&&x.h===h)||c.find(x=>nz(x.titulo)===t);
  return o?{o,h}:null}
-function card(o,ed,sel){
+function card(o,ed,sel,hk){
  const meta=ed?[o.compositor,pdfIds.has(o.id)?'':'sin PDF'].filter(Boolean).join(' · '):`${esc(o.compositor)}${o.compositor?' · ':''}${PL[pe(o)]}${pdfIds.has(o.id)?'':' · sin PDF'}`;
  const lead=sel===undefined?`<span class="dot ${pe(o)}"></span>`:`<span class="cb ${sel?'on':''}">${sel?'✓':''}</span>`;
- return `<div class="card${sel?' chk':''}" data-id="${o.id}">${lead}<div style="flex:1;min-width:0"><div class="tt">${esc(o.titulo)}</div>${meta?`<small>${ed?esc(meta):meta}</small>`:''}${o.notas&&!ed?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}</div>${ed&&sel===undefined?'<button class="ib2 ed" aria-label="Editar">✎</button>':''}</div>`;
+ return `<div class="card${sel?' chk':''}${hk&&doneO(o,hk)?' dn':''}" data-id="${o.id}">${lead}<div style="flex:1;min-width:0"><div class="tt">${esc(o.titulo)}</div>${meta?`<small>${ed?esc(meta):meta}</small>`:''}${o.notas&&!ed?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}</div>${ed&&sel===undefined?'<button class="ib2 ed" aria-label="Editar">✎</button>':''}${hk?hb('o',o.id,hk):''}</div>`;
 }
 function bindCards(m){
  m.querySelectorAll('.card[data-id]').forEach(c=>{
@@ -453,20 +466,33 @@ async function divForm(o){
  };
  pinta();
 }
+const doneE=(e,k)=>(e.dn||[]).includes(k),doneO=(o,k)=>(o.dn||[]).includes(k);
+const hb=(kind,id,k)=>{const on=kind==='e'?doneE(eventos.find(x=>x.id==id)||{},k):doneO(todas.find(x=>x.id==id)||{},k);return `<button class="hb${on?' on':''}" data-hk="${kind}" data-hid="${id}" data-hd="${k}" aria-label="${on?'Volver a pendiente':'Marcar como completado'}">${on?'✓':''}</button>`};
+async function togDone(kind,id,k){
+ const st=kind==='e'?'eventos':'obras',o=(kind==='e'?eventos:todas).find(x=>x.id==id);if(!o)return;
+ const lim=ymd(new Date(Date.now()-90*864e5)),on=(o.dn||[]).includes(k);
+ let dn=on?o.dn.filter(x=>x!==k):[...(o.dn||[]),k];dn=dn.filter(x=>x>=lim);
+ const n={...o};if(dn.length)n.dn=dn;else delete n.dn;
+ await rq(st,'readwrite',s=>s.put(n));await load();draw();
+}
+const bindHb=m=>m.querySelectorAll('.hb').forEach(b=>b.onclick=e=>{e.stopPropagation();e.preventDefault();togDone(b.dataset.hk,+b.dataset.hid,b.dataset.hd)});
 function vHoy(m,hoy){
  m.classList.add('cg');
- const l=sortO(obras.filter(o=>(o.dias||[]).includes(hoy)));
- const h=ymd(new Date()),ev=occ(h);
- m.innerHTML=(ev.length?'<h2 class="sh" style="margin-top:0">Hoy en la agenda</h2>'+ev.map(e=>evCard(e,h,h)).join(''):'')+(l.length?(ev.length?'<h2 class="sh">Para estudiar hoy</h2>':'')+l.map(o=>card(o)).join(''):(ev.length?'':'<div class="empty">No hay obras asignadas para hoy.<br>Asignales días en Organizar.</div>'));
- bindCards(m);m.querySelectorAll('[data-e]').forEach(c=>c.onclick=()=>{const e=eventos.find(x=>x.id==c.dataset.e);if(e)formEv(e)});
+ const h=ymd(new Date()),all=sortO(obras.filter(o=>(o.dias||[]).includes(hoy))),l=all.filter(o=>!doneO(o,h)),ld=all.filter(o=>doneO(o,h)),eA=occ(h,true),ev=eA.filter(e=>!doneE(e,h)),ed=eA.filter(e=>doneE(e,h)),nd=ld.length+ed.length;
+ m.innerHTML=(ev.length?'<h2 class="sh" style="margin-top:0">Hoy en la agenda</h2>'+ev.map(e=>evCard(e,h,h)).join(''):'')
+  +(l.length?(ev.length?'<h2 class="sh">Para estudiar hoy</h2>':'')+l.map(o=>card(o,false,undefined,h)).join(''):'')
+  +(!ev.length&&!l.length?(nd?'<div class="empty">¡Todo listo por hoy!<br>Completaste lo que había para hoy.</div>':'<div class="empty">No hay obras asignadas para hoy.<br>Asignales días en Organizar.</div>'):'')
+  +(nd?`<details class="est"><summary>✔ Completados hoy (${nd})</summary><div class="cg">${ed.map(e=>evCard(e,h,h)).join('')}${ld.map(o=>card(o,false,undefined,h)).join('')}</div></details>`:'');
+ bindCards(m);bindHb(m);m.querySelectorAll('[data-e]').forEach(c=>c.onclick=()=>{const e=eventos.find(x=>x.id==c.dataset.e);if(e)formEv(e)});
 }
 const EV={ensayo:['Ensayo','🎼','var(--ba)'],show:['Show','🎤','var(--br)'],recordatorio:['Recordatorio','🔔','#b48ee0']};
 const dowK=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).getDay()};
-const occ=k=>eventos.filter(e=>e.fecha===k||(e.rep==='sem'&&k>e.fecha&&dowK(k)===dowK(e.fecha))).sort((a,b)=>(a.hora||'99').localeCompare(b.hora||'99'));
+const occ=(k,all)=>eventos.filter(e=>(e.fecha===k||(e.rep==='sem'&&k>e.fecha&&dowK(k)===dowK(e.fecha)))&&(all||!doneE(e,k))).sort((a,b)=>(a.hora||'99').localeCompare(b.hora||'99'));
+function proxPend(e,h){let k=proxFecha(e,h),n=0;while(k&&doneE(e,k)&&n++<60){if(e.rep!=='sem')return null;const [y,m,d]=k.split('-').map(Number);k=ymd(new Date(y,m-1,d+7))}return k}
 function proxFecha(e,h){if(e.fecha>=h)return e.fecha;if(e.rep!=='sem')return null;const [y,m,d]=h.split('-').map(Number),dt=new Date(y,m-1,d);dt.setDate(dt.getDate()+(dowK(e.fecha)-dt.getDay()+7)%7);return ymd(dt)}
-function proxEv(listaId){const h=ymd(new Date());let b=null;for(const e of eventos.filter(x=>x.lista===listaId)){const k=proxFecha(e,h);if(k&&(!b||(k+(e.hora||'')).localeCompare(b.k+(b.e.hora||''))<0))b={e,k}}return b}
+function proxEv(listaId){const h=ymd(new Date());let b=null;for(const e of eventos.filter(x=>x.lista===listaId)){const k=proxPend(e,h);if(k&&(!b||(k+(e.hora||'')).localeCompare(b.k+(b.e.hora||''))<0))b={e,k}}return b}
 const evLinea=(e,k)=>`${EV[e.tipo][0]} · ${fmtF(k)}${e.hora?' · '+esc(e.hora)+' h':''}${e.lugar?' · '+esc(e.lugar):''}${e.rep==='sem'?' · cada semana':''}`;
-const evCard=(e,k,h)=>{const L=e.lista?listas.find(x=>x.id===e.lista):null;return `<div class="card" data-e="${e.id}" style="align-items:center${k===h?';border-color:var(--br)':''}"><span class="evi" style="background:${EV[e.tipo][2]}">${EV[e.tipo][1]}</span><div style="flex:1;min-width:0"><div class="tt">${esc(e.titulo)}</div><small>${k===h?'HOY · ':''}${evLinea(e,k)}</small>${L?`<small>Repertorio: ${esc(L.nombre)} (${L.obras.length} obra${L.obras.length===1?'':'s'})</small>`:''}</div></div>`};
+const evCard=(e,k,h)=>{const L=e.lista?listas.find(x=>x.id===e.lista):null;return `<div class="card${doneE(e,k)?' dn':''}" data-e="${e.id}" style="align-items:center${k===h?';border-color:var(--br)':''}"><span class="evi" style="background:${EV[e.tipo][2]}">${EV[e.tipo][1]}</span><div style="flex:1;min-width:0"><div class="tt">${esc(e.titulo)}</div><small>${k===h?'HOY · ':''}${evLinea(e,k)}</small>${L?`<small>Repertorio: ${esc(L.nombre)} (${L.obras.length} obra${L.obras.length===1?'':'s'})</small>`:''}</div>${hb('e',e.id,k)}</div>`};
 function formEv(e,k0){
  const nuevo=!e;e=e||{tipo:'ensayo',titulo:'',fecha:k0||ymd(new Date()),hora:'',lugar:'',nota:'',lista:0,rep:''};const M=$('#modal');M.classList.remove('hide');
  let tipo=e.tipo;
@@ -492,32 +518,33 @@ function formEv(e,k0){
  };
  pinta();
 }
-let agv=ls.get('agv')==='sem'?'sem':'prox',agPast=false;
+let agv=ls.get('agv')==='sem'?'sem':'prox',agPast=false,agDone=false;
 function vAgenda(m){
  const now=new Date(),h=ymd(now),DL=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],man=ymd(new Date(now.getFullYear(),now.getMonth(),now.getDate()+1));
  const fl=k=>{const [y,mo,d]=k.split('-').map(Number),t=new Date(y,mo-1,d).toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});return t.charAt(0).toUpperCase()+t.slice(1)};
- const prox=eventos.map(e=>({e,k:proxFecha(e,h)})).filter(x=>x.k).sort((a,b)=>(a.k+(a.e.hora||'')).localeCompare(b.k+(b.e.hora||''))).slice(0,20);
+ const prox=eventos.map(e=>({e,k:agDone?proxFecha(e,h):proxPend(e,h)})).filter(x=>x.k).sort((a,b)=>(a.k+(a.e.hora||'')).localeCompare(b.k+(b.e.hora||''))).slice(0,20);
  const gr=[];prox.forEach(x=>{let g=gr[gr.length-1];if(!g||g.k!==x.k){g={k:x.k,L:[]};gr.push(g)}g.L.push(x)});
- const evR=e=>{const L=e.lista?listas.find(x=>x.id===e.lista):null,t=[EV[e.tipo][0],e.hora?esc(e.hora)+' h':'',e.lugar?esc(e.lugar):'',e.rep==='sem'?'cada semana':''].filter(Boolean).join(' · ');return `<div class="agr" data-e="${e.id}"><span class="evi" style="background:${EV[e.tipo][2]}">${EV[e.tipo][1]}</span><div style="flex:1;min-width:0"><div class="tt">${esc(e.titulo)}</div><small>${t}</small>${L?`<small>Repertorio: ${esc(L.nombre)} (${L.obras.length} obra${L.obras.length===1?'':'s'})</small>`:''}</div></div>`};
- const pProx=gr.length?gr.map(g=>`<div class="dh">${g.k===h?'Hoy':g.k===man?'Mañana':fl(g.k)}${g.k===h||g.k===man?`<small>${fl(g.k)}</small>`:''}</div>`+g.L.map(x=>evR(x.e)).join('')).join(''):'<div class="empty" style="padding:14px 10px">No hay nada agendado.<br>Tocá “+ Agendar” para sumar un ensayo, un show o un recordatorio.</div>';
+ const evR=(e,k)=>{const L=e.lista?listas.find(x=>x.id===e.lista):null,t=[EV[e.tipo][0],e.hora?esc(e.hora)+' h':'',e.lugar?esc(e.lugar):'',e.rep==='sem'?'cada semana':''].filter(Boolean).join(' · ');return `<div class="agr${doneE(e,k)?' dn':''}" data-e="${e.id}"><span class="evi" style="background:${EV[e.tipo][2]}">${EV[e.tipo][1]}</span><div style="flex:1;min-width:0"><div class="tt">${esc(e.titulo)}</div><small>${t}</small>${L?`<small>Repertorio: ${esc(L.nombre)} (${L.obras.length} obra${L.obras.length===1?'':'s'})</small>`:''}</div>${hb('e',e.id,k)}</div>`};
+ const pProx=gr.length?gr.map(g=>`<div class="dh">${g.k===h?'Hoy':g.k===man?'Mañana':fl(g.k)}${g.k===h||g.k===man?`<small>${fl(g.k)}</small>`:''}</div>`+g.L.map(x=>evR(x.e,x.k)).join('')).join(''):'<div class="empty" style="padding:14px 10px">No hay nada pendiente.<br>Tocá “+ Agendar” para sumar un ensayo, un show o un recordatorio.</div>';
  const lun=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7)+7*wk),fd=d=>d.toLocaleDateString('es-AR',{day:'numeric',month:'short'});
  const dias=ORD.map((d,i)=>{const f=new Date(lun.getFullYear(),lun.getMonth(),lun.getDate()+i);return{d,f,k:ymd(f)}});
  const ocu=wk===0&&!agPast,vis=ocu?dias.filter(x=>x.k>=h):dias,nOcu=dias.length-vis.length;
  const sem=vis.map(({d,f,k})=>{
-  const ev=occ(k),ob=sortO(obras.filter(o=>(o.dias||[]).includes(d)));
+  const ev=occ(k,agDone),obA=sortO(obras.filter(o=>(o.dias||[]).includes(d))),ob=agDone?obA:obA.filter(o=>!doneO(o,k)),nh=obA.length-obA.filter(o=>!doneO(o,k)).length;
   return `<div class="card" style="display:block;${k===h?'border-color:var(--br)':''}"><div style="display:flex;align-items:center"><div class="tt" style="font-size:16px;flex:1">${DL[d]} ${f.getDate()}${k===h?' · hoy':''}</div><button class="ib2" data-add="${k}" aria-label="Agendar este día" style="width:34px;height:34px;font-size:20px">+</button></div>`
-   +ev.map(e=>`<div class="ag ev" data-e="${e.id}" style="color:${EV[e.tipo][2]}">${EV[e.tipo][1]} ${e.hora?esc(e.hora)+' · ':''}${esc(e.titulo)}${e.lugar?' · '+esc(e.lugar):''}</div>`).join('')
-   +(ob.length?`<details class="est"${k===h?' open':''}><summary>📖 ${ob.length} obra${ob.length===1?'':'s'} para estudiar</summary>${ob.map(o=>`<div class="ag" data-o="${o.id}"><span class="dot ${pe(o)}" style="display:inline-block;margin:0 8px 0 0"></span>${esc(o.titulo)}</div>`).join('')}</details>`:'')
-   +(ev.length||ob.length?'':'<small>Sin nada asignado</small>')+'</div>'}).join('');
+   +ev.map(e=>`<div class="ag ev${doneE(e,k)?' dn':''}" data-e="${e.id}" style="color:${EV[e.tipo][2]}"><span class="tx">${EV[e.tipo][1]} ${e.hora?esc(e.hora)+' · ':''}${esc(e.titulo)}${e.lugar?' · '+esc(e.lugar):''}</span>${hb('e',e.id,k)}</div>`).join('')
+   +(ob.length?`<details class="est"${k===h?' open':''}><summary>📖 ${ob.length} obra${ob.length===1?'':'s'} para estudiar${!agDone&&nh?' · '+nh+' hecha'+(nh===1?'':'s'):''}</summary>${ob.map(o=>`<div class="ag hr${doneO(o,k)?' dn':''}" data-o="${o.id}"><span class="dot ${pe(o)}" style="display:inline-block;flex:none"></span><span class="tx">${esc(o.titulo)}</span>${hb('o',o.id,k)}</div>`).join('')}</details>`:'')
+   +(ev.length||ob.length?'':(obA.length||nh?'<small>✔ Todo completado</small>':'<small>Sin nada asignado</small>'))+'</div>'}).join('');
  const pSem=`<div class="row" style="margin-top:0;align-items:center"><button class="btn s" id="wp">‹</button><b style="flex:1;text-align:center">${fd(dias[0].f)} al ${fd(dias[6].f)}</b><button class="btn s" id="wn">›</button></div>`+(wk?'<div class="row" style="margin-top:0"><button class="btn s" id="wh">Volver a esta semana</button></div>':'')+(wk===0&&(nOcu||agPast)?`<div class="row" style="margin-top:0"><button class="btn s" id="wpas">${agPast?'Ocultar días anteriores':'Ver días anteriores ('+nOcu+')'}</button></div>`:'')+sem;
- m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="ne">+ Agendar</button></div><div class="agt"><button data-v="prox" class="${agv==='prox'?'on':''}">Próximamente</button><button data-v="sem" class="${agv==='sem'?'on':''}">Semana</button></div><div class="agw" data-v="${agv}"><div class="pn prox"><h2 class="sh">Próximamente</h2>${pProx}</div><div class="pn sem"><h2 class="sh">Semana</h2>${pSem}</div></div>`;
- $('#ne').onclick=()=>formEv();
+ m.innerHTML=`<div class="row" style="margin-top:0"><button class="btn" id="ne">+ Agendar</button><button class="btn s" id="ndn">${agDone?'Ocultar completados':'Ver completados'}</button></div><div class="agt"><button data-v="prox" class="${agv==='prox'?'on':''}">Próximamente</button><button data-v="sem" class="${agv==='sem'?'on':''}">Semana</button></div><div class="agw" data-v="${agv}"><div class="pn prox"><h2 class="sh">Próximamente</h2>${pProx}</div><div class="pn sem"><h2 class="sh">Semana</h2>${pSem}</div></div>`;
+ $('#ne').onclick=()=>formEv();$('#ndn').onclick=()=>{agDone=!agDone;draw()};
  m.querySelectorAll('.agt button').forEach(b=>b.onclick=()=>{agv=b.dataset.v;ls.set('agv',agv);m.querySelector('.agw').dataset.v=agv;m.querySelectorAll('.agt button').forEach(x=>x.classList.toggle('on',x===b))});
  $('#wp').onclick=()=>{wk--;draw()};$('#wn').onclick=()=>{wk++;draw()};if(wk)$('#wh').onclick=()=>{wk=0;draw()};
  if($('#wpas'))$('#wpas').onclick=()=>{agPast=!agPast;draw()};
  m.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>formEv(null,b.dataset.add));
  m.querySelectorAll('[data-e]').forEach(c=>c.onclick=()=>{const e=eventos.find(x=>x.id==c.dataset.e);if(e)formEv(e)});
  m.querySelectorAll('[data-o]').forEach(c=>c.onclick=()=>{const o=obras.find(x=>x.id==c.dataset.o);if(o&&pdfIds.has(o.id))abrir(o);else if(o)form(o)});
+ bindHb(m);
 }
 function vListas(m){
  m.classList.add('cg');
@@ -542,7 +569,7 @@ function detLista(id){
  if(M.classList.contains('hide')&&!(history.state&&history.state.m))history.pushState({m:1},'');
  M.classList.remove('hide');
  M.innerHTML=`<div class="mh"><button class="btn s" id="d4" aria-label="Volver">‹ Volver</button><div style="flex:1;min-width:0"><h2>${esc(l.nombre)}</h2><small>${arr.length} obra${arr.length===1?'':'s'}${ev1?' · '+EV[ev1.e.tipo][1]+' '+EV[ev1.e.tipo][0]+' '+fmtF(ev1.k)+(ev1.e.hora?' · '+esc(ev1.e.hora)+' h':''):''}</small></div><button class="btn s" id="d3">Editar</button></div><div class="row" style="margin-top:0"><button class="btn" id="d1">▶ Empezar</button><button class="btn s" id="d2">+ Agregar obras</button><button class="btn s" id="d6">⬆ Importar PDF</button>${(l.ok||[]).length?'<button class="btn s" id="d5">Reiniciar ✓</button>':''}</div><input type="file" id="d6f" accept="application/pdf,.pdf" multiple class="hide"><p id="d6m" style="color:var(--br);margin:6px 0"></p>`+(arr.length?arr.map((o,i)=>`<div class="card" data-i="${i}" style="align-items:center"><div style="flex:1"><div class="tt" style="${(l.ok||[]).includes(o.id)?'opacity:.5;text-decoration:line-through':''}">${i+1}. ${esc(o.titulo)}</div><small>${esc(o.compositor)}${pdfIds.has(o.id)?'':(o.compositor?' · ':'')+'sin PDF'}</small></div><div class="li"><button data-a="k" class="${(l.ok||[]).includes(o.id)?'on':''}">✓</button><button data-a="u">▲</button><button data-a="d">▼</button><button data-a="x">✕</button></div></div>`).join(''):'<div class="empty">Esta lista está vacía.<br>Tocá "Agregar obras".</div>');
- const v=arr.filter(o=>pdfIds.has(o.id)),abrirI=i=>{const o=arr[i];if(o&&pdfIds.has(o.id))abrir(o,{arr:v,i:v.indexOf(o)})};
+ const v=arr.filter(o=>pdfIds.has(o.id)),abrirI=i=>{const o=arr[i];if(o&&pdfIds.has(o.id))abrir(o,{arr:v,i:v.indexOf(o),lid:id})};
  $('#d6').onclick=()=>$('#d6f').click();
  $('#d6f').onchange=async e=>{
   const fs=[...e.target.files];if(!fs.length)return;const r=await impPdfs(fs,t=>{$('#d6m').textContent=t});
@@ -575,12 +602,12 @@ async function abrir(o,ctx,fin){
  if(V.mode===2)n0-=n0%2;
  pguardar();V.lp=null;V.laps=0;V.id=o.id;PR.id=o.id;PR.last=Date.now();if(!PR.t)PR.t=setInterval(ptick,1000);V.ctx=ctx||null;V.n=n0;V.hp=fin?1:0;V.rs=true;V.zoom=1;V.hist=[];V.hm=false;V.nt=(await rq('notas','readonly',s=>s.get(o.id)))||{obra:o.id,p:{}};mcarga(o.id);
  if(!abierto){$('#vb').classList.remove('hide');$('#vf').classList.remove('hide')}
- $('#vt').textContent=(ctx?`${ctx.i+1}/${ctx.arr.length} · `:'')+o.titulo;$('#v').classList.remove('hide');if(!abierto)history.pushState({v:1},'');vista();
+ $('#vt').textContent=(ctx?`${ctx.i+1}/${ctx.arr.length} · `:'')+o.titulo;$('#v').classList.remove('hide');if(!abierto)history.pushState({v:1},'');vista();rpUI();
  if(!wl||wl.released){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}
 }
 function aut(){if(!V.auto)return;const b=$('#pages'),m=b.clientWidth>b.clientHeight?2:1;if(m===V.mode)return;V.mode=m;if(m===2)V.n-=V.n%2;V.hp=0;V.rs=true}
 function vista(){
- aut();$('#vml').textContent=V.auto?'Auto · '+V.mode+' pág.':V.mode+' pág.';$('#vm').classList.toggle('on',V.auto);$('#vb').classList.toggle('tools',TAB);$('#ab').classList.toggle('hide',!TAB);
+ aut();$('#vml').textContent=V.auto?'Auto · '+V.mode+' pág.':V.mode+' pág.';$('#vm').classList.toggle('on',V.auto);$('#vb').classList.toggle('tools',TAB);abShow();
  $('#pages').classList.toggle('inv',V.inv);pintar();
 }
 async function calcCrop(doc,o0,n,key){
@@ -643,10 +670,38 @@ function ir(d){
   if(d>0&&V.n>=fin){V.n=ini;V.hp=0;V.rs=true;V.laps++;if(M.on&&M.lapUp&&M.bpm<M.ptg)mset(Math.min(M.ptg,M.bpm+M.pst));lpUI();toast('↻ Vuelta '+(V.laps+1)+(M.on&&M.lapUp?' · '+M.bpm+' bpm':''));pintar();return}
   if(d<0&&V.n<=ini){V.n=fin;V.hp=1;V.rs=true;pintar();return}
  }
- if(n>=t){if(c&&c.i+1<c.arr.length)abrir(c.arr[c.i+1],{arr:c.arr,i:c.i+1});return}
- if(n<0){if(c&&c.i>0)abrir(c.arr[c.i-1],{arr:c.arr,i:c.i-1},true);return}
+ if(n>=t){if(c&&c.i+1<c.arr.length)abrir(c.arr[c.i+1],{...c,i:c.i+1});return}
+ if(n<0){if(c&&c.i>0)abrir(c.arr[c.i-1],{...c,i:c.i-1},true);return}
  V.n=n;V.hp=d<0?1:0;V.rs=true;pintar();
 }
+/* Panel del repertorio dentro del lector: ver el resto, saltar a otra obra y (solo tablet) cambiar el orden */
+function rpUI(){
+ const c=V.ctx&&V.ctx.lid?V.ctx:null;$('#vrp').classList.toggle('hide',!c);
+ if(!c){$('#rp').classList.add('hide');return}
+ if(!$('#rp').classList.contains('hide'))rpDraw();
+}
+function rpDraw(){
+ const c=V.ctx,P=$('#rp'),l=c&&listas.find(x=>x.id===c.lid);
+ if(!l){P.classList.add('hide');return}
+ const it=l.obras.map(i=>obras.find(o=>o.id===i)).filter(Boolean),ok=new Set(l.ok||[]);
+ P.innerHTML=`<div class="rph"><div style="flex:1;min-width:0"><b>${esc(l.nombre)}</b><small>${it.length} obra${it.length===1?'':'s'}</small></div><button class="ib2" id="rpx" aria-label="Cerrar">✕</button></div><div class="rpl">${it.map((o,i)=>{const pdf=pdfIds.has(o.id);return `<div class="rpi${o.id===V.id?' cur':''}${pdf?'':' nopdf'}" data-i="${i}"><button class="rpk${ok.has(o.id)?' on':''}" data-k="${o.id}" aria-label="Marcar como tocada">✓</button><div class="rpt"><div class="tt">${i+1}. ${esc(o.titulo)}</div><small>${[o.compositor,pdf?'':'sin PDF en este equipo'].filter(Boolean).map(esc).join(' · ')}</small></div>${TAB?`<div class="li"><button data-m="${i}" data-d="-1" aria-label="Subir" ${i?'':'disabled'}>▲</button><button data-m="${i}" data-d="1" aria-label="Bajar" ${i<it.length-1?'':'disabled'}>▼</button></div>`:''}</div>`}).join('')}</div>${TAB?'<small class="rpn">Tocá una obra para abrirla. Con ▲ ▼ cambiás el orden del repertorio.</small>':''}`;
+ $('#rpx').onclick=()=>P.classList.add('hide');
+ P.querySelectorAll('.rpi').forEach(r=>r.onclick=async e=>{
+  if(e.target.closest('.rpk')||e.target.closest('.li'))return;
+  const o=it[+r.dataset.i];if(!o)return;
+  if(o.id===V.id){P.classList.add('hide');return}
+  if(!pdfIds.has(o.id)){toast('Esta obra no tiene el PDF en este equipo.');return}
+  const arr=it.filter(x=>pdfIds.has(x.id));P.classList.add('hide');await abrir(o,{...c,arr,i:arr.indexOf(o)})});
+ P.querySelectorAll('.rpk').forEach(b=>b.onclick=async e=>{e.stopPropagation();const k=new Set(l.ok||[]),id=+b.dataset.k;k.has(id)?k.delete(id):k.add(id);await rq('listas','readwrite',s=>s.put({...l,ok:[...k]}));await load();rpDraw()});
+ P.querySelectorAll('[data-m]').forEach(b=>b.onclick=async e=>{
+  e.stopPropagation();const i=+b.dataset.m,j=i+(+b.dataset.d),a=[...l.obras],x=it[i],y=it[j];if(!x||!y)return;
+  const p=a.indexOf(x.id),q=a.indexOf(y.id);[a[p],a[q]]=[a[q],a[p]];
+  await rq('listas','readwrite',s=>s.put({...l,obras:a}));await load();
+  const l2=listas.find(z=>z.id===c.lid);
+  if(l2){const arr=l2.obras.map(n=>obras.find(o=>o.id===n)).filter(o=>o&&pdfIds.has(o.id));V.ctx={...c,arr,i:Math.max(0,arr.findIndex(o=>o.id===V.id))};const cur=obras.find(o=>o.id===V.id);if(cur)$('#vt').textContent=`${V.ctx.i+1}/${arr.length} · ${cur.titulo}`}
+  rpDraw()});
+}
+$('#vrp').onclick=()=>{const P=$('#rp');if(P.classList.contains('hide')){P.classList.remove('hide');rpDraw()}else P.classList.add('hide')};
 function lockSet(on){V.lock=on;$('#v').classList.toggle('lk',on);$('#lkc').classList.toggle('hide',!on);
  if(on){V.tl='r';V.an=false;abtn();$('#mb').classList.add('hide');$('#sc').classList.add('hide');cierraNt();$('#vb').classList.add('hide');$('#vf').classList.add('hide');try{if(!fsOn()&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}catch(e){}toast('Escenario activado. Solo se pasa de página. Para salir, mantené apretado el candado.')}
  else{$('#vb').classList.remove('hide');$('#vf').classList.remove('hide')}
@@ -660,10 +715,10 @@ $('#vm').onclick=()=>{const st=V.auto?'a':String(V.mode),nx={a:'1','1':'2','2':'
  ls.set('auto',V.auto?'1':'0');vista()};
 $('#vsl').onchange=()=>{let n=+$('#vsl').value-1;if(V.mode===2)n-=n%2;V.n=n;V.hp=0;V.rs=true;$('#vsl').blur();pintar()};
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&V.doc&&(!wl||wl.released)){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}});
-function cerrarV(){tok++;$('#v').classList.remove('lk');$('#lps').classList.add('hide');V.lp=null;V.laps=0;V.lock=false;$('#lkc').classList.add('hide');PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}rstUI();syncSoon(1500)}
+function cerrarV(){tok++;V.abOpen=false;$('#rp').classList.add('hide');$('#v').classList.remove('lk');$('#lps').classList.add('hide');V.lp=null;V.laps=0;V.lock=false;$('#lkc').classList.add('hide');PR.run=false;PR.act=false;prui();mstop();pguardar();clearInterval(PR.t);PR.t=null;$('#sc').classList.add('hide');$('#mb').classList.add('hide');V.an=false;V.tl='r';abtn();$('#pages').classList.remove('an');cierraNt();$('#v').classList.add('hide');V.doc=null;if(wl){wl.release();wl=null}try{if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}rstUI();syncSoon(1500)}
 $('#vx').onclick=()=>{if(history.state&&history.state.v)history.back();else cerrarV()};
 addEventListener('popstate',()=>{if(!V.doc&&!$('#modal').classList.contains('hide')){$('#modal').classList.add('hide');if(tab==='org')draw();return}if(V.doc){if(V.lock){history.pushState({v:1},'');return}cerrarV()}});
-$('#pages').onclick=e=>{if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if((V.an&&V.tl!=='m')||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else if(!V.lock){const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
+$('#pages').onclick=e=>{if(!$('#rp').classList.contains('hide')){$('#rp').classList.add('hide');return}if(!$('#mb').classList.contains('hide')){$('#mb').classList.add('hide');return}if((V.an&&V.tl!=='m')||e.target.closest('.pin'))return;const r=$('#pages').getBoundingClientRect(),x=(e.clientX-r.left)/r.width;if(x<.3)ir(-1);else if(x>.7)ir(1);else if(!V.lock){const h=$('#vb').classList.toggle('hide');$('#vf').classList.toggle('hide',h);try{if(h){if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}else if(document.fullscreenElement&&!fsPref())document.exitFullscreen().catch(()=>{})}catch(e){}pintar()}};
 addEventListener('keydown',e=>{if(!V.doc||/^(TEXTAREA|INPUT|SELECT)$/.test(e.target.tagName))return;const k=e.key;if(['ArrowRight','PageDown',' '].includes(k)){ir(1);e.preventDefault()}else if(['ArrowLeft','PageUp'].includes(k)){ir(-1);e.preventDefault()}});
 addEventListener('resize',()=>{document.documentElement.style.setProperty('--navh',$('#nav').offsetHeight+'px');if(V.doc)vista()});
 /* Metrónomo */
@@ -807,6 +862,9 @@ $('#adi').onclick=()=>{V.dedo=!V.dedo;ls.set('dedo',V.dedo?'1':'0');abtn()};
 $('#agr').onclick=()=>{V.gr=1-V.gr;abtn()};
 $('#aoc').onclick=()=>{V.hm=!V.hm;abtn();pintar()};
 $('#aun').onclick=()=>{const h=V.hist.pop();if(!h)return;h[0].s=h[0].s.filter(x=>x!==h[1]);gnt();pintar()};
+function abShow(){$('#vb').classList.toggle('pho',!TAB);$('#ab').classList.toggle('hide',!TAB&&!V.abOpen);$('#van').classList.toggle('hide',TAB);$('#van').classList.toggle('on',!TAB&&!!V.abOpen)}
+$('#van').onclick=()=>{V.abOpen=!V.abOpen;if(!V.abOpen){const wh=V.hm;V.tl='r';V.an=false;abtn();if(wh)pintar()}abShow()};
+abtn();
 function cierraNt(){$('#nt').classList.add('hide');$('#pages').style.paddingBottom=''}
 function abrirNt(d,n,o){
  const T=$('#nt'),x=$('#ntx'),P=$('#pages');T.classList.remove('hide');x.value=n.t;x.readOnly=!V.an;
@@ -961,9 +1019,9 @@ function snap(){
  const S=new Map(),i2u={},l2u={};
  for(const o of todas)i2u[o.id]=o.uid;for(const l of listas)l2u[l.id]=l.uid;
  const put=(t,u,c)=>S.set(t+'/'+u,{t,u,c,h:hs(canon(c))});
- for(const o of todas)put('obra',o.uid,{titulo:o.titulo||'',compositor:o.compositor||'',notas:o.notas||'',prioridad:o.prioridad||'media',dias:[...(o.dias||[])].sort((a,b)=>a-b),grupo:o.grupo||'',sin:!!o.sin,marc:(o.marc||[]).map(m=>({n:m.n,p:m.p})),sp:o.sp||null,rg:o.rg||null,ref:o.ref?(i2u[o.ref]||null):null,h:o.h||null,del:o.del||null});
+ for(const o of todas)put('obra',o.uid,{titulo:o.titulo||'',compositor:o.compositor||'',notas:o.notas||'',prioridad:o.prioridad||'media',dias:[...(o.dias||[])].sort((a,b)=>a-b),grupo:o.grupo||'',sin:!!o.sin,marc:(o.marc||[]).map(m=>({n:m.n,p:m.p})),sp:o.sp||null,rg:o.rg||null,ref:o.ref?(i2u[o.ref]||null):null,h:o.h||null,del:o.del||null,...(o.dn&&o.dn.length?{dn:[...o.dn].sort()}:{})});
  for(const l of listas)put('lista',l.uid,{nombre:l.nombre||'',obras:(l.obras||[]).map(i=>i2u[i]).filter(Boolean),ok:(l.ok||[]).map(i=>i2u[i]).filter(Boolean)});
- for(const e of eventos)put('evento',e.uid,{tipo:e.tipo,titulo:e.titulo||'',fecha:e.fecha||'',hora:e.hora||'',lugar:e.lugar||'',nota:e.nota||'',lista:e.lista?(l2u[e.lista]||null):null,rep:e.rep||''});
+ for(const e of eventos)put('evento',e.uid,{tipo:e.tipo,titulo:e.titulo||'',fecha:e.fecha||'',hora:e.hora||'',lugar:e.lugar||'',nota:e.nota||'',lista:e.lista?(l2u[e.lista]||null):null,rep:e.rep||'',...(e.dn&&e.dn.length?{dn:[...e.dn].sort()}:{})});
  for(const r of prac){const o={};for(const [i,sg] of Object.entries(r.o||{})){const u=i2u[i];if(u&&sg>0)o[u]=sg}if(Object.keys(o).length)put('practica',r.d,{o})}
  const mt=ls.get('meta');if(mt)put('ajuste','meta',{v:mt});
  return S}
@@ -994,6 +1052,7 @@ async function sbApply(rows){
   const t=loc||adopt('obra',todas,r),c=r.contenido||{},n={...(t||{}),uid:r.id,titulo:c.titulo||'',compositor:c.compositor||'',notas:c.notas||'',prioridad:c.prioridad||'media',dias:c.dias||[],grupo:c.grupo||'',sin:!!c.sin,marc:c.marc||[]};
   for(const q of ['sp','rg','h','del'])if(c[q]!=null)n[q]=c[q];else delete n[q];
   delete n.ref;if(c.ref)pend.push([r.id,c.ref]);
+  if(c.dn&&c.dn.length)n.dn=c.dn;else delete n.dn;
   await guarda('obras',n,t);done.push(k);chg=true}
  await load();
  {const U={};for(const o of todas)U[o.uid]=o.id;
@@ -1013,6 +1072,7 @@ async function sbApply(rows){
   const loc=eventos.find(x=>x.uid===r.id);
   if(d==='del'){if(loc){await rq('eventos','readwrite',s=>s.delete(loc.id));X.push(k);chg=true}continue}
   const t=loc||adopt('evento',eventos,r),c=r.contenido||{},n={...(t||{}),uid:r.id,tipo:c.tipo||'recordatorio',titulo:c.titulo||'',fecha:c.fecha||'',hora:c.hora||'',lugar:c.lugar||'',nota:c.nota||'',lista:c.lista?(L2I[c.lista]||0):0,rep:c.rep||''};
+  if(c.dn&&c.dn.length)n.dn=c.dn;else delete n.dn;
   await guarda('eventos',n,t);done.push(k);chg=true}
  {const U={};for(const o of todas)U[o.uid]=o.id;
   for(const r of by.practica){

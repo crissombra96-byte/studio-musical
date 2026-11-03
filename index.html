@@ -133,6 +133,7 @@ details.est summary{cursor:pointer;color:var(--mu);font-size:14px;margin:8px 0 2
 .rpi{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:8px 10px;margin-bottom:8px;cursor:pointer}.rpi.cur{border-color:var(--br);background:color-mix(in srgb,var(--br) 12%,var(--bg))}.rpi.nopdf{opacity:.55}.rpi .rpt{flex:1;min-width:0}.rpi .tt{font-size:16px;overflow-wrap:anywhere}.rpi small{display:block;color:var(--mu)}
 .rpi .rpk{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--mu);background:none;color:transparent;font-weight:700;font-size:17px;padding:0}.rpi .rpk.on{background:var(--br);border-color:var(--br);color:#1a1405}
 #v.lk #rp{display:none!important}
+.pgl{margin:0 0 12px}.pgl span{font-size:14px;color:var(--mu)}.pgl.ok span{color:var(--br);font-weight:600}.pgl .bar{height:6px;border-radius:3px;background:var(--ln);margin-top:5px;overflow:hidden}.pgl .bar i{display:block;height:100%;background:var(--br);border-radius:3px}.cnt{display:block;font-size:12px;font-weight:400;color:var(--mu);margin-top:1px}.cnt.ok{color:var(--br)}
 .hb{flex:none;width:38px;height:38px;border-radius:50%;border:2px solid var(--mu);background:none;color:#1a1405;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0;margin-left:8px}.hb.on{background:var(--br);border-color:var(--br)}
 .dn{opacity:.55}.dn .tt,.dn .tx{text-decoration:line-through}
 .ag.hr,.ag.ev{display:flex;gap:8px;align-items:center}.ag .tx{flex:1;min-width:0;overflow-wrap:anywhere}.ag .hb{width:32px;height:32px;font-size:17px}
@@ -179,6 +180,7 @@ details.est summary{cursor:pointer;color:var(--mu);font-size:14px;margin:8px 0 2
  RESPALDO   exportar, importar (restaura), rstate/rstUI (aviso), toast/say
  Claves localStorage: modo auto dedo resume pag<id> bpm bpm<id> cmp<id> pul<id> orden tema meta ultresp rsnooze crop<k> msnd mvol mpst mpn mptg esto (orden de pestañas de Estudiar) agv (vista de Agenda) impdest (carpeta elegida al importar) mig_g2l (ya se pasaron las carpetas viejas a repertorios)
  v30: las "carpetas" de Organizar SON los repertorios (listas). Una obra puede estar en varios; sin ninguno = "Sin carpeta". El campo obra.grupo quedó sin uso (se migró a repertorios con migGrupos).
+ v32: al terminar de practicar se marca la obra hecha hoy (ajuste autoP); al pasar al siguiente tema de un repertorio se tilda el anterior (autoR); contador 'X de Y hechos' en Hoy y en cada día de la Agenda.
  v31: eventos y obras tienen dn=[fechas completadas] (togDone/hb/doneE/doneO); la barra de anotaciones en el celular se abre con el botón Anotar (#van).
  Funciones nuevas v30: impModal (importar con carpeta destino), moverSel (agrega a repertorio), ordEst (orden de pestañas), migGrupos, fsOn/fsTry. La práctica también se sincroniza (se mezcla por máximo de segundos por obra).
  Obra: {id,titulo,compositor,notas,prioridad,dias,grupo,sin,ref,rg,marc,h,del}  (ref/rg = parte de otro PDF; h = huella; del = fecha de papelera)
@@ -255,8 +257,8 @@ function draw(){if(tab!=='org')SEL=null;
  }else if(tab==='org'){
   vOrg(m,hoy);
  }else{
-  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><div class="card" id="rcard" style="display:block"><div class="tt">Respaldo</div><div id="rst" style="margin:4px 0 2px;font-weight:600"></div><small>Tus partituras, marcas, listas y práctica viven solo en este dispositivo. Si Android o el navegador borran los datos, se pierden. Mandá el respaldo a tu Drive o a tu mail cada tanto.</small><div class="row"><button class="btn" id="exs">Compartir respaldo</button><button class="btn s" id="ex">Guardar en la tablet</button><button class="btn s" id="im">Importar respaldo</button></div><small>“Importar respaldo”: elegí un archivo <b>.estudio</b> (o el .json viejo). Antes de cambiar nada te muestro cuántas obras y listas trae, y arriba vas a ver el avance.</small><small id="prot" style="margin-top:6px"></small></div><div class="card" id="scard" style="display:block"></div><div class="card" style="display:block"><div class="tt">Papelera${papelera.length?' ('+papelera.length+')':''}</div><small>Las obras eliminadas se guardan 30 días y después se borran solas.</small><div class="row"><button class="btn s" id="pap">Ver papelera</button></div></div><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="fsc" ${fsPref()?'checked':''} style="width:22px;height:22px"> Pantalla completa (oculta las barras de Android)</label><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
-  syncUI();$('#fsc').onchange=e=>{ls.set('fsc',e.target.checked?'1':'0');if(e.target.checked){fsNo=false;fsDone=false;fsTry()}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})};$('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#pap').onclick=verPapelera;$('#ex').onclick=()=>exportar('file');$('#exs').onclick=()=>exportar('share');(async()=>{try{let p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():false;if(!p&&navigator.storage&&navigator.storage.persist)p=await navigator.storage.persist();const e=$('#prot');if(e)e.textContent=p?'Protección de datos del navegador: activa.':'Protección de datos del navegador: no activa. Por eso el respaldo es importante.'}catch(e){}})();$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
+  m.innerHTML=`<p style="color:var(--mu);margin:0 0 6px">Aspecto</p><div class="days" id="tm" style="margin:0 0 16px">${TEMAS.map(([k,t])=>`<button data-m="${k}" class="${(document.documentElement.dataset.t||'folk')===k?'on':''}">${t}</button>`).join('')}</div><div class="card" id="rcard" style="display:block"><div class="tt">Respaldo</div><div id="rst" style="margin:4px 0 2px;font-weight:600"></div><small>Tus partituras, marcas, listas y práctica viven solo en este dispositivo. Si Android o el navegador borran los datos, se pierden. Mandá el respaldo a tu Drive o a tu mail cada tanto.</small><div class="row"><button class="btn" id="exs">Compartir respaldo</button><button class="btn s" id="ex">Guardar en la tablet</button><button class="btn s" id="im">Importar respaldo</button></div><small>“Importar respaldo”: elegí un archivo <b>.estudio</b> (o el .json viejo). Antes de cambiar nada te muestro cuántas obras y listas trae, y arriba vas a ver el avance.</small><small id="prot" style="margin-top:6px"></small></div><div class="card" id="scard" style="display:block"></div><div class="card" style="display:block"><div class="tt">Papelera${papelera.length?' ('+papelera.length+')':''}</div><small>Las obras eliminadas se guardan 30 días y después se borran solas.</small><div class="row"><button class="btn s" id="pap">Ver papelera</button></div></div><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="rs" ${ls.get('resume')!=='0'?'checked':''} style="width:22px;height:22px"> Abrir cada obra en la última página que viste</label><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="apr" ${autoP()?'checked':''} style="width:22px;height:22px"> Marcar la obra como hecha al terminar de practicarla</label><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="aro" ${autoR()?'checked':''} style="width:22px;height:22px"> Tildar el tema del repertorio al pasar al siguiente</label><label style="display:flex;gap:10px;align-items:center;color:var(--tx);font-size:16px;margin:0 0 12px"><input type="checkbox" id="fsc" ${fsPref()?'checked':''} style="width:22px;height:22px"> Pantalla completa (oculta las barras de Android)</label><input type="file" id="imf" class="hide"><p id="msg" style="color:var(--br)"></p>`;
+  syncUI();$('#fsc').onchange=e=>{ls.set('fsc',e.target.checked?'1':'0');if(e.target.checked){fsNo=false;fsDone=false;fsTry()}else if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})};$('#rs').onchange=e=>ls.set('resume',e.target.checked?'1':'0');$('#apr').onchange=e=>ls.set('autoP',e.target.checked?'1':'0');$('#aro').onchange=e=>ls.set('autoR',e.target.checked?'1':'0');$('#tm').querySelectorAll('button').forEach(b=>b.onclick=()=>{tema(b.dataset.m);draw()});$('#pap').onclick=verPapelera;$('#ex').onclick=()=>exportar('file');$('#exs').onclick=()=>exportar('share');(async()=>{try{let p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():false;if(!p&&navigator.storage&&navigator.storage.persist)p=await navigator.storage.persist();const e=$('#prot');if(e)e.textContent=p?'Protección de datos del navegador: activa.':'Protección de datos del navegador: no activa. Por eso el respaldo es importante.'}catch(e){}})();$('#im').onclick=()=>$('#imf').click();$('#imf').onchange=e=>importar(e.target.files[0]);
  }
  rstUI();
 }
@@ -340,7 +342,7 @@ function ordEst(){
 }
 const fopSave=()=>ls.set('fop',JSON.stringify([...FOP]));
 try{FOP=new Set(JSON.parse(ls.get('fop')||'[]'))}catch(e){}
-const fsPref=()=>ls.get('fsc')!=='0';
+const fsPref=()=>ls.get('fsc')!=='0',autoP=()=>ls.get('autoP')!=='0',autoR=()=>ls.get('autoR')!=='0';
 let fsNo=false,fsDone=false;
 const fsOn=()=>matchMedia('(display-mode: fullscreen)').matches||!!document.fullscreenElement;
 /* Pide pantalla completa UNA sola vez por apertura (Android muestra su aviso cada vez que se pide). Si la app está instalada con display fullscreen (manifest) no hace falta pedirla. */
@@ -478,13 +480,14 @@ async function togDone(kind,id,k){
 const bindHb=m=>m.querySelectorAll('.hb').forEach(b=>b.onclick=e=>{e.stopPropagation();e.preventDefault();togDone(b.dataset.hk,+b.dataset.hid,b.dataset.hd)});
 function vHoy(m,hoy){
  m.classList.add('cg');
- const h=ymd(new Date()),all=sortO(obras.filter(o=>(o.dias||[]).includes(hoy))),l=all.filter(o=>!doneO(o,h)),ld=all.filter(o=>doneO(o,h)),eA=occ(h,true),ev=eA.filter(e=>!doneE(e,h)),ed=eA.filter(e=>doneE(e,h)),nd=ld.length+ed.length;
- m.innerHTML=(ev.length?'<h2 class="sh" style="margin-top:0">Hoy en la agenda</h2>'+ev.map(e=>evCard(e,h,h)).join(''):'')
+ const h=ymd(new Date()),all=sortO(obras.filter(o=>(o.dias||[]).includes(hoy))),l=all.filter(o=>!doneO(o,h)),ld=all.filter(o=>doneO(o,h)),eA=occ(h,true),ev=eA.filter(e=>!doneE(e,h)),ed=eA.filter(e=>doneE(e,h)),nd=ld.length+ed.length,tot=nd+ev.length+l.length;
+ m.innerHTML=hechosBar(nd,tot,'hoy')+(ev.length?'<h2 class="sh" style="margin-top:0">Hoy en la agenda</h2>'+ev.map(e=>evCard(e,h,h)).join(''):'')
   +(l.length?(ev.length?'<h2 class="sh">Para estudiar hoy</h2>':'')+l.map(o=>card(o,false,undefined,h)).join(''):'')
   +(!ev.length&&!l.length?(nd?'<div class="empty">¡Todo listo por hoy!<br>Completaste lo que había para hoy.</div>':'<div class="empty">No hay obras asignadas para hoy.<br>Asignales días en Organizar.</div>'):'')
   +(nd?`<details class="est"><summary>✔ Completados hoy (${nd})</summary><div class="cg">${ed.map(e=>evCard(e,h,h)).join('')}${ld.map(o=>card(o,false,undefined,h)).join('')}</div></details>`:'');
  bindCards(m);bindHb(m);m.querySelectorAll('[data-e]').forEach(c=>c.onclick=()=>{const e=eventos.find(x=>x.id==c.dataset.e);if(e)formEv(e)});
 }
+const hechosBar=(n,t,w)=>t?`<div class="pgl${n===t?' ok':''}"><span>${n} de ${t} hecho${t===1?'':'s'}${w?' '+w:''}</span><div class="bar"><i style="width:${Math.round(100*n/t)}%"></i></div></div>`:'';
 const EV={ensayo:['Ensayo','🎼','var(--ba)'],show:['Show','🎤','var(--br)'],recordatorio:['Recordatorio','🔔','#b48ee0']};
 const dowK=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d).getDay()};
 const occ=(k,all)=>eventos.filter(e=>(e.fecha===k||(e.rep==='sem'&&k>e.fecha&&dowK(k)===dowK(e.fecha)))&&(all||!doneE(e,k))).sort((a,b)=>(a.hora||'99').localeCompare(b.hora||'99'));
@@ -530,8 +533,8 @@ function vAgenda(m){
  const dias=ORD.map((d,i)=>{const f=new Date(lun.getFullYear(),lun.getMonth(),lun.getDate()+i);return{d,f,k:ymd(f)}});
  const ocu=wk===0&&!agPast,vis=ocu?dias.filter(x=>x.k>=h):dias,nOcu=dias.length-vis.length;
  const sem=vis.map(({d,f,k})=>{
-  const ev=occ(k,agDone),obA=sortO(obras.filter(o=>(o.dias||[]).includes(d))),ob=agDone?obA:obA.filter(o=>!doneO(o,k)),nh=obA.length-obA.filter(o=>!doneO(o,k)).length;
-  return `<div class="card" style="display:block;${k===h?'border-color:var(--br)':''}"><div style="display:flex;align-items:center"><div class="tt" style="font-size:16px;flex:1">${DL[d]} ${f.getDate()}${k===h?' · hoy':''}</div><button class="ib2" data-add="${k}" aria-label="Agendar este día" style="width:34px;height:34px;font-size:20px">+</button></div>`
+  const ev=occ(k,agDone),evT=occ(k,true),obA=sortO(obras.filter(o=>(o.dias||[]).includes(d))),ob=agDone?obA:obA.filter(o=>!doneO(o,k)),nh=obA.length-obA.filter(o=>!doneO(o,k)).length,nT=evT.length+obA.length,nD=evT.filter(e=>doneE(e,k)).length+nh;
+  return `<div class="card" style="display:block;${k===h?'border-color:var(--br)':''}"><div style="display:flex;align-items:center"><div class="tt" style="font-size:16px;flex:1">${DL[d]} ${f.getDate()}${k===h?' · hoy':''}${nT?`<small class="cnt${nD===nT?' ok':''}">${nD} de ${nT} hechos</small>`:''}</div><button class="ib2" data-add="${k}" aria-label="Agendar este día" style="width:34px;height:34px;font-size:20px">+</button></div>`
    +ev.map(e=>`<div class="ag ev${doneE(e,k)?' dn':''}" data-e="${e.id}" style="color:${EV[e.tipo][2]}"><span class="tx">${EV[e.tipo][1]} ${e.hora?esc(e.hora)+' · ':''}${esc(e.titulo)}${e.lugar?' · '+esc(e.lugar):''}</span>${hb('e',e.id,k)}</div>`).join('')
    +(ob.length?`<details class="est"${k===h?' open':''}><summary>📖 ${ob.length} obra${ob.length===1?'':'s'} para estudiar${!agDone&&nh?' · '+nh+' hecha'+(nh===1?'':'s'):''}</summary>${ob.map(o=>`<div class="ag hr${doneO(o,k)?' dn':''}" data-o="${o.id}"><span class="dot ${pe(o)}" style="display:inline-block;flex:none"></span><span class="tx">${esc(o.titulo)}</span>${hb('o',o.id,k)}</div>`).join('')}</details>`:'')
    +(ev.length||ob.length?'':(obA.length||nh?'<small>✔ Todo completado</small>':'<small>Sin nada asignado</small>'))+'</div>'}).join('');
@@ -657,6 +660,10 @@ function lpBar(){
  const L=V.lp;if(!V.doc||!L||!L.on||!L.cpp)return;
  if((L.k||0)>=L.cpp)ir(1);
  L.k=L.k||0;lpStrip(L.k);L.k++}
+async function autoOk(c){
+ if(!autoR()||!c||!c.lid)return;const l=listas.find(x=>x.id===c.lid),cur=c.arr[c.i];
+ if(!l||!cur||(l.ok||[]).includes(cur.id))return;
+ await rq('listas','readwrite',s=>s.put({...l,ok:[...(l.ok||[]),cur.id]}));await load();toast('✓ “'+cur.titulo+'” tildada en el repertorio.')}
 function ir(d){
  const t=V.tot,P=$('#pages'),c=V.ctx;
  if(V.half&&V.mode===1&&V.c2){
@@ -670,7 +677,7 @@ function ir(d){
   if(d>0&&V.n>=fin){V.n=ini;V.hp=0;V.rs=true;V.laps++;if(M.on&&M.lapUp&&M.bpm<M.ptg)mset(Math.min(M.ptg,M.bpm+M.pst));lpUI();toast('↻ Vuelta '+(V.laps+1)+(M.on&&M.lapUp?' · '+M.bpm+' bpm':''));pintar();return}
   if(d<0&&V.n<=ini){V.n=fin;V.hp=1;V.rs=true;pintar();return}
  }
- if(n>=t){if(c&&c.i+1<c.arr.length)abrir(c.arr[c.i+1],{...c,i:c.i+1});return}
+ if(n>=t){if(c&&c.i+1<c.arr.length){const nx=c.arr[c.i+1];autoOk(c).catch(()=>{}).then(()=>abrir(nx,{...c,i:c.i+1}))}else if(c)autoOk(c).catch(()=>{});return}
  if(n<0){if(c&&c.i>0)abrir(c.arr[c.i-1],{...c,i:c.i-1},true);return}
  V.n=n;V.hp=d<0?1:0;V.rs=true;pintar();
 }
@@ -816,7 +823,13 @@ const PR={s:0,t:null,last:Date.now(),id:null,q:Promise.resolve(),run:false,act:f
 const fmt=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
 function prui(){const a=PR.act;$('#ppl').textContent=!a?'Practicar':(PR.run?'Pausar ':'Seguir ')+fmt(PR.el);$('#pplay').classList.toggle('on',PR.run);$('#pplay i').innerHTML=svg(PR.run?'pause':'play');$('#pfin').classList.toggle('hide',!a)}
 $('#pplay').onclick=()=>{if(!PR.act){PR.act=true;PR.run=true;PR.el=0}else if(PR.run){PR.run=false;pguardar()}else PR.run=true;prui()};
-$('#pfin').onclick=()=>{PR.run=false;PR.act=false;pguardar();prui()};
+async function autoHecha(id,el){
+ if(!autoP()||el<30||id==null)return;
+ const o=todas.find(x=>x.id==id),h=ymd(new Date());
+ if(!o||!(o.dias||[]).includes(new Date().getDay())||doneO(o,h))return;
+ const lim=ymd(new Date(Date.now()-90*864e5)),n={...o,dn:[...(o.dn||[]),h].filter(x=>x>=lim)};
+ await rq('obras','readwrite',s=>s.put(n));await load();draw();toast('✓ “'+o.titulo+'” marcada como hecha hoy.')}
+$('#pfin').onclick=()=>{const id=PR.id,el=PR.el;PR.run=false;PR.act=false;pguardar();prui();autoHecha(id,el).catch(()=>{})};
 $('#vsec').onclick=()=>{if($('#sc').classList.contains('hide'))scAbrir();else $('#sc').classList.add('hide')};prui();
 function ptick(){if(!PR.run||!V.doc||document.hidden)return;PR.el++;$('#ppl').textContent='Pausar '+fmt(PR.el);if(++PR.s>=30)pguardar()}
 function pguardar(){

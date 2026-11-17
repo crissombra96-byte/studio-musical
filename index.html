@@ -191,9 +191,25 @@ nav button{min-height:56px;border-radius:0 0 var(--rad) var(--rad)}
 nav button.on{background:color-mix(in srgb,var(--br) 13%,transparent)}
 html[data-t="clas"] nav{border-top:1px solid var(--ln)}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--br);outline-offset:2px}
+/* ===== v36: tarjetas y encabezado como en la guía visual ===== */
+header #rch{position:absolute;right:14px;top:16px;z-index:1;min-width:58px;text-align:center;border:1px solid var(--ln);border-radius:var(--rad);padding:6px 8px;background:color-mix(in srgb,var(--bg) 60%,transparent)}
+#rch b{display:block;font:600 1.4rem/1 var(--ft);color:var(--br)}
+#rch span{font:500 .62rem var(--fs);letter-spacing:.1em;text-transform:uppercase;color:var(--mu)}
+header h1,header p{max-width:calc(100% - 84px)}
+html[data-t="folk"] header::before,html[data-t="tango"] header::before{right:86px}
+.card .dias{flex:none;text-align:right;font:500 .72rem/1.2 var(--fs);color:var(--mu);min-width:48px}
+.card .dias b{display:block;font:600 1.5rem/1 var(--ft);color:var(--p,var(--br))}
+.av{height:5px;border-radius:3px;background:var(--ln);margin-top:10px;overflow:hidden}
+.av i{display:block;height:100%;background:var(--br);border-radius:3px}
+html[data-t="clas"] .card{border-left:6px solid var(--ln)}
+html[data-t="clas"] .card:has(.dot.alta){border-left-color:var(--al)}
+html[data-t="clas"] .card:has(.dot.media){border-left-color:var(--me)}
+html[data-t="clas"] .card:has(.dot.baja){border-left-color:var(--ba)}
+html[data-t="folk"] .card,html[data-t="tango"] .card{border-left-width:6px}
+.evi{border-radius:calc(var(--rad) - 4px)}
 </style></head><body>
 <div id="band"></div>
-<header><h1 id="h1"></h1><p id="h2"></p></header>
+<header><h1 id="h1"></h1><p id="h2"></p><div id="rch" class="hide" aria-label="Días seguidos de práctica"></div></header>
 <div id="rbar" class="hide"></div>
 <main id="main"></main>
 <nav id="nav"></nav>
@@ -292,6 +308,12 @@ async function migGrupos(){
 const pdfOf=o=>o.ref||o.id;
 const lunes=()=>{const n=new Date();return ymd(new Date(n.getFullYear(),n.getMonth(),n.getDate()-((n.getDay()+6)%7)))};
 const pe=o=>o.sp&&o.sp.k===lunes()?o.sp.v:o.prioridad;
+// v36: datos para las tarjetas (solo lectura): días sin tocar, avance de la semana y racha
+const PCV={alta:'--al',media:'--me',baja:'--ba'};
+const ultTq=o=>{let u=(o.dn||[]).reduce((a,x)=>x>a?x:a,'');for(const r of (typeof prac!=='undefined'&&prac)||[])if(r.o&&r.o[o.id]>0&&r.d>u)u=r.d;return u};
+const diasSin=o=>{const u=ultTq(o);if(!u)return null;const [y,m,d]=u.split('-'),n=new Date();return Math.max(0,Math.round((Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())-Date.UTC(+y,m-1,+d))/864e5))};
+const avSem=o=>{const n=(o.dias||[]).length;if(!n)return null;const l=lunes();return Math.min(100,Math.round(100*(o.dn||[]).filter(x=>x>=l).length/n))};
+const rachaN=()=>{const mp={};for(const r of (typeof prac!=='undefined'&&prac)||[])mp[r.d]=Object.values(r.o||{}).reduce((a,b)=>a+b,0);const ok=d=>(mp[d]||0)>=300,dd=new Date();if(!ok(ymd(dd)))dd.setDate(dd.getDate()-1);let n=0;while(ok(ymd(dd))){n++;dd.setDate(dd.getDate()-1)}return n};
 const sortO=a=>a.sort((x,y)=>PRI[pe(x)]-PRI[pe(y)]||x.titulo.localeCompare(y.titulo));
 const PL={alta:'Alta',media:'Media',baja:'Baja'};
 
@@ -299,6 +321,7 @@ function draw(){if(tab!=='org')SEL=null;
  const now=new Date(),hoy=now.getDay(),m=$('#main');
  $('#h1').textContent={est:EST[se],org:'Organizar',aju:'Ajustes'}[tab];
  $('#h2').textContent=tab==='est'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
+ {const R=$('#rch'),n=rachaN();R.classList.toggle('hide',tab!=='est');R.innerHTML=`<b>${n}</b><span>${n===1?'día':'días'}</span>`}
  $('#nav').innerHTML=[['est','♫ Estudiar'],['org','♯ Organizar'],['aju','♭ Ajustes'+(rstate().mal&&obras.length?' ●':'')]].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
  document.documentElement.style.setProperty('--navh',$('#nav').offsetHeight+'px');
  $('#nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('#modal').classList.add('hide');tab=b.dataset.t;draw()});
@@ -439,7 +462,8 @@ async function huerf(f){
 function card(o,ed,sel,hk){
  const meta=ed?[o.compositor,pdfIds.has(o.id)?'':'sin PDF'].filter(Boolean).join(' · '):`${esc(o.compositor)}${o.compositor?' · ':''}${PL[pe(o)]}${pdfIds.has(o.id)?'':' · sin PDF'}`;
  const lead=sel===undefined?`<span class="dot ${pe(o)}"></span>`:`<span class="cb ${sel?'on':''}">${sel?'✓':''}</span>`;
- return `<div class="card${sel?' chk':''}${hk&&doneO(o,hk)?' dn':''}" data-id="${o.id}">${lead}<div style="flex:1;min-width:0"><div class="tt">${esc(o.titulo)}</div>${meta?`<small>${ed?esc(meta):meta}</small>`:''}${o.notas&&!ed?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}</div>${ed&&sel===undefined?'<button class="ib2 ed" aria-label="Editar">✎</button>':''}${hk?hb('o',o.id,hk):''}</div>`;
+ const vis=!ed&&sel===undefined,ds=vis?diasSin(o):null,av=vis?avSem(o):null,pc=PCV[pe(o)]||'--mu';
+ return `<div class="card${sel?' chk':''}${hk&&doneO(o,hk)?' dn':''}" data-id="${o.id}">${lead}<div style="flex:1;min-width:0"><div class="tt">${esc(o.titulo)}</div>${meta?`<small>${ed?esc(meta):meta}</small>`:''}${o.notas&&!ed?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}${av!==null?`<div class="av" title="Avance de la semana: días hechos de los asignados"><i style="width:${av}%"></i></div>`:''}</div>${vis?`<div class="dias" style="--p:var(${pc})"><b>${ds===null?'–':ds}</b>${ds===null?'sin<br>práctica':ds===0?'hoy':ds===1?'día sin<br>tocar':'días sin<br>tocar'}</div>`:''}${ed&&sel===undefined?'<button class="ib2 ed" aria-label="Editar">✎</button>':''}${hk?hb('o',o.id,hk):''}</div>`;
 }
 function bindCards(m){
  m.querySelectorAll('.card[data-id]').forEach(c=>{

@@ -156,6 +156,41 @@ html[data-t="tango"] header::after{height:5px;margin-top:10px;background:none;bo
 html[data-t="tango"] .card,html[data-t="tango"] .agr,html[data-t="tango"] .oc,html[data-t="tango"] .fh,html[data-t="tango"] .rpi{border-color:color-mix(in srgb,var(--br) 50%,var(--ln));box-shadow:inset 0 0 0 2px var(--pn),inset 0 0 0 3px color-mix(in srgb,var(--br) 38%,transparent)}
 html[data-t="tango"] .rpi{box-shadow:inset 0 0 0 2px var(--bg),inset 0 0 0 3px color-mix(in srgb,var(--br) 38%,transparent)}
 html[data-t="tango"] .fh{background:color-mix(in srgb,var(--bg) 55%,var(--pn))}
+/* ===== v35: identidad visual (Folclore, Tango, Clásico) ===== */
+@font-face{font-family:'Figtree';font-weight:400 600;font-style:normal;font-display:swap;src:url(figtree-var.woff2) format('woff2')}
+@font-face{font-family:'Jost';font-weight:400 600;font-style:normal;font-display:swap;src:url(jost-var.woff2) format('woff2')}
+@font-face{font-family:'Public Sans';font-weight:400 600;font-style:normal;font-display:swap;src:url(publicsans-var.woff2) format('woff2')}
+@font-face{font-family:'Bodoni Moda';font-weight:400 600;font-style:normal;font-display:swap;src:url(bodoni-var.woff2) format('woff2')}
+@font-face{font-family:'Newsreader';font-weight:400 600;font-style:normal;font-display:swap;src:url(newsreader-var.woff2) format('woff2')}
+:root{--fs:system-ui,sans-serif;--on:#1a1405;--rad:12px;--sh:0 1px 0 rgba(255,255,255,.04) inset,0 6px 16px rgba(0,0,0,.28)}
+html[data-t="folk"]{--bg:#1d1510;--pn:#2a1e15;--ln:#4b3626;--tx:#f2e7d3;--mu:#bba68a;--br:#dc9b4e;--al:#e47a52;--me:#dcb55c;--ba:#86ab7f;--on:#24160b;--ft:'Fraunces',Georgia,'Times New Roman',serif;--fs:'Figtree',system-ui,sans-serif;--rad:16px;--sh:0 1px 0 rgba(255,231,190,.07) inset,0 8px 18px rgba(8,4,0,.4)}
+html[data-t="tango"]{--bg:#0c0a0b;--pn:#171113;--ln:#3b2a2d;--tx:#f3e9df;--mu:#ab9a8d;--br:#c9a45e;--al:#d0405c;--me:#c9a45e;--ba:#74a198;--on:#1a1206;--ft:'Bodoni Moda',Georgia,'Times New Roman',serif;--fs:'Jost',system-ui,sans-serif;--rad:6px;--sh:0 1px 0 rgba(201,164,94,.12) inset,0 10px 22px rgba(0,0,0,.6)}
+html[data-t="clas"]{--bg:#f3eee4;--pn:#fbf8f1;--ln:#d9d0bd;--tx:#2a2622;--mu:#6a6256;--br:#35506b;--al:#a63d2f;--me:#a8741f;--ba:#456f50;--on:#fbf8f1;--ft:'Newsreader',Georgia,'Times New Roman',serif;--fs:'Public Sans',system-ui,sans-serif;--rad:10px;--sh:0 1px 2px rgba(60,45,20,.1),0 4px 12px rgba(60,45,20,.08)}
+html[data-t="clas"]{color-scheme:light}
+html,body{font-family:var(--fs)}
+button{font-family:inherit}
+html[data-t="tango"] h1,html[data-t="tango"] h2,html[data-t="tango"] .tt{font-weight:500}
+header{position:relative;overflow:hidden}
+html[data-t="folk"] header{background:linear-gradient(180deg,#33241a,var(--pn));border-bottom:1px solid var(--ln)}
+html[data-t="tango"] header{background:radial-gradient(120% 140% at 85% 0,#2a0f17 0,var(--pn) 60%);border-bottom:1px solid var(--ln)}
+html[data-t="clas"] header{background:var(--pn);border-bottom:1px solid var(--ln);padding-bottom:12px}
+html[data-t="clas"] #band{display:block;height:4px;background:var(--br)}
+.card,.agr,.oc,.fh,.rpi{border-radius:var(--rad)}
+.card,.agr,.oc{box-shadow:var(--sh)}
+html[data-t="tango"] .card,html[data-t="tango"] .agr,html[data-t="tango"] .oc{box-shadow:var(--sh),inset 0 0 0 2px var(--bg),inset 0 0 0 3px color-mix(in srgb,var(--br) 35%,transparent)}
+.card{border-color:color-mix(in srgb,var(--ln) 85%,transparent)}
+.btn{min-height:48px;border-radius:var(--rad);letter-spacing:.01em;box-shadow:var(--sh)}
+.btn:not(.s):not(.d){color:var(--on);border:1px solid color-mix(in srgb,var(--br) 70%,#000);background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0))}
+.btn.d{box-shadow:none}
+.btn:active{transform:translateY(1px)}
+.days button{min-height:44px;border-radius:calc(var(--rad) - 4px)}
+.days button.on,.li button.on{color:var(--on)}
+html[data-t="tango"] .btn:not(.s):not(.d){letter-spacing:.06em;text-transform:uppercase;font-size:14px}
+nav{box-shadow:0 -6px 16px rgba(0,0,0,.18)}
+nav button{min-height:56px;border-radius:0 0 var(--rad) var(--rad)}
+nav button.on{background:color-mix(in srgb,var(--br) 13%,transparent)}
+html[data-t="clas"] nav{border-top:1px solid var(--ln)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--br);outline-offset:2px}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p></header>

@@ -8,11 +8,11 @@
 <link rel="icon" href="icon-192.png">
 <title>Estudio Musical</title>
 <style>
-:root{--bg:#12161a;--pn:#1b2228;--ln:#2c353d;--tx:#e8e4da;--mu:#98a0a6;--br:#d4a84b;--al:#e0674f;--me:#d4a84b;--ba:#6fa3aa}
+:root{--ft:Georgia,'Times New Roman',serif;--bg:#12161a;--pn:#1b2228;--ln:#2c353d;--tx:#e8e4da;--mu:#98a0a6;--br:#d4a84b;--al:#e0674f;--me:#d4a84b;--ba:#6fa3aa}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}input,textarea{-webkit-user-select:text;user-select:text}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:16px/1.4 system-ui,sans-serif}
 body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
-h1,h2,.tt{font-family:Georgia,'Times New Roman',serif;font-weight:600}
+h1,h2,.tt{font-family:var(--ft);font-weight:600}
 header{padding:18px 18px 6px}
 header h1{margin:0;font-size:26px;text-transform:capitalize}
 header p{margin:2px 0 0;color:var(--mu);font-size:14px}
@@ -107,7 +107,7 @@ header{position:relative}
 #mb{left:50%;right:auto;transform:translateX(-50%);width:min(680px,calc(100% - 16px));bottom:calc(100% + 8px);border:1px solid var(--ln);border-radius:16px;padding:10px 12px 4px}
 #mb select{width:auto;max-width:42%;padding:7px 8px;font-size:15px;border-radius:10px;background:var(--bg);color:var(--tx);border:1px solid var(--ln)}
 #mb .mr:first-child #mgo{margin-left:2px}#mgo{font-weight:700}
-.fs{margin:0 0 10px}.fh{display:flex;align-items:center;gap:10px;background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}.fh b{font-family:Georgia,'Times New Roman',serif;font-size:18px;font-weight:600}.fh i{font-style:normal;color:var(--mu);background:var(--bg);border-radius:999px;padding:1px 10px;font-size:14px}.fh .ar{color:var(--br);width:16px}.fh .sp{flex:1}.fh .fsa{padding:8px 12px;font-size:14px}
+.fs{margin:0 0 10px}.fh{display:flex;align-items:center;gap:10px;background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}.fh b{font-family:var(--ft);font-size:18px;font-weight:600}.fh i{font-style:normal;color:var(--mu);background:var(--bg);border-radius:999px;padding:1px 10px;font-size:14px}.fh .ar{color:var(--br);width:16px}.fh .sp{flex:1}.fh .fsa{padding:8px 12px;font-size:14px}
 .fb{padding:8px 0 4px 10px;display:grid;gap:8px}@media(min-width:900px){.fb{grid-template-columns:repeat(2,1fr)}}
 .oc{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:10px 12px}.oh{display:flex;align-items:center;gap:10px;cursor:pointer}.oh .dot{margin-top:0}.ot{flex:1;min-width:0}.ot .tt{font-size:17px;overflow-wrap:anywhere}.ot small{color:var(--mu);display:block}
 .orw{display:flex;align-items:center;gap:8px;margin-top:8px}.ol{font-size:12px;color:var(--mu);width:78px;flex:none;line-height:1.15}.orw .days{flex:1;margin-top:0}
@@ -123,12 +123,12 @@ details.idt{background:var(--pn);border:1px solid var(--ln);border-radius:10px;p
 .agt{display:flex;gap:6px;margin:0 0 12px}.agt button{flex:1;padding:11px 0;border-radius:10px;border:1px solid var(--ln);background:none;color:var(--mu);font-size:15px}.agt button.on{background:var(--br);color:#1a1405;border-color:var(--br);font-weight:700}
 .agw .pn{display:none}.agw[data-v=prox] .pn.prox,.agw[data-v=sem] .pn.sem{display:block}.agw>.pn>h2.sh{display:none;margin-top:0}
 @media(min-width:900px){.agt{display:none}.agw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:22px;align-items:start}.agw .pn{display:block!important}.agw>.pn>h2.sh{display:block}}
-.dh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:16px 0 8px;font-weight:700;color:var(--br);font-family:Georgia,'Times New Roman',serif;font-size:17px}.dh:first-child{margin-top:2px}.dh small{color:var(--mu);font-weight:400;font-family:inherit;font-size:14px}
+.dh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:16px 0 8px;font-weight:700;color:var(--br);font-family:var(--ft);font-size:17px}.dh:first-child{margin-top:2px}.dh small{color:var(--mu);font-weight:400;font-family:inherit;font-size:14px}
 .agr{display:flex;gap:10px;align-items:center;background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer}.agr .tt{overflow-wrap:anywhere}.agr small{display:block;color:var(--mu)}
 details.est summary{cursor:pointer;color:var(--mu);font-size:14px;margin:8px 0 2px}details.est .ag{padding:5px 0}
 
 #rp{position:absolute;z-index:8;right:0;top:0;bottom:0;width:min(380px,90vw);display:flex;flex-direction:column;background:var(--pn);color:var(--tx);border-left:1px solid var(--ln);box-shadow:-12px 0 30px rgba(0,0,0,.45);padding-top:env(safe-area-inset-top)}#rp.hide{display:none}
-#rp .rph{display:flex;align-items:center;gap:10px;padding:12px 12px 10px;border-bottom:1px solid var(--ln)}#rp .rph b{flex:1;min-width:0;font-family:Georgia,'Times New Roman',serif;font-size:18px;overflow-wrap:anywhere}#rp .rph small{color:var(--mu)}
+#rp .rph{display:flex;align-items:center;gap:10px;padding:12px 12px 10px;border-bottom:1px solid var(--ln)}#rp .rph b{flex:1;min-width:0;font-family:var(--ft);font-size:18px;overflow-wrap:anywhere}#rp .rph small{color:var(--mu)}
 #rp .rpl{flex:1;overflow:auto;padding:8px 10px}#rp .rpn{display:block;color:var(--mu);padding:8px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--ln)}
 .rpi{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:8px 10px;margin-bottom:8px;cursor:pointer}.rpi.cur{border-color:var(--br);background:color-mix(in srgb,var(--br) 12%,var(--bg))}.rpi.nopdf{opacity:.55}.rpi .rpt{flex:1;min-width:0}.rpi .tt{font-size:16px;overflow-wrap:anywhere}.rpi small{display:block;color:var(--mu)}
 .rpi .rpk{flex:none;width:34px;height:34px;border-radius:50%;border:2px solid var(--mu);background:none;color:transparent;font-weight:700;font-size:17px;padding:0}.rpi .rpk.on{background:var(--br);border-color:var(--br);color:#1a1405}
@@ -138,6 +138,24 @@ details.est summary{cursor:pointer;color:var(--mu);font-size:14px;margin:8px 0 2
 .dn{opacity:.55}.dn .tt,.dn .tx{text-decoration:line-through}
 .ag.hr,.ag.ev{display:flex;gap:8px;align-items:center}.ag .tx{flex:1;min-width:0;overflow-wrap:anywhere}.ag .hb{width:32px;height:32px;font-size:17px}
 .cg>details{grid-column:1/-1}details.est>.cg{margin-top:8px}
+
+/* ===== v34: Folklore y Tango con letra propia y adornos ===== */
+@font-face{font-family:'Fraunces';font-weight:600;font-style:normal;font-display:swap;src:url(fraunces-600.woff2) format('woff2')}
+@font-face{font-family:'Playfair Display';font-weight:600;font-style:normal;font-display:swap;src:url(playfair-600.woff2) format('woff2')}
+html[data-t="folk"]{--ft:'Fraunces',Georgia,'Times New Roman',serif}
+html[data-t="tango"]{--ft:'Playfair Display',Georgia,'Times New Roman',serif}
+html[data-t="tango"] header h1{letter-spacing:.03em}
+html[data-t="folk"] #band{height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Crect width='28' height='14' fill='%231d1611'/%3E%3Crect width='28' height='2' fill='%23e4572e'/%3E%3Crect y='12' width='28' height='2' fill='%23e4572e'/%3E%3Cpath d='M14 2L22 7 14 12 6 7Z' fill='%23f2a931'/%3E%3Cpath d='M14 5L18 7 14 9 10 7Z' fill='%232ec4b6'/%3E%3Cpath d='M0 7l2-2 2 2-2 2zM24 7l2-2 2 2-2 2z' fill='%23f7ecda'/%3E%3C/svg%3E") repeat-x 0 0/28px 14px}
+html[data-t="folk"] header::before{content:'';font-size:0;width:64px;height:64px;top:2px;right:14px;opacity:.22;transform:rotate(18deg);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='%23f2a931'%3E%3Crect x='29' y='4' width='6' height='28'/%3E%3Crect x='27' y='0' width='10' height='8' rx='2'/%3E%3Cellipse cx='32' cy='38' rx='11' ry='9'/%3E%3Cellipse cx='32' cy='50' rx='14' ry='11'/%3E%3C/g%3E%3Ccircle cx='32' cy='44' r='4' fill='%231d1611'/%3E%3C/svg%3E") center/contain no-repeat}
+html[data-t="folk"] header::after{height:8px;margin-top:10px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 8L8 1 16 8' fill='none' stroke='%23f2a931' stroke-width='1.6' stroke-opacity='.75'/%3E%3C/svg%3E") repeat-x 0 0/16px 8px}
+html[data-t="folk"] .card,html[data-t="folk"] .agr,html[data-t="folk"] .oc,html[data-t="folk"] .fh{border-top:2px solid color-mix(in srgb,var(--br) 40%,var(--ln))}
+html[data-t="folk"] .fh{border-left:4px solid var(--br)}
+html[data-t="tango"] #band{height:10px;box-shadow:0 3px 0 var(--bg),0 4px 0 var(--br)}
+html[data-t="tango"] header::before{content:'';font-size:0;width:72px;height:64px;top:2px;right:12px;opacity:.2;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 64'%3E%3Cg fill='%23e2b44f'%3E%3Crect x='2' y='8' width='18' height='48' rx='3'/%3E%3Crect x='52' y='8' width='18' height='48' rx='3'/%3E%3C/g%3E%3Cg stroke='%23e2b44f' stroke-width='3' fill='none'%3E%3Cpath d='M20 12v40M27 15v34M34 12v40M41 15v34M48 12v40'/%3E%3C/g%3E%3Cg fill='%23150a0d'%3E%3Ccircle cx='11' cy='22' r='2.4'/%3E%3Ccircle cx='11' cy='32' r='2.4'/%3E%3Ccircle cx='11' cy='42' r='2.4'/%3E%3Ccircle cx='61' cy='22' r='2.4'/%3E%3Ccircle cx='61' cy='32' r='2.4'/%3E%3Ccircle cx='61' cy='42' r='2.4'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+html[data-t="tango"] header::after{height:5px;margin-top:10px;background:none;border-top:1px solid var(--br);border-bottom:1px solid var(--br)}
+html[data-t="tango"] .card,html[data-t="tango"] .agr,html[data-t="tango"] .oc,html[data-t="tango"] .fh,html[data-t="tango"] .rpi{border-color:color-mix(in srgb,var(--br) 50%,var(--ln));box-shadow:inset 0 0 0 2px var(--pn),inset 0 0 0 3px color-mix(in srgb,var(--br) 38%,transparent)}
+html[data-t="tango"] .rpi{box-shadow:inset 0 0 0 2px var(--bg),inset 0 0 0 3px color-mix(in srgb,var(--br) 38%,transparent)}
+html[data-t="tango"] .fh{background:color-mix(in srgb,var(--bg) 55%,var(--pn))}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p></header>
@@ -850,7 +868,7 @@ async function vPractica(m){
  const mx=Math.max(600,...dias.map(x=>x.s)),sem=dias.reduce((a,x)=>a+x.s,0),po={};
  all.filter(r=>dias.some(x=>x.k===r.d)).forEach(r=>Object.entries(r.o).forEach(([i,v])=>po[i]=(po[i]||0)+v));
  const top=Object.entries(po).map(([i,v])=>[obras.find(o=>o.id==i),v]).filter(x=>x[0]).sort((a,b)=>b[1]-a[1]).slice(0,5),mn=v=>Math.round(v/60);
- m.innerHTML=`<div class="card" style="display:block;text-align:center"><div style="font-size:44px;font-family:Georgia,serif;color:var(--br);line-height:1.1">♫ ${rach}</div><div class="tt">${rach===1?'día seguido':'días seguidos'} de práctica</div><small>Mejor racha: ${best} · Hoy: ${mn(mp[h]||0)} min · Esta semana: ${mn(sem)} min</small></div>
+ m.innerHTML=`<div class="card" style="display:block;text-align:center"><div style="font-size:44px;font-family:var(--ft);color:var(--br);line-height:1.1">♫ ${rach}</div><div class="tt">${rach===1?'día seguido':'días seguidos'} de práctica</div><small>Mejor racha: ${best} · Hoy: ${mn(mp[h]||0)} min · Esta semana: ${mn(sem)} min</small></div>
  <div class="card" style="display:block"><div style="display:flex;align-items:center;gap:8px"><div class="tt" style="flex:1">Meta de hoy: ${mn(mp[h]||0)} / ${meta} min${mn(mp[h]||0)>=meta?' ✓':''}</div><input type="number" id="meta" min="1" max="600" inputmode="numeric" value="${meta}" class="nm"><small>min</small></div><div style="height:10px;background:var(--ln);border-radius:6px;margin-top:8px;overflow:hidden"><div style="height:100%;width:${Math.min(100,Math.round(mn(mp[h]||0)/meta*100))}%;background:var(--br)"></div></div></div>
  <h2 style="font-size:18px;margin:14px 0 8px">Esta semana (minutos)</h2><div class="card" style="display:flex;gap:4px;align-items:flex-end">${dias.map(x=>`<div style="flex:1;text-align:center"><div style="height:80px;display:flex;align-items:flex-end;justify-content:center"><div style="width:70%;height:${Math.max(3,Math.round(x.s/mx*80))}px;background:${x.s>=300?'var(--br)':'var(--ln)'};border-radius:4px 4px 0 0"></div></div><small style="display:block;${x.k===h?'color:var(--br);font-weight:700':''}">${DIAS[x.d]}</small><small style="display:block;color:var(--tx)">${mn(x.s)}</small></div>`).join('')}</div>
  <h2 style="font-size:18px;margin:14px 0 8px">Lo más estudiado esta semana</h2>${top.length?top.map(([o,v])=>`<div class="card" style="align-items:center"><span class="dot ${o.prioridad}"></span><div style="flex:1" class="tt">${esc(o.titulo)}</div><b>${mn(v)} min</b></div>`).join(''):'<div class="empty" style="padding:14px 10px">Todavía no hay práctica registrada esta semana.<br>Se cuenta sola mientras tenés una partitura abierta.</div>'}

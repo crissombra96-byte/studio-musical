@@ -1,4 +1,4 @@
-const C='estudio-v38',F=['./','index.html','manifest.json','pdf.min.js','pdf.worker.min.js','icon-192.png','icon-512.png','fraunces-600.woff2','playfair-600.woff2','figtree-var.woff2','jost-var.woff2','publicsans-var.woff2','bodoni-var.woff2','newsreader-var.woff2'];
+const C='estudio-v39',F=['./','index.html','manifest.json','pdf.min.js','pdf.worker.min.js','icon-192.png','icon-512.png','fraunces-600.woff2','playfair-600.woff2','figtree-var.woff2','jost-var.woff2','publicsans-var.woff2','bodoni-var.woff2','newsreader-var.woff2'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>Promise.all(F.map(u=>c.add(new Request(u,{cache:'reload'})).catch(()=>{})))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 // Abre al instante con lo guardado y, en segundo plano, baja la versión nueva para la próxima vez.

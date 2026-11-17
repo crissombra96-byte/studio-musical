@@ -207,6 +207,9 @@ html[data-t="clas"] .card:has(.dot.media){border-left-color:var(--me)}
 html[data-t="clas"] .card:has(.dot.baja){border-left-color:var(--ba)}
 html[data-t="folk"] .card,html[data-t="tango"] .card{border-left-width:6px}
 .evi{border-radius:calc(var(--rad) - 4px)}
+.fe{flex:none;width:54px;text-align:center;padding:6px 0;border-radius:calc(var(--rad) - 4px);background:var(--bg);border:1px solid var(--ln);border-left:4px solid var(--br)}
+.fe b{display:block;font:600 1.4rem/1 var(--ft)}
+.fe i{font:500 .62rem var(--fs);letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-style:normal}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p><div id="rch" class="hide" aria-label="Días seguidos de práctica"></div></header>
@@ -572,7 +575,7 @@ function proxPend(e,h){let k=proxFecha(e,h),n=0;while(k&&doneE(e,k)&&n++<60){if(
 function proxFecha(e,h){if(e.fecha>=h)return e.fecha;if(e.rep!=='sem')return null;const [y,m,d]=h.split('-').map(Number),dt=new Date(y,m-1,d);dt.setDate(dt.getDate()+(dowK(e.fecha)-dt.getDay()+7)%7);return ymd(dt)}
 function proxEv(listaId){const h=ymd(new Date());let b=null;for(const e of eventos.filter(x=>x.lista===listaId)){const k=proxPend(e,h);if(k&&(!b||(k+(e.hora||'')).localeCompare(b.k+(b.e.hora||''))<0))b={e,k}}return b}
 const evLinea=(e,k)=>`${EV[e.tipo][0]} · ${fmtF(k)}${e.hora?' · '+esc(e.hora)+' h':''}${e.lugar?' · '+esc(e.lugar):''}${e.rep==='sem'?' · cada semana':''}`;
-const evCard=(e,k,h)=>{const L=e.lista?listas.find(x=>x.id===e.lista):null;return `<div class="card${doneE(e,k)?' dn':''}" data-e="${e.id}" style="align-items:center${k===h?';border-color:var(--br)':''}"><span class="evi" style="background:${EV[e.tipo][2]}">${EV[e.tipo][1]}</span><div style="flex:1;min-width:0"><div class="tt">${esc(e.titulo)}</div><small>${k===h?'HOY · ':''}${evLinea(e,k)}</small>${L?`<small>Repertorio: ${esc(L.nombre)} (${L.obras.length} obra${L.obras.length===1?'':'s'})</small>`:''}</div>${hb('e',e.id,k)}</div>`};
+const evCard=(e,k,h)=>{const L=e.lista?listas.find(x=>x.id===e.lista):null;return `<div class="card${doneE(e,k)?' dn':''}" data-e="${e.id}" style="align-items:center${k===h?';border-color:var(--br)':''}"><span class="fe" style="border-left-color:${EV[e.tipo][2]}"><b>${+k.slice(8,10)}</b><i>${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+k.slice(5,7)-1]}</i></span><div style="flex:1;min-width:0"><div class="tt">${esc(e.titulo)}</div><small>${EV[e.tipo][1]} ${k===h?'HOY · ':''}${evLinea(e,k)}</small>${L?`<small>Repertorio: ${esc(L.nombre)} (${L.obras.length} obra${L.obras.length===1?'':'s'})</small>`:''}</div>${hb('e',e.id,k)}</div>`};
 function formEv(e,k0){
  const nuevo=!e;e=e||{tipo:'ensayo',titulo:'',fecha:k0||ymd(new Date()),hora:'',lugar:'',nota:'',lista:0,rep:''};const M=$('#modal');M.classList.remove('hide');
  let tipo=e.tipo;

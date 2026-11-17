@@ -210,6 +210,31 @@ html[data-t="folk"] .card,html[data-t="tango"] .card{border-left-width:6px}
 .fe{flex:none;width:54px;text-align:center;padding:6px 0;border-radius:calc(var(--rad) - 4px);background:var(--bg);border:1px solid var(--ln);border-left:4px solid var(--br)}
 .fe b{display:block;font:600 1.4rem/1 var(--ft)}
 .fe i{font:500 .62rem var(--fs);letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-style:normal}
+/* ===== v38: igual que la guía visual (encabezado, adornos, chips, barra inferior con íconos) ===== */
+header{display:flex;flex-direction:column;padding-bottom:14px}
+header p{order:-1;text-transform:uppercase;letter-spacing:.16em;font-size:11.5px;font-weight:500;margin:0 0 4px}
+header h1{font-size:28px;line-height:1.1;text-transform:none}
+html[data-t] header h1{color:var(--tx)}
+html[data-t="folk"] header::before,html[data-t="tango"] header::before{display:none}
+html[data-t="folk"] #band{height:14px;border-bottom:1px solid var(--ln);background:linear-gradient(135deg,var(--br) 25%,transparent 25%) 0 0/14px 14px,linear-gradient(225deg,#4f9d9a 25%,transparent 25%) 0 0/14px 14px,var(--pn)}
+html[data-t="folk"] header::after{height:7px;margin-top:12px;background:linear-gradient(135deg,var(--br) 25%,transparent 25%) 0 0/10px 10px,linear-gradient(225deg,var(--br) 25%,transparent 25%) 0 0/10px 10px;opacity:.55;position:absolute;left:0;right:0;bottom:0}
+html[data-t="tango"] #band{height:14px;background:#5a1020;border-bottom:0;box-shadow:0 3px 0 var(--bg),0 4px 0 var(--br);margin-bottom:4px}
+html[data-t="tango"] header::after{position:absolute;left:18px;right:18px;bottom:6px;height:4px;margin:0;opacity:.7}
+html[data-t="folk"] header{padding-bottom:20px}
+html[data-t="tango"] header{padding-bottom:20px}
+html[data-t="folk"] .card{border-top:2px solid var(--br)}
+.sh,h2.sh{font:600 .68rem var(--fs);letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+html[data-t="folk"] h2.sh,html[data-t="tango"] h2.sh{color:var(--mu)}
+.chs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chp{display:inline-flex;align-items:center;gap:6px;font:500 .74rem var(--fs);padding:4px 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--p,var(--ln)) 55%,transparent);color:var(--tx);background:color-mix(in srgb,var(--p,var(--ln)) 14%,transparent)}
+.chp i{width:7px;height:7px;border-radius:50%;background:var(--p,var(--mu))}
+.chp.n{--p:var(--ln);color:var(--mu)}
+.card .dot{display:none}
+.card:has(.chs) .dot{display:none}
+nav{padding:6px 4px calc(8px + env(safe-area-inset-bottom))}
+nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:500;padding:6px 2px;margin:0 2px;border-radius:var(--rad);box-shadow:none}
+nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{box-shadow:none}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p><div id="rch" class="hide" aria-label="Días seguidos de práctica"></div></header>
@@ -319,13 +344,14 @@ const avSem=o=>{const n=(o.dias||[]).length;if(!n)return null;const l=lunes();re
 const rachaN=()=>{const mp={};for(const r of (typeof prac!=='undefined'&&prac)||[])mp[r.d]=Object.values(r.o||{}).reduce((a,b)=>a+b,0);const ok=d=>(mp[d]||0)>=300,dd=new Date();if(!ok(ymd(dd)))dd.setDate(dd.getDate()-1);let n=0;while(ok(ymd(dd))){n++;dd.setDate(dd.getDate()-1)}return n};
 const sortO=a=>a.sort((x,y)=>PRI[pe(x)]-PRI[pe(y)]||x.titulo.localeCompare(y.titulo));
 const PL={alta:'Alta',media:'Media',baja:'Baja'};
+const NIC={est:'<svg viewBox="0 0 24 24"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/></svg>',org:'<svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>',aju:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>'};
 
 function draw(){if(tab!=='org')SEL=null;
  const now=new Date(),hoy=now.getDay(),m=$('#main');
- $('#h1').textContent={est:EST[se],org:'Organizar',aju:'Ajustes'}[tab];
- $('#h2').textContent=tab==='est'?now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';
+ $('#h1').textContent={est:'Estudio',org:'Organizar',aju:'Ajustes'}[tab];
+ $('#h2').textContent=tab==='est'?'Hoy · '+now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric'}):'';
  {const R=$('#rch'),n=rachaN();R.classList.toggle('hide',tab!=='est');R.innerHTML=`<b>${n}</b><span>${n===1?'día':'días'}</span>`}
- $('#nav').innerHTML=[['est','♫ Estudiar'],['org','♯ Organizar'],['aju','♭ Ajustes'+(rstate().mal&&obras.length?' ●':'')]].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${t}</button>`).join('');
+ $('#nav').innerHTML=[['est','Estudiar'],['org','Organizar'],['aju','Ajustes'+(rstate().mal&&obras.length?' ●':'')]].map(([k,t])=>`<button class="${k===tab?'on':''}" data-t="${k}">${NIC[k]}<span>${t}</span></button>`).join('');
  document.documentElement.style.setProperty('--navh',$('#nav').offsetHeight+'px');
  $('#nav').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('#modal').classList.add('hide');tab=b.dataset.t;draw()});
  if(tab==='est'){
@@ -466,7 +492,8 @@ function card(o,ed,sel,hk){
  const meta=ed?[o.compositor,pdfIds.has(o.id)?'':'sin PDF'].filter(Boolean).join(' · '):`${esc(o.compositor)}${o.compositor?' · ':''}${PL[pe(o)]}${pdfIds.has(o.id)?'':' · sin PDF'}`;
  const lead=sel===undefined?`<span class="dot ${pe(o)}"></span>`:`<span class="cb ${sel?'on':''}">${sel?'✓':''}</span>`;
  const vis=!ed&&sel===undefined,ds=vis?diasSin(o):null,av=vis?avSem(o):null,pc=PCV[pe(o)]||'--mu';
- return `<div class="card${sel?' chk':''}${hk&&doneO(o,hk)?' dn':''}" data-id="${o.id}">${lead}<div style="flex:1;min-width:0"><div class="tt">${esc(o.titulo)}</div>${meta?`<small>${ed?esc(meta):meta}</small>`:''}${o.notas&&!ed?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}${av!==null?`<div class="av" title="Avance de la semana: días hechos de los asignados"><i style="width:${av}%"></i></div>`:''}</div>${vis?`<div class="dias" style="--p:var(${pc})"><b>${ds===null?'–':ds}</b>${ds===null?'sin<br>práctica':ds===0?'hoy':ds===1?'día sin<br>tocar':'días sin<br>tocar'}</div>`:''}${ed&&sel===undefined?'<button class="ib2 ed" aria-label="Editar">✎</button>':''}${hk?hb('o',o.id,hk):''}</div>`;
+ const sub2=vis?`${o.compositor?`<small>${esc(o.compositor)}</small>`:''}<div class="chs"><span class="chp" style="--p:var(${pc})"><i></i>${PL[pe(o)]}</span>${pdfIds.has(o.id)?'':'<span class="chp n">sin PDF</span>'}</div>`:null;
+ return `<div class="card${sel?' chk':''}${hk&&doneO(o,hk)?' dn':''}" data-id="${o.id}">${lead}<div style="flex:1;min-width:0"><div class="tt">${esc(o.titulo)}</div>${sub2!==null?sub2:meta?`<small>${ed?esc(meta):meta}</small>`:''}${o.notas&&!ed?`<small style="margin-top:4px;color:var(--tx)">${esc(o.notas)}</small>`:''}${av!==null?`<div class="av" title="Avance de la semana: días hechos de los asignados"><i style="width:${av}%"></i></div>`:''}</div>${vis?`<div class="dias" style="--p:var(${pc})"><b>${ds===null?'–':ds}</b>${ds===null?'sin<br>práctica':ds===0?'hoy':ds===1?'día sin<br>tocar':'días sin<br>tocar'}</div>`:''}${ed&&sel===undefined?'<button class="ib2 ed" aria-label="Editar">✎</button>':''}${hk?hb('o',o.id,hk):''}</div>`;
 }
 function bindCards(m){
  m.querySelectorAll('.card[data-id]').forEach(c=>{
@@ -1056,7 +1083,7 @@ function rstUI(){
  b.classList.toggle('hide',!show);
  if(show){b.innerHTML=`<span style="flex:1">${s.d===null?'Todavía no hiciste un respaldo. Si Android borra los datos, se pierden tus partituras y marcas.':'Hace '+s.d+' días que no hacés un respaldo.'}</span><button class="btn" id="rbg" style="padding:8px 12px;font-size:14px">Respaldar</button><button class="btn s" id="rbl" style="padding:8px 10px;font-size:14px">Luego</button>`;$('#rbg').onclick=()=>exportar('share');$('#rbl').onclick=()=>{ls.set('rsnooze',String(Date.now()+864e5));rstUI()}}
  const rt=$('#rst');if(rt){rt.textContent=s.d===null?'Todavía no hiciste ningún respaldo.':'Último respaldo: '+(s.d===0?'hoy':s.d===1?'ayer':'hace '+s.d+' días')+'.';rt.style.color=s.mal?'var(--al)':'var(--br)'}
- const nb=document.querySelector('#nav button[data-t=aju]');if(nb)nb.textContent='♭ Ajustes'+(s.mal&&obras.length?' ●':'');
+ const nb=document.querySelector('#nav button[data-t=aju] span');if(nb)nb.textContent='Ajustes'+(s.mal&&obras.length?' ●':'');
 }
 function aviso(t){
  let d=$('#err');if(!d){d=document.createElement('div');d.id='err';d.style.cssText='position:fixed;left:8px;right:8px;bottom:70px;z-index:99;background:#5a1d17;color:#fff;border:1px solid var(--al);border-radius:10px;padding:12px;font-size:14px';d.onclick=()=>d.remove();document.body.appendChild(d)}

@@ -241,6 +241,19 @@ nav button{min-width:0;margin:0 1px;padding:6px 0;font-size:10px;letter-spacing:
 nav button span{display:block;max-width:100%;overflow:hidden}
 nav button svg{width:22px;height:22px}
 @media(min-width:700px){nav button{font-size:12px}nav button svg{width:24px;height:24px}}
+/* ===== v40: marcos suaves y grilla pareja (la obra manda) ===== */
+html:not(#x)[data-t] .card,html:not(#x)[data-t] .agr,html:not(#x)[data-t] .oc,html:not(#x)[data-t] .rpi{border:1px solid color-mix(in srgb,var(--ln) 55%,transparent);box-shadow:0 4px 12px rgba(0,0,0,.16)}
+html:not(#x)[data-t="clas"] .card,html:not(#x)[data-t="clas"] .agr,html:not(#x)[data-t="clas"] .oc{box-shadow:0 1px 2px rgba(60,45,20,.08),0 3px 10px rgba(60,45,20,.06)}
+html:not(#x)[data-t] .card{border-left:4px solid color-mix(in srgb,var(--ln) 70%,transparent)}
+html:not(#x)[data-t] .card:has(.dot.alta){border-left-color:color-mix(in srgb,var(--al) 70%,transparent)}
+html:not(#x)[data-t] .card:has(.dot.media){border-left-color:color-mix(in srgb,var(--me) 70%,transparent)}
+html:not(#x)[data-t] .card:has(.dot.baja){border-left-color:color-mix(in srgb,var(--ba) 70%,transparent)}
+.card .tt{font-size:19px;line-height:1.25}
+.card>div[style*="flex:1"]{display:flex;flex-direction:column}
+.card .av{margin-top:auto;box-sizing:content-box;border-top:12px solid transparent;background-clip:padding-box;opacity:.6}
+.card .dias b{font-size:1.3rem;opacity:.9}
+.card[data-e]{border-color:color-mix(in srgb,var(--br) 40%,transparent)!important;border-left-width:1px}
+@media(min-width:900px){.cg{align-items:stretch;gap:12px}.cg>.card,.cg>.agr,.cg>.oc{margin:0}}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p><div id="rch" class="hide" aria-label="Días seguidos de práctica"></div></header>

@@ -254,6 +254,36 @@ html:not(#x)[data-t] .card:has(.dot.baja){border-left-color:color-mix(in srgb,va
 .card .dias b{font-size:1.3rem;opacity:.9}
 .card[data-e]{border-color:color-mix(in srgb,var(--br) 40%,transparent)!important;border-left-width:1px}
 @media(min-width:900px){.cg{align-items:stretch;gap:12px}.cg>.card,.cg>.agr,.cg>.oc{margin:0}}
+/* ===== v41: lector más limpio (paneles sin superposición, orden por arrastre, barra de páginas suave) ===== */
+#v{--vbh:0px;--vfh:0px}
+#rp{top:var(--vbh);bottom:var(--vfh);padding-top:0;width:min(360px,88vw);border-left:1px solid color-mix(in srgb,var(--ln) 70%,transparent);box-shadow:-10px 0 28px rgba(0,0,0,.28);animation:rpin .18s ease-out}
+@keyframes rpin{from{transform:translateX(14px);opacity:0}to{transform:none;opacity:1}}
+#rp .rph{padding:14px 14px 12px}
+#rp .rph b{font-size:18px;line-height:1.2}
+#rp .rph small{display:block;font-size:12px;letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+#rp .ib2{width:38px;height:38px;border-radius:50%;font-size:15px;border-color:transparent;background:color-mix(in srgb,var(--mu) 16%,transparent)}
+#rp .rpl{position:relative;padding:10px 10px 14px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#rp .rpn{font-size:12px;text-align:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom))}
+html:not(#x)[data-t] .rpi{gap:10px;padding:8px 4px 8px 10px;margin-bottom:6px;box-shadow:none;border:1px solid color-mix(in srgb,var(--ln) 55%,transparent);background:var(--bg);touch-action:pan-y}
+html:not(#x)[data-t] .rpi.cur{border-color:color-mix(in srgb,var(--br) 55%,transparent);background:color-mix(in srgb,var(--br) 10%,var(--bg))}
+.rpi .tt{font-size:15px;line-height:1.25}.rpi .rpno{color:var(--mu);font-family:var(--fs);font-size:13px}
+.rpi .rpk{width:30px;height:30px;font-size:14px;border-width:1.5px;opacity:.9}
+.rpi .rpg{flex:none;width:46px;height:46px;margin:-6px 0;border:0;background:none;color:var(--mu);border-radius:12px;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab;opacity:.75;-webkit-tap-highlight-color:transparent}
+.rpi .rpg svg{width:20px;height:20px;fill:currentColor}
+.rpi .rpg:active{background:color-mix(in srgb,var(--br) 16%,transparent);color:var(--br);opacity:1}
+.rpl.dragging{user-select:none;-webkit-user-select:none;touch-action:none}
+.rpl.dragging .rpi:not(.drag){transition:transform .16s ease}
+html:not(#x)[data-t] .rpi.drag{position:relative;z-index:3;transition:none;background:var(--pn);border-color:var(--br);box-shadow:0 12px 26px rgba(0,0,0,.45)}
+#vb{border-bottom-color:color-mix(in srgb,var(--ln) 55%,transparent)}
+#vb .tt{font-family:var(--ft);font-size:17px}
+#vs{padding:0 8px;opacity:.6;transition:opacity .2s}
+#vs:focus-within,#vs:active{opacity:1}
+#vs button{font-size:22px;min-width:40px;min-height:34px;padding:0 8px;color:var(--mu)}
+#vsl{-webkit-appearance:none;appearance:none;background:transparent;height:26px;margin:0}
+#vsl::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:color-mix(in srgb,var(--mu) 32%,transparent)}
+#vsl::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-5.5px;border:0;border-radius:50%;background:var(--br);box-shadow:0 0 0 5px color-mix(in srgb,var(--br) 16%,transparent)}
+#vsl::-moz-range-track{height:3px;border-radius:2px;background:color-mix(in srgb,var(--mu) 32%,transparent)}
+#vsl::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:var(--br)}
 </style></head><body>
 <div id="band"></div>
 <header><h1 id="h1"></h1><p id="h2"></p><div id="rch" class="hide" aria-label="Días seguidos de práctica"></div></header>
@@ -814,28 +844,59 @@ function rpUI(){
  if(!c){$('#rp').classList.add('hide');return}
  if(!$('#rp').classList.contains('hide'))rpDraw();
 }
+function rpPos(){const v=$('#v'),h=x=>$(x).classList.contains('hide')?0:$(x).offsetHeight;v.style.setProperty('--vbh',h('#vb')+'px');v.style.setProperty('--vfh',h('#vf')+'px')}
 function rpDraw(){
- const c=V.ctx,P=$('#rp'),l=c&&listas.find(x=>x.id===c.lid);
- if(!l){P.classList.add('hide');return}
- const it=l.obras.map(i=>obras.find(o=>o.id===i)).filter(Boolean),ok=new Set(l.ok||[]);
- P.innerHTML=`<div class="rph"><div style="flex:1;min-width:0"><b>${esc(l.nombre)}</b><small>${it.length} obra${it.length===1?'':'s'}</small></div><button class="ib2" id="rpx" aria-label="Cerrar">✕</button></div><div class="rpl">${it.map((o,i)=>{const pdf=pdfIds.has(o.id);return `<div class="rpi${o.id===V.id?' cur':''}${pdf?'':' nopdf'}" data-i="${i}"><button class="rpk${ok.has(o.id)?' on':''}" data-k="${o.id}" aria-label="Marcar como tocada">✓</button><div class="rpt"><div class="tt">${i+1}. ${esc(o.titulo)}</div><small>${[o.compositor,pdf?'':'sin PDF en este equipo'].filter(Boolean).map(esc).join(' · ')}</small></div>${TAB?`<div class="li"><button data-m="${i}" data-d="-1" aria-label="Subir" ${i?'':'disabled'}>▲</button><button data-m="${i}" data-d="1" aria-label="Bajar" ${i<it.length-1?'':'disabled'}>▼</button></div>`:''}</div>`}).join('')}</div>${TAB?'<small class="rpn">Tocá una obra para abrirla. Con ▲ ▼ cambiás el orden del repertorio.</small>':''}`;
+ const c=V.ctx,P=$('#rp'),l0=c&&listas.find(x=>x.id===c.lid);
+ if(!l0){P.classList.add('hide');return}
+ rpPos();
+ const sy=(P.querySelector('.rpl')||{}).scrollTop||0,L=()=>listas.find(x=>x.id===c.lid)||l0;
+ const it=l0.obras.map(i=>obras.find(o=>o.id===i)).filter(Boolean),ok=new Set(l0.ok||[]);
+ P.innerHTML=`<div class="rph"><div style="flex:1;min-width:0"><b>${esc(l0.nombre)}</b><small>${it.length} obra${it.length===1?'':'s'}</small></div><button class="ib2" id="rpx" aria-label="Cerrar">✕</button></div><div class="rpl">${it.map((o,i)=>{const pdf=pdfIds.has(o.id);return `<div class="rpi${o.id===V.id?' cur':''}${pdf?'':' nopdf'}" data-i="${i}" data-id="${o.id}"><button class="rpk${ok.has(o.id)?' on':''}" data-k="${o.id}" aria-label="Marcar como tocada">✓</button><div class="rpt"><div class="tt"><span class="rpno">${i+1}. </span>${esc(o.titulo)}</div><small>${[o.compositor,pdf?'':'sin PDF en este equipo'].filter(Boolean).map(esc).join(' · ')}</small></div>${TAB?'<button class="rpg" aria-label="Mantené y arrastrá para reordenar"><svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg></button>':''}</div>`}).join('')}</div>${TAB?'<small class="rpn">Tocá una obra para abrirla · arrastrá ⠿ para ordenar</small>':''}`;
+ const R=P.querySelector('.rpl');R.scrollTop=sy;
  $('#rpx').onclick=()=>P.classList.add('hide');
+ const orden=()=>[...R.querySelectorAll('.rpi')].map(e=>obras.find(x=>x.id===+e.dataset.id)).filter(Boolean);
  P.querySelectorAll('.rpi').forEach(r=>r.onclick=async e=>{
-  if(e.target.closest('.rpk')||e.target.closest('.li'))return;
-  const o=it[+r.dataset.i];if(!o)return;
+  if(e.target.closest('.rpk')||e.target.closest('.rpg'))return;
+  const o=obras.find(x=>x.id===+r.dataset.id);if(!o)return;
   if(o.id===V.id){P.classList.add('hide');return}
   if(!pdfIds.has(o.id)){toast('Esta obra no tiene el PDF en este equipo.');return}
-  const arr=it.filter(x=>pdfIds.has(x.id));P.classList.add('hide');await abrir(o,{...c,arr,i:arr.indexOf(o)})});
- P.querySelectorAll('.rpk').forEach(b=>b.onclick=async e=>{e.stopPropagation();const k=new Set(l.ok||[]),id=+b.dataset.k;k.has(id)?k.delete(id):k.add(id);await rq('listas','readwrite',s=>s.put({...l,ok:[...k]}));await load();rpDraw()});
- P.querySelectorAll('[data-m]').forEach(b=>b.onclick=async e=>{
-  e.stopPropagation();const i=+b.dataset.m,j=i+(+b.dataset.d),a=[...l.obras],x=it[i],y=it[j];if(!x||!y)return;
-  const p=a.indexOf(x.id),q=a.indexOf(y.id);[a[p],a[q]]=[a[q],a[p]];
-  await rq('listas','readwrite',s=>s.put({...l,obras:a}));await load();
-  const l2=listas.find(z=>z.id===c.lid);
-  if(l2){const arr=l2.obras.map(n=>obras.find(o=>o.id===n)).filter(o=>o&&pdfIds.has(o.id));V.ctx={...c,arr,i:Math.max(0,arr.findIndex(o=>o.id===V.id))};const cur=obras.find(o=>o.id===V.id);if(cur)$('#vt').textContent=`${V.ctx.i+1}/${arr.length} · ${cur.titulo}`}
-  rpDraw()});
+  const arr=orden().filter(x=>pdfIds.has(x.id));P.classList.add('hide');await abrir(o,{...c,arr,i:arr.indexOf(o)})});
+ P.querySelectorAll('.rpk').forEach(b=>b.onclick=async e=>{e.stopPropagation();const Lc=L(),k=new Set(Lc.ok||[]),id=+b.dataset.k;k.has(id)?k.delete(id):k.add(id);await rq('listas','readwrite',s=>s.put({...Lc,ok:[...k]}));await load();rpDraw()});
+ // arrastrar para reordenar: se mueve en pantalla sin redibujar la lista (no salta al principio)
+ if(TAB)P.querySelectorAll('.rpg').forEach(g=>{
+  g.onpointerdown=e=>{
+   if(e.button>0)return;e.preventDefault();e.stopPropagation();
+   const row=g.closest('.rpi'),rows=[...R.querySelectorAll('.rpi')],n=rows.length,from=rows.indexOf(row),pos=rows.map(r=>({t:r.offsetTop,h:r.offsetHeight})),gap=6;
+   const y0=e.clientY-R.getBoundingClientRect().top+R.scrollTop,grab=y0-pos[from].t;
+   let cy=e.clientY,to=from,raf=0,done=false;
+   row.classList.add('drag');R.classList.add('dragging');try{g.setPointerCapture(e.pointerId)}catch(_){}try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}
+   const upd=()=>{
+    const y=cy-R.getBoundingClientRect().top+R.scrollTop,top=Math.max(0,Math.min(R.scrollHeight-pos[from].h,y-grab)),mid=top+pos[from].h/2;
+    let t=0;for(let k=0;k<n;k++){if(k!==from&&pos[k].t+pos[k].h/2<mid)t++}
+    to=t;row.style.transform=`translateY(${top-pos[from].t}px)`;
+    const h=pos[from].h+gap;rows.forEach((r,k)=>{if(k===from)return;let d=0;if(from<to&&k>from&&k<=to)d=-h;else if(from>to&&k<from&&k>=to)d=h;r.style.transform=d?`translateY(${d}px)`:''});
+   };
+   const loop=()=>{if(done)return;const rr=R.getBoundingClientRect(),m=56;let d=0;if(cy<rr.top+m)d=-(rr.top+m-cy)/4;else if(cy>rr.bottom-m)d=(cy-(rr.bottom-m))/4;if(d)R.scrollTop+=Math.max(-18,Math.min(18,d));upd();raf=requestAnimationFrame(loop)};
+   loop();
+   g.onpointermove=ev=>{cy=ev.clientY};
+   const fin=async cancel=>{
+    if(done)return;done=true;cancelAnimationFrame(raf);
+    R.classList.remove('dragging');row.classList.remove('drag');rows.forEach(r=>{r.style.transform=''});
+    if(cancel||to===from)return;
+    const ref=rows.filter(r=>r!==row)[to];R.insertBefore(row,ref||null);
+    R.querySelectorAll('.rpi .rpno').forEach((x,k)=>{x.textContent=(k+1)+'. '});
+    const ids=[...R.querySelectorAll('.rpi')].map(r=>+r.dataset.id),Lc=L(),a=[...Lc.obras],sl=[];a.forEach((id,ix)=>{if(ids.includes(id))sl.push(ix)});sl.forEach((ix,k)=>{a[ix]=ids[k]});
+    await rq('listas','readwrite',s=>s.put({...Lc,obras:a}));await load();
+    const l2=L();
+    if(l2){const arr=l2.obras.map(n=>obras.find(o=>o.id===n)).filter(o=>o&&pdfIds.has(o.id));V.ctx={...c,arr,i:Math.max(0,arr.findIndex(o=>o.id===V.id))};const cur=obras.find(o=>o.id===V.id);if(cur)$('#vt').textContent=`${V.ctx.i+1}/${arr.length} · ${cur.titulo}`}
+   };
+   g.onpointerup=()=>fin(false);g.onpointercancel=()=>fin(true);g.onlostpointercapture=()=>fin(false);
+  };
+ });
 }
-$('#vrp').onclick=()=>{const P=$('#rp');if(P.classList.contains('hide')){P.classList.remove('hide');rpDraw()}else P.classList.add('hide')};
+$('#vrp').onclick=()=>{const P=$('#rp');if(P.classList.contains('hide')){P.classList.remove('hide');rpDraw();const R=P.querySelector('.rpl'),cu=R&&R.querySelector('.rpi.cur');if(cu)R.scrollTop=Math.max(0,cu.offsetTop-R.clientHeight/3)}else P.classList.add('hide')};
+// un solo panel abierto a la vez (obras / metrónomo / secciones / nota)
+{const ps=['#rp','#mb','#sc','#nt'],vis=x=>!$(x).classList.contains('hide'),was={};ps.forEach(x=>{was[x]=vis(x)});const ob=new MutationObserver(()=>{ps.forEach(x=>{const v=vis(x);if(v&&!was[x])ps.forEach(y=>{if(y!==x&&vis(y)){$(y).classList.add('hide')}});});ps.forEach(x=>{was[x]=vis(x)})});ps.forEach(x=>ob.observe($(x),{attributes:true,attributeFilter:['class']}));addEventListener('resize',()=>{if(!$('#rp').classList.contains('hide'))rpPos()})}
 function lockSet(on){V.lock=on;$('#v').classList.toggle('lk',on);$('#lkc').classList.toggle('hide',!on);
  if(on){V.tl='r';V.an=false;abtn();$('#mb').classList.add('hide');$('#sc').classList.add('hide');cierraNt();$('#vb').classList.add('hide');$('#vf').classList.add('hide');try{if(!fsOn()&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{})}catch(e){}toast('Escenario activado. Solo se pasa de página. Para salir, mantené apretado el candado.')}
  else{$('#vb').classList.remove('hide');$('#vf').classList.remove('hide')}
